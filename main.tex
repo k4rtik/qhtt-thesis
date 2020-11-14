@@ -56,8 +56,10 @@
         {β00}{{$\beta_{00}$}}2
 }
 
+\def\titlerunning{Quantum Hoare Type Theory}
+\def\authorrunning{Kartik Singhal}
 
-\title{Quantum Hoare Type Theory}
+\title{\titlerunning}
 
 \author{
 Kartik Singhal
@@ -95,9 +97,13 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
     \label{fig:bell00}
 \end{figure}
 
-\lstinputlisting[language=QHaskell]{bell00.qh}
+\lstinputlisting[language=QHaskell,lastline=7]{bell00.qh}
 
-This corresponds to a suspended quantum computation (or a quantum circuit) that can be composed with other computations (circuits). Here we see our first two propositions: the top, $\top$, predicate that is satisfied by any state space and the $X =_q \ket{\psi}$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\ket{\psi}$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
+This corresponds to a suspended quantum computation (or a quantum circuit) that can be composed with other computations (circuits). The specification of the program is in its type (the first line). Here we see our first two propositions: the top, $\top$, predicate that is satisfied by any state space and the $X =_q \ket{\psi}$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\ket{\psi}$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
+
+Here is how we can prove whether this program conforms to the given specification.
+
+\lstinputlisting[language=QHaskell,firstline=9]{bell00.qh}
 
 \section{Discussion}
 

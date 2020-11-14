@@ -31,17 +31,18 @@
 }
 
 \lstset{
-	basicstyle=\small\ttfamily,
+	basicstyle=\ttfamily,
 	flexiblecolumns=false,
-	basewidth={0.5em,0.45em},
+	basewidth={0.5em,0.5em},
 	commentstyle=\color{dkgreen},
 	keywordstyle=\bfseries\color{blue},
     stringstyle=\color{violet},
     literate=
         {√}{{$\surd$}}1
-        {>}{{$>$}}1 {<}{{$<$}}1 {λ}{{$\lambda$}}1
+        {>}{{$>$}}1 {<}{{$<$}}1
         {\\\\}{{\char`\\\char`\\}}1
         {⇐}{{$\Leftarrow$}}1 {⇒}{{$\Rightarrow$}}2
+        {->}{{$\rightarrow$}}2
         {\ .}{{$\circ$}}2 {\ .\ }{{$\circ$}}2
         {|}{{$\vert$}}1 {⟩}{{$\rangle$}}1
         {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1
@@ -96,7 +97,7 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
 
 \lstinputlisting[language=QHaskell]{bell00.qh}
 
-This corresponds to a suspended computation (or a quantum circuit) that can be composed with other computations/circuits. Here we see our first two propositions, the $\top$ that is satisfied by any state space and the $X =q \ket{\psi}$ predicate that is only satisfied by quantum variables, $X$, that lie in the span of the given state $\ket{\psi}$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled and are in the Bell state $\ket{\beta_{00}}$.
+This corresponds to a suspended quantum computation (or a quantum circuit) that can be composed with other computations (circuits). Here we see our first two propositions: the top, $\top$, predicate that is satisfied by any state space and the $X =_q \ket{\psi}$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\ket{\psi}$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
 
 \section{Discussion}
 

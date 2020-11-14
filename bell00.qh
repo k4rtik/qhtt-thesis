@@ -1,6 +1,7 @@
 bell00 : {⊤} (a, b) : (qbit ⊗ qbit) {(a,b) =q |β00⟩}
-       = do qa = init false;
+       = circ () -> do
+            qa = init 0;
             apply H to qa;
-            qb = init false;
+            qb = init 0;
             apply CX to (qa, qb);
-            (a, b)
+            (qa, qb)

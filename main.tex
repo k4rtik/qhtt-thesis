@@ -9,8 +9,9 @@
 \usepackage{amsmath}
 \usepackage{braket}
 \usepackage{xspace}
-\usepackage{cleveref}
+\usepackage[capitalize]{cleveref}
 \crefformat{section}{\S#2#1#3}
+% \crefformat{figure}{Fig. #2#1#3}
 
 % \usepackage{adjustbox}
 \usepackage{tikz}
@@ -81,7 +82,6 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
 
 \begin{figure}
     \centering
-    % \begin{adjustbox}{width=0.4\textwidth}
     \begin{tikzpicture}
         \node[scale=1.0] {
             \begin{quantikz}
@@ -90,7 +90,6 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
             \end{quantikz}
         };
     \end{tikzpicture}
-    % \end{adjustbox}
     \caption{Circuit to produce the first Bell state}
     \label{fig:bell00}
 \end{figure}

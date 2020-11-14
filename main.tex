@@ -53,7 +53,7 @@
         {=q}{{$=_q$}}2 {=c}{{$=_c$}}2
         {α}{{$\alpha$}}1 {β}{{$\beta$}}1
         {ψ}{{$\psi$}}1
-        {_i}{{$_i$}}1
+        {_i}{{$_i$}}1 {_x}{{$_x$}}1 {_y}{{$_y$}}1
         {\ .\ }{{$\cdot$}}1
         {β00}{{$\beta_{00}$}}2
 }
@@ -135,7 +135,7 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
             \end{quantikz}
         };
     \end{tikzpicture}
-    \caption{Circuit to produce the first Bell state}
+    \caption{Circuit to prepare the first Bell state}
     \label{fig:bell00}
 \end{figure}
 
@@ -150,6 +150,8 @@ Here is how we can prove whether this program conforms to the given specificatio
 \subsubsection{Teleportation}
 Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum computation and the corresponding code follows:
 
+\clearpage
+
 \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -161,15 +163,17 @@ Our second example shows how we can compose circuits defined in QHTT together an
             \end{quantikz}
         };
     \end{tikzpicture}
-    \caption{Quantum teleportation}
+    \caption{Quantum teleportation circuit}
     \label{fig:teleport}
 \end{figure}
 
 \lstinputlisting[language=QHaskell,lastline=10,caption=Quantum teleportation]{teleport.qh}
 
+\clearpage
+
 Verification steps follow:
 
-\lstinputlisting[language=QHaskell,firstline=12,caption=Quantum teleportation]{teleport.qh}
+\lstinputlisting[language=QHaskell,firstline=12,caption=Annotated quantum teleportation program]{teleport.qh}
 
 \section{Discussion and Related Work}
 

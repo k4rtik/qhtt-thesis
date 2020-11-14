@@ -1,0 +1,10 @@
+teleport : Πq:qbit.{q =q |ψ⟩} b : qbit {b =q |ψ⟩}
+         = circ (q) -> do
+              (a, b) = bell00 ();
+              apply CX to (q, a);
+              apply H to q;
+              meas q;
+              meas a;
+              apply CX to (a, b);
+              apply CZ to (q, b);
+              b

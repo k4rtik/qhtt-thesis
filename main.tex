@@ -43,18 +43,16 @@
     stringstyle=\color{violet},
     literate=
         {√}{{$\surd$}}1
-        {>}{{$>$}}1 {<}{{$<$}}1
-        {\\\\}{{\char`\\\char`\\}}1
         {⇐}{{$\Leftarrow$}}1 {⇒}{{$\Rightarrow$}}2
         {->}{{$\rightarrow$}}2
-        {\ .}{{$\circ$}}2 {\ .\ }{{$\circ$}}2
         {|}{{$\vert$}}1 {⟩}{{$\rangle$}}1
         {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1
-        {∈}{{$\in$}}1 {Π}{{$\Pi$}}1 {∃}{{$\exists$}}1
+        {∈}{{$\in$}}1 {Π}{{$\Pi$}}2 {∃}{{$\exists$}}1
         {⊗}{{$\otimes$}}1 {⊕}{{$\oplus$}}1
         {⊤}{{$\top$}}2
         {=q}{{$=_q$}}2 {=c}{{$=_c$}}2
         {α}{{$\alpha$}}1 {β}{{$\beta$}}1
+        {ψ}{{$\psi$}}1
         {_i}{{$_i$}}1
         {\ .\ }{{$\cdot$}}1
         {β00}{{$\beta_{00}$}}2
@@ -68,7 +66,7 @@
 \title{\titlerunning}
 
 \author{
-Kartik Singhal
+\authorrunning
 \institute{University of Chicago}
 \email{\mailtodomain{ks@cs.uchicago.edu}}
 }
@@ -76,6 +74,10 @@ Kartik Singhal
 \begin{document}
 
 \maketitle
+
+\begin{abstract}
+    \blindtext
+\end{abstract}
 
 \thispagestyle{empty}
 
@@ -85,7 +87,7 @@ Kartik Singhal
 
 \lstlistoflistings
 
-\listoftables
+% \listoftables
 
 \clearpage
 
@@ -101,7 +103,7 @@ TODO:
 
 - Hoare logic and Hoare Type Theory
 
-- basics of quantum computing
+- basics of quantum computing (4 laws, superposition and entanglement, pure vs mixed states)
 
 - Quantum Hoare Logic
 
@@ -123,7 +125,7 @@ TODO:
 
 Our simplest example involves creation of a Bell (or EPR) state which is one of the four maximally entangled quantum states of two qubits. Specifically, we will create a circuit (\cref{fig:bell00}) to produce the first Bell state which we will write in the mnemonic notation as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$.
 
-\begin{figure}[b]
+\begin{figure}
     \centering
     \begin{tikzpicture}
         \node[scale=1.0] {
@@ -139,11 +141,31 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
 
 \lstinputlisting[language=QHaskell,lastline=7,caption=Generating Bell state]{bell00.qh}
 
-This corresponds to a suspended quantum computation (or a quantum circuit) that can be composed with other computations (circuits). The specification of the program is in its type (the first line). Here we see our first two propositions: the top, $\top$, predicate that is satisfied by any state space and the $X =_q \ket{\psi}$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\ket{\psi}$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
+This circuit corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns to two qubits as output. The specification of the program is in its type (the first line). Here we see our first two propositions: the top, $\top$, predicate that is satisfied by any state space and the $X =_q \ket{\psi}$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\ket{\psi}$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
 
 Here is how we can prove whether this program conforms to the given specification.
 
 \lstinputlisting[language=QHaskell,firstline=9,caption=Bell state program annotated with propositions]{bell00.qh}
+
+\subsubsection{Teleportation}
+Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum computation and the corresponding code follows:
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \node[scale=1.0] {
+            \begin{quantikz}
+                \lstick{$\ket{\psi}$} & \ctrl{1}  & \gate{H} & \meter{} & \cw & \cwbend{2} \\
+                \lstick[wires=2]{$\ket{\beta_{00}}$} & \targ{} & \qw & \meter{} & \cwbend{1} \\
+                \qw & \qw & \qw & \qw & \gate{X} & \gate{Z} \\
+            \end{quantikz}
+        };
+    \end{tikzpicture}
+    \caption{Quantum teleportation}
+    \label{fig:teleport}
+\end{figure}
+
+\lstinputlisting[language=QHaskell,lastline=10,caption=Quantum teleportation]{teleport.qh}
 
 \section{Discussion and Related Work}
 
@@ -153,6 +175,21 @@ Here is how we can prove whether this program conforms to the given specificatio
 
 \blindtext
 
+\section*{Acknowledgements}
+\blindtext
+
 \bibliographystyle{eptcsalpha}
+
+\clearpage
+
+\appendix
+
+\section{Metatheory}
+
+\blindtext
+
+\section{Uninteresting examples}
+
+\blindtext
 
 \end{document}

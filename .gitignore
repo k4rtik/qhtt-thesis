@@ -290,4 +290,6 @@ TSWLatexianTemp*
 *.out.make
 *.pag
 *.pdf
-
+*.lof.make
+*.lol.make
+*.toc.make

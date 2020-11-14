@@ -1,0 +1,17 @@
+cointoss : {⊤} b : bit {uniform(b)}
+         = circ () -> do
+              q = init 0;
+              apply H to q;
+              b = meas q;
+              b
+
+cointoss : {⊤} b : bit {uniform(b)}
+         = circ () -> do
+              -- ⊤
+              q = init 0;
+              -- q =q |0⟩
+              apply H to q;
+              -- q = 1/√2(|0⟩+|1⟩) ⇒ q = |+⟩
+              x = meas q;
+              -- class(x), e_x = |+⟩
+              x

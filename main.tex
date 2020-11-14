@@ -85,8 +85,8 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
     \begin{tikzpicture}
         \node[scale=1.0] {
             \begin{quantikz}
-                \lstick{$\ket{0}$} & \gate{H} & \ctrl{1} & \qw & \midstick[2,brackets=left]{$\ket{\beta_{00}}$} \\
-                \lstick{$\ket{0}$} & \qw      & \targ{}  & \qw & \\
+                \lstick{$\ket{0}$} & \gate{H} & \ctrl{1} & \qw \\
+                \lstick{$\ket{0}$} & \qw      & \targ{}  & \qw \\
             \end{quantikz}
         };
     \end{tikzpicture}

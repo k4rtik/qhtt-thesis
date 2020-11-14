@@ -19,7 +19,41 @@
 % From: https://tomhennigan.blogspot.com/2012/01/grouped-emails-in-latex-with-href-and.html
 \newcommand{\mailtodomain}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
 
-\include{preamble.tex}
+\usepackage{xcolor}
+\definecolor{dkgreen}{rgb}{0,0.35,0}
+
+\usepackage{listings}
+\lstloadlanguages{Haskell}
+\lstdefinelanguage{QHaskell}{
+	language     = Haskell,
+	morekeywords = {bool, qbit, U, C, meas, apply, to},
+}
+
+\lstset{
+	basicstyle=\small\ttfamily,
+	flexiblecolumns=false,
+	basewidth={0.5em,0.45em},
+	commentstyle=\color{dkgreen},
+	keywordstyle=\bfseries\color{blue},
+    stringstyle=\color{violet},
+    literate=
+        {√}{{$\surd$}}1
+        {>}{{$>$}}1 {<}{{$<$}}1 {λ}{{$\lambda$}}1
+        {\\\\}{{\char`\\\char`\\}}1
+        {⇐}{{$\Leftarrow$}}1 {⇒}{{$\Rightarrow$}}2
+        {\ .}{{$\circ$}}2 {\ .\ }{{$\circ$}}2
+        {|}{{$\vert$}}1 {⟩}{{$\rangle$}}1
+        {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1
+        {∈}{{$\in$}}1 {Π}{{$\Pi$}}1 {∃}{{$\exists$}}1
+        {⊗}{{$\otimes$}}1 {⊕}{{$\oplus$}}1
+        {⊤}{{$\top$}}2
+        {=q}{{$=_q$}}2 {=c}{{$=_c$}}2
+        {α}{{$\alpha$}}1 {β}{{$\beta$}}1
+        {_i}{{$_i$}}1
+        {\ .\ }{{$\cdot$}}1
+        {β00}{{$\beta_{00}$}}2
+}
+
 
 \title{Quantum Hoare Type Theory}
 

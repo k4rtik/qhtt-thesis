@@ -1,0 +1,100 @@
+alice : (q, a): qbit⊗qbit ->
+        QST (x, y): (bit⊗bit)
+            (requires {(a, e) = |β00⟩})
+            (ensures  {})
+alice = circ (q, a) -> do
+            apply CX to (q, a)
+            apply H to q
+            x <- meas q
+            y <- meas a
+            return (x, y)
+
+alice : (q, a): qbit⊗qbit ->
+        QST (x, y): (bit⊗bit)
+            (requires {(a, e) = |β00⟩})
+            (ensures  {})
+alice = circ (q, a) -> do
+            -- q =q α|0⟩+β|1⟩, (a, e) = |β00⟩}
+            -- ⇒ (q, a, e) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|00⟩+|11⟩))
+            apply CX to (q, a)
+            -- (CX on (q, a)) . (q =q |ψ⟩, (a, e) = |β00⟩)
+            -- ⇒ (q, a, e) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|10⟩+|01⟩))
+            apply H to q
+            -- (H on q) . ((q, a, e) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|10⟩+|01⟩)))
+            -- ⇒ (q, a, e) =q 1/2(α(|0⟩+|1⟩)(|00⟩+|11⟩) + β(|0⟩-|1⟩)(|10⟩+|01⟩))
+            -- ⇒ (q, a, e) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
+            --                   + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
+            x <- meas q
+            -- class(x) ∧
+            -- (e_x, a, e) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
+            --                 + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
+            y <- meas a
+            -- class(x) ∧ class(y) ∧
+            -- (e_x, e_y, e) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
+            --                  + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
+            return (x, y)
+
+bob : (x, y, b): bit⊗bit⊗qbit ->
+      QST q: qbit
+          (requires {})
+          (ensures  {})
+bob = circ (x, y, b) -> do
+          if y then apply X to b else ()
+          if x then apply Z to b else ()
+          return b
+
+bob : (x, y, b): bit⊗bit⊗qbit ->
+      QST q: qbit
+          (requires {})
+          (ensures  {})
+bob = circ (x, y, b) -> do
+          -- (e_x, e_y, b) = |ψ⟩
+          if y then apply X to b else ()
+          --   y =c 1, (X on b).((e_x, e_y, b) = |ψ⟩)
+          -- ∨ y =c 0, (e_x, e_y, b) = |ψ⟩
+          if x then apply Z to b else ()
+          --   x =c 1, y =c 1, (Z;X on b).((e_x, e_y, b) = |ψ⟩)
+          -- ∨ x =c 1, y =c 0, (Z on b).((e_x, e_y, b) = |ψ⟩)
+          -- ∨ x =c 0, y =c 1, (X on b).((e_x, e_y, b) = |ψ⟩)
+          -- ∨ x =c 0, y =c 0, (e_x, e_y, b) = |ψ⟩
+          return b
+
+teleport : q: qbit -> QST b: qbit
+                          (requires {q =q |ψ⟩})
+                          (ensures  {b =q |ψ⟩})
+teleport = circ (q) -> do
+              (a, b) <- bell00 ()
+              x, y <- alice (q, a)
+              b <- bob (x, y, b)
+              return b
+
+teleport : q: qbit -> QST b: qbit
+                          (requires {q =q |ψ⟩})
+                          (ensures  {b =q |ψ⟩})
+teleport = circ (q) -> do
+              -- q =q |ψ⟩
+              -- ⇒ q =q α|0⟩+β|1⟩
+              (a, b) <- bell00 ()
+              -- q =q |ψ⟩, (a, b) = |β00⟩
+              -- ⇒ (q, a, b) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|00⟩+|11⟩))
+              x, y <- alice (q, a)
+              -- class(x) ∧ class(y) ∧
+              -- (e_q, e_a, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
+              --                  + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
+              b <- bob (x, y, b)
+              -- Merge:
+              -- class(x) ∧ class(y) ∧
+              -- (e_q, e_a, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
+              --                  + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
+              -- and
+              --   x =c 1, y =c 1, (Z;X on b).((e_x, e_y, b) = |ψ⟩)
+              -- ∨ x =c 1, y =c 0, (Z on b).((e_x, e_y, b) = |ψ⟩)
+              -- ∨ x =c 0, y =c 1, (X on b).((e_x, e_y, b) = |ψ⟩)
+              -- ∨ x =c 0, y =c 0, (e_x, e_y, b) = |ψ⟩
+              -- ⇒
+              -- class(x) ∧ class(y) ∧
+              -- (e_q, e_a, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|0⟩+β|1⟩)
+              --                  + |10⟩(α|0⟩+β|1⟩) + |11⟩(α|0⟩+β|1⟩))
+              -- ⇒ (e_q, e_a) =q 1/2(|00⟩+|01⟩+|10⟩+|11⟩), b =q α|0⟩+β|1⟩
+              return b
+              -- b =q α|0⟩+β|1⟩ ⇒ b =q |ψ⟩

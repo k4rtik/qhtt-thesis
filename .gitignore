@@ -293,3 +293,6 @@ TSWLatexianTemp*
 *.lof.make
 *.lol.make
 *.toc.make
+*.bbl.cookie
+*.pdf.1st.make
+*.run.cookie

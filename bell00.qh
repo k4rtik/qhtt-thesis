@@ -1,4 +1,4 @@
-bell00 : {⊤} (a, b) : (qbit ⊗ qbit) {(a,b) =q |β00⟩}
+bell00 : {⊤} (a, b) : (qbit⊗qbit) {(a,b) =q |β00⟩}
        = circ () -> do
             qa = init 0;
             apply H to qa;
@@ -6,7 +6,7 @@ bell00 : {⊤} (a, b) : (qbit ⊗ qbit) {(a,b) =q |β00⟩}
             apply CX to (qa, qb);
             (qa, qb)
 
-bell00 : {⊤} (a, b) : (qbit ⊗ qbit) {(a,b) =q |β00⟩}
+bell00 : {⊤} (a, b) : (qbit⊗qbit) {(a,b) =q |β00⟩}
        = circ () -> do
             -- ⊤
             qa = init 0;

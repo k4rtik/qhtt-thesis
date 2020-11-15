@@ -49,7 +49,7 @@
         {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1
         {∈}{{$\in$}}1 {Π}{{$\Pi$}}2
         {∃}{{$\exists$}}2 {∀}{{$\forall$}}2
-        {⊗}{{$\otimes$}}1 {⊕}{{$\oplus$}}1
+        {⊗}{{$\otimes$}}2 {⊕}{{$\oplus$}}2
         {⊤}{{$\top$}}2
         {=q}{{$=_q$}}2 {=c}{{$=_c$}}2
         {α}{{$\alpha$}}1 {β}{{$\beta$}}1
@@ -57,6 +57,7 @@
         {_i}{{$_i$}}1 {_x}{{$_x$}}1 {_y}{{$_y$}}1
         {\ .\ }{{$\cdot$}}1
         {β00}{{$\beta_{00}$}}2
+        {==}{{$=$}}1 {!=}{{$\neq$}}1
 }
 
 \usepackage{blindtext}
@@ -186,6 +187,26 @@ Here we write a program along with its verification steps which produces a unifo
 \lstinputlisting[language=QHaskell,firstline=8,caption=Fair coin toss]{cointoss.qh}
 
 In this program we see the use of an unentangled ghost variable ($u_x$) at line 8 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
+
+\subsubsection{Deutsch's algorithm}
+Our final example demonstrates that our system works in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation.
+
+\begin{figure}[b]
+    \centering
+    \begin{tikzpicture}
+        \node[scale=1.0] {
+            \begin{quantikz}
+                \lstick{$\ket{0}$} & \gate{H} & \gate[wires=2][1.7cm]{U_f}\gateinput{$x$}
+                \gateoutput{$x$} & \gate{H} & \meter{} \\
+                \lstick{$\ket{1}$} & \gate{H} & \gateinput{$y$}\gateoutput{$y\oplus f(x)$} & \qw & \qw \\
+            \end{quantikz}
+        };
+    \end{tikzpicture}
+    \caption{Quantum circuit for Deutsch's algorithm}
+    \label{fig:deutsch}
+\end{figure}
+
+\lstinputlisting[language=QHaskell,caption=Deutsch's algorithm]{deutsch.qh}
 
 \section{Discussion and related work}
 

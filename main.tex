@@ -147,7 +147,8 @@ Here is how we can prove whether this program conforms to the given specificatio
 
 \lstinputlisting[language=QHaskell,firstline=9,caption=Bell state program annotated with propositions]{bell00.qh}
 
-\subsubsection{Teleportation}
+\subsubsection{Quantum teleportation}
+\label{sec:teleport}
 Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum computation and the corresponding code follows:
 
 \clearpage
@@ -185,11 +186,11 @@ Here we write a program along with its verification steps which produces a unifo
 
 In this program we see the use of an unentangled ghost variable ($u_x$) at line 8 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
 
-\section{Discussion and Related Work}
+\section{Discussion and related work}
 
-\blindtext
+In \cref{sec:teleport}, when we presented code for quantum teleportation, it is not apparent from its type (or specification) whether the quantum variables q (input) and b (output) are different. We can improve the specification by requiring the Bell state, $\ket{\beta_{00}}$, to be part of the input, but this requires changing the implementation as well. Another solution could be to specify that q is discarded in the postcondition (equivalent to saying that it gets consumed). This latter solution, although not currently expressible in our system, could be better. Even better would be to have a way to specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
 
-\section{Conclusion and Perspectives}
+\section{Conclusion and perspectives}
 
 \blindtext
 
@@ -204,10 +205,6 @@ In this program we see the use of an unentangled ghost variable ($u_x$) at line 
 \appendix
 
 \section{Metatheory}
-
-\blindtext
-
-\section{Uninteresting examples}
 
 \blindtext
 

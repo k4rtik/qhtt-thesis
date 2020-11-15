@@ -1,20 +1,20 @@
 bell00 : {⊤} (a, b) : (qbit⊗qbit) {(a,b) =q |β00⟩}
        = circ () -> do
-            qa = init 0;
-            apply H to qa;
-            qb = init 0;
-            apply CX to (qa, qb);
+            qa = init 0
+            apply H to qa
+            qb = init 0
+            apply CX to (qa, qb)
             (qa, qb)
 
 bell00 : {⊤} (a, b) : (qbit⊗qbit) {(a,b) =q |β00⟩}
        = circ () -> do
             -- ⊤
-            qa = init 0;
+            qa = init 0
             -- qa =q |0⟩
-            apply H to qa;
+            apply H to qa
             -- (H on qa).(qa =q |0⟩) ⇒ qa =q |+⟩
-            qb = init 0;
+            qb = init 0
             -- qa =q |+⟩, qb =q |0⟩
-            apply CX to (qa, qb);
+            apply CX to (qa, qb)
             -- (CX on (qa, qb)).(qa =q |+⟩, qb =q |0⟩) ⇒ (a,b) =q |β00⟩
             (qa, qb)

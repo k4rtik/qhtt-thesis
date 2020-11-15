@@ -3,5 +3,5 @@ stateFlip : Πq:qbit.∀ψ.
                r:qbit
             {r =q α|1⟩+β|0⟩}
           = circ (q) -> do
-               apply X to q;
+               apply X to q
                q

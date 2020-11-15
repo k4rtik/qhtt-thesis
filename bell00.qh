@@ -1,4 +1,6 @@
-bell00 : {⊤} (a, b) : (qbit⊗qbit) {(a,b) =q |β00⟩}
+bell00 : () -> QST (a, b): (qbit⊗qbit)
+                   (requires {⊤})
+                   (ensures  {(a,b) =q |β00⟩})
 bell00 = circ () -> do
             qa <- init 0
             apply H to qa
@@ -6,7 +8,9 @@ bell00 = circ () -> do
             apply CX to (qa, qb)
             return (qa, qb)
 
-bell00 : {⊤} (a, b) : (qbit⊗qbit) {(a,b) =q |β00⟩}
+bell00 : () -> QST (a, b): (qbit⊗qbit)
+                   (requires {⊤})
+                   (ensures  {(a,b) =q |β00⟩})
 bell00 = circ () -> do
             -- ⊤
             qa <- init 0

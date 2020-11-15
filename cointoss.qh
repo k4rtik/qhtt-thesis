@@ -1,11 +1,15 @@
-cointoss : {⊤} b : bit {uniform(b)}
+cointoss : () -> QST b: bit
+                     (requires {⊤})
+                     (ensures  {uniform(b)})
 cointoss = circ () -> do
               q <- init 0
               apply H to q
               b <- meas q
               return b
 
-cointoss : {⊤} b : bit {uniform(b)}
+cointoss : () -> QST b: bit
+                     (requires {⊤})
+                     (ensures  {uniform(b)})
 cointoss = circ () -> do
               -- ⊤
               q <- init 0

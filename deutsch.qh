@@ -5,12 +5,12 @@ U_f : Πa:qbit,b:qbit.∃f:(bit -> bit),x:bit,y:bit.
 
 deutsch : ΠU_f.{⊤} r:bit { (r =c 0 ⇒ f(0) == f(1))
                            ∧ (r =c 1 ⇒ f(0) != f(1)) }
-        = circ (U_f) -> do
-             a = init 0
-             b = init 1
+deutsch = circ (U_f) -> do
+             a <- init 0
+             b <- init 1
              apply H to a
              apply H to b
-             (c, d) = U_f (a, b)
+             (c, d) <- U_f (a, b)
              apply H to c
-             r = meas c
-             r
+             r <- meas c
+             return r

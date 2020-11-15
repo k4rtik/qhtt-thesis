@@ -1,19 +1,19 @@
 teleport : Πq:qbit.∀ψ.{q =q |ψ⟩} b : qbit {b =q |ψ⟩}
-         = circ (q) -> do
-              (a, b) = bell00 ()
+teleport = circ (q) -> do
+              (a, b) <- bell00 ()
               apply CX to (q, a)
               apply H to q
-              x = meas q
-              y = meas a
+              x <- meas q
+              y <- meas a
               apply CX to (y, b)
               apply CZ to (x, b)
-              b
+              return b
 
 teleport : Πq:qbit.∀ψ.{q =q |ψ⟩} b : qbit {b =q |ψ⟩}
-         = circ (q) -> do
+teleport = circ (q) -> do
               -- q =q |ψ⟩
               -- ⇒ q =q α|0⟩+β|1⟩
-              (a, b) = bell00 ()
+              (a, b) <- bell00 ()
               -- q =q |ψ⟩, (a, b) = |β00⟩
               -- ⇒ (q, a, b) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|00⟩+|11⟩))
               apply CX to (q, a)
@@ -24,11 +24,11 @@ teleport : Πq:qbit.∀ψ.{q =q |ψ⟩} b : qbit {b =q |ψ⟩}
               -- ⇒ (q, a, b) =q 1/2(α(|0⟩+|1⟩)(|00⟩+|11⟩) + β(|0⟩-|1⟩)(|10⟩+|01⟩))
               -- ⇒ (q, a, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
               --                   + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
-              x = meas q
+              x <- meas q
               -- class(x) ∧
               -- (e_x, a, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
               --                 + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
-              y = meas a
+              y <- meas a
               -- class(x) ∧ class(y) ∧
               -- (e_x, e_y, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
               --                  + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
@@ -41,5 +41,5 @@ teleport : Πq:qbit.∀ψ.{q =q |ψ⟩} b : qbit {b =q |ψ⟩}
               -- (e_x, e_y, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|0⟩+β|1⟩)
               --                  + |10⟩(α|0⟩+β|1⟩) + |11⟩(α|0⟩+β|1⟩))
               -- ⇒ (e_x, e_y) =q 1/2(|00⟩+|01⟩+|10⟩+|11⟩), b =q α|0⟩+β|1⟩
-              b
+              return b
               -- b =q α|0⟩+β|1⟩ ⇒ b =q |ψ⟩

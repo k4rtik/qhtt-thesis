@@ -175,11 +175,15 @@ Verification steps follow:
 
 \lstinputlisting[language=QHaskell,firstline=12,caption=Annotated quantum teleportation program]{teleport.qh}
 
+At line 16, something interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either 0 or 1 based on the distribution of either outcomes. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded with the measurement operation) in the subsystem under consideration with a ghost variable. If the quantum variable was previously entangled, it is replaced with a entangled ghost ($e$) and if it was unentangled with an unentangled ghost ($u$). Further, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So above, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 20-22, $e_y$ is introduced corresponding to $y$. This helps us in the following two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\ket{\psi}$ at the end.
+
 \subsubsection{Fair coin toss}
 
 Here we write a program along with its verification steps which produces a uniformly random bit:
 
-\lstinputlisting[language=QHaskell,caption=Fair coin toss]{cointoss.qh}
+\lstinputlisting[language=QHaskell,firstline=8,caption=Fair coin toss]{cointoss.qh}
+
+In this program we see the use of an unentangled ghost variable ($u_x$) at line 8 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
 
 \section{Discussion and Related Work}
 

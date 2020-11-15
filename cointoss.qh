@@ -13,5 +13,5 @@ cointoss : {⊤} b : bit {uniform(b)}
               apply H to q;
               -- q = 1/√2(|0⟩+|1⟩) ⇒ q = |+⟩
               x = meas q;
-              -- class(x), e_x = |+⟩
+              -- class(x), u_x = |+⟩
               x

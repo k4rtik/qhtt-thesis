@@ -188,26 +188,6 @@ Here we write a program along with its verification steps which produces a unifo
 
 In this program we see the use of an unentangled ghost variable ($u_x$) at line 8 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
 
-\subsubsection{Deutsch's algorithm}
-Our final example demonstrates that our system works in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation.
-
-\begin{figure}[b]
-    \centering
-    \begin{tikzpicture}
-        \node[scale=1.0] {
-            \begin{quantikz}
-                \lstick{$\ket{0}$} & \gate{H} & \gate[wires=2][1.7cm]{U_f}\gateinput{$x$}
-                \gateoutput{$x$} & \gate{H} & \meter{} \\
-                \lstick{$\ket{1}$} & \gate{H} & \gateinput{$y$}\gateoutput{$y\oplus f(x)$} & \qw & \qw \\
-            \end{quantikz}
-        };
-    \end{tikzpicture}
-    \caption{Quantum circuit for Deutsch's algorithm}
-    \label{fig:deutsch}
-\end{figure}
-
-\lstinputlisting[language=QHaskell,caption=Deutsch's algorithm]{deutsch.qh}
-
 \section{Discussion and related work}
 
 In \cref{sec:teleport}, when we presented code for quantum teleportation, it is not apparent from its type (or specification) whether the quantum variables q (input) and b (output) are different. We can improve the specification by requiring the Bell state, $\ket{\beta_{00}}$, to be part of the input, but this requires changing the implementation as well. Another solution could be to specify that q is discarded in the postcondition (equivalent to saying that it gets consumed). This latter solution, although not currently expressible in our system, could be better. Even better would be to have a way to specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
@@ -229,5 +209,31 @@ In \cref{sec:teleport}, when we presented code for quantum teleportation, it is 
 \section{Metatheory}
 
 \blindtext
+
+\section{Other examples}
+
+\subsection{Deutsch's algorithm}
+This example demonstrates that our system works in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation.
+
+\begin{figure}[b]
+    \centering
+    \begin{tikzpicture}
+        \node[scale=1.0] {
+            \begin{quantikz}
+                \lstick{$\ket{0}$} & \gate{H} & \gate[wires=2][1.7cm]{U_f}\gateinput{$x$}
+                \gateoutput{$x$} & \gate{H} & \meter{} \\
+                \lstick{$\ket{1}$} & \gate{H} & \gateinput{$y$}\gateoutput{$y\oplus f(x)$} & \qw & \qw \\
+            \end{quantikz}
+        };
+    \end{tikzpicture}
+    \caption{Quantum circuit for Deutsch's algorithm}
+    \label{fig:deutsch}
+\end{figure}
+
+\lstinputlisting[language=QHaskell,caption=Deutsch's algorithm]{deutsch.qh}
+
+\subsection{Trivial examples}
+
+\lstinputlisting[language=QHaskell,caption=Several simple examples from Q\# Quantum Katas]{qsharp.qh}
 
 \end{document}

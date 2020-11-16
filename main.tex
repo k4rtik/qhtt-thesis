@@ -65,6 +65,14 @@
 \def\titlerunning{Quantum Hoare Type Theory}
 \def\authorrunning{Kartik Singhal}
 
+
+\hypersetup{
+    pdftitle={\titlerunning},
+    pdfsubject={Computer Science},
+    pdfauthor={\authorrunning},
+    pdfkeywords={General programming languages, Quantum computation, Functional languages, Program specifications, Pre- and post-conditions, Type theory, Hoare logic}
+}
+
 \title{\titlerunning}
 
 \author{
@@ -222,7 +230,7 @@ In \cref{sec:teleport}, when we presented code for quantum teleportation, it is 
 
 \section{Other examples}
 
-\subsection{Modular teleportation with classical branching}
+\subsection{Modular teleportation with classical control}
 
 Here is another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with an annotated version with verification steps to ease readability. We do not have any information about the distribution of outcomes for the given bit (lines 42-43) and hence cannot say anything worthwhile in the specification. The max we can do is consider all the outcomes as we end up doing in the inferred propositions in lines 53-59. But this leads to an awkward requirement of an unexplored merge operation when bob's circuit is called (lines 85-98).
 

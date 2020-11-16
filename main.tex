@@ -222,14 +222,14 @@ In \cref{sec:teleport}, when we presented code for quantum teleportation, it is 
 
 \section{Other examples}
 
-\subsection{Teleportation with classical branching}
+\subsection{Modular teleportation with classical branching}
 
 Here is another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with an annotated version with verification steps to ease readability. We do not have any information about the distribution of outcomes for the given bit (lines 42-43) and hence cannot say anything worthwhile in the specification. The max we can do is consider all the outcomes as we end up doing in the inferred propositions in lines 53-59. But this leads to an awkward requirement of an unexplored merge operation when bob's circuit is called (lines 85-98).
 
-\lstinputlisting[language=QHaskell,caption=Teleport with if then else]{teleport2.qh}
+\lstinputlisting[language=QHaskell,caption=Modular teleport with if then else]{teleport2.qh}
 
 \subsection{Deutsch's algorithm}
-This example demonstrates that our system works in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation.
+This example demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone. The final consequence still requires some manual intervention and may not be fully inferrable by the system.
 
 \begin{figure}
     \centering

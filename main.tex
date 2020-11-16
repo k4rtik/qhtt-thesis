@@ -113,25 +113,78 @@ What can we from the programming languages community offer that can help the upc
 
 In classical software development, the use of strong static type systems has been proven to be hugely beneficial in avoiding large classes of bugs before running the programs. Recent mainstream languages such as Rust even manage to statically prevent memory safety bugs that have been notorious for being the root causes of a large swath of security vulnerabilities found in production software written in unsafe languages such as C. There is a similar need for innovation in type systems for quantum programming languages.
 
-Recent academic languages such as QWire and Silq that employ a linear type system to statically enforce the no-cloning theorem of quantum mechanics show promise in the validity of statically preventing bugs in the quantum domain. However, semantic properties about the quantum state such as whether a qubit is in superposition or whether it is entangled with some other qubit have not been tackled with the help of types. Further, assertions in the form of pre and post-conditions around small pieces of code have shown the most promise in the quantum domain. It seems fair as we humans can only hold so much information about the quantum state in our brains that it makes sense to be able to reason about pieces of quantum code in a modular manner.
+Recent academic languages such as QWire and Silq that employ a linear type system to statically enforce the no-cloning theorem of quantum mechanics show promise in the validity of statically preventing bugs in the quantum domain. However, semantic properties about the quantum state such as whether a qubit is in superposition or whether it is entangled with some other qubit have not been tackled with the help of types. Further, assertions in the form of pre-and post-conditions around small pieces of code have shown the most promise in the quantum domain. It seems fair as we humans can only hold so much information about the quantum state in our brains that it makes sense to be able to reason about pieces of quantum code in a modular manner.
 
-The most common approach to reason with pre and post-conditions in the classical domain is to use variations of Floyd-Hoare logic that utilize specification triples of the form ${P} c {Q}$, where $c$ is the program to be executed, $P$ a proposition on the initial state associated with the program (pre-condition) and, $Q$ that on the final state (post-condition). The intuitive reading of such as triple is that if the pre-condition holds true on the program state before executing the program, then if the program terminates, the post-condition must hold true. These triples along with a set of axioms and inference rules for composing them together have proven to be quite effective in proving correctness of classical programs over the last several decades. It is no surprise that similar logics have appeared in the quantum computing domain as well.
+The most common approach to reason with pre-and post-conditions in the classical domain is to use variations of Floyd-Hoare logic that utilize specification triples of the form ${P} c {Q}$, where $c$ is the program to be executed, $P$ a proposition on the initial state associated with the program (pre-condition) and, $Q$ that on the final state (post-condition). The intuitive reading of such as triple is that if the pre-condition holds true on the program state before executing the program, then if the program terminates, the post-condition must hold true. These triples along with a set of axioms and inference rules for composing them together have proven to be quite effective in proving correctness of classical state-manipulating (imperative) programs over the last several decades. It is no surprise that similar logics have appeared in the quantum computing domain as well.
 
-Hoare Type Theory (HTT) incorporates Hoare-style specifications into types that can then be used to statically enforce desired properties about the program state. This is made possible with the use of dependent types that can depend on values (instead of just another types) and add immense expressive power to a programming language. In this work, we consider the problem of reasoning about quantum programs in HTT and present our Quantum Hoare Type Theory (QHTT).
+Hoare Type Theory (HTT) incorporates Hoare-style specifications into types that can then be used to statically enforce desired properties about the program state. This is made possible with the use of dependent types that can depend on values (instead of just another types) and add immense expressive power to a programming language. In effect, we obtain a functional programming language in which imperative code is encapsulated within a computation type which is indexed by the type of the result of the computation, and its specification in the form of pre- and post-conditions. In this work, we consider the problem of reasoning about quantum programs in HTT and present our Quantum Hoare Type Theory (QHTT).
 
-To achieve this, we replace the classical state-manipulating primitive commands from the original HTT with primitive quantum-specific commands and make use of a novel approach by Unruh \cite{unruh2019} to employ ghost variables for reasoning locally about quantum state in our predicate logic.
+To achieve this, we replace the classical primitive commands from the original HTT with quantum-specific primitive commands and make use of a novel approach by Unruh \cite{unruh2019} and employ ghost variables for reasoning locally about quantum state in our quantum proposition logic.
+
+We limit our presentation to quantum programs that do not involve iteration. This is not to suggest that iteration is not supported in the system, only that we are yet to study it.
 
 Our investigation suggests that QHTT has the potential to be a unified system for programming, specifying, and reasoning about quantum programs.
 
 \section{Background}
 
-TODO:
+\subsection{Floyd-Hoare logic}
+In the late 1960's, Robert Floyd and Tony Hoare came up with a set of axioms and rules of inference that can be used to prove properties of computer programs. This approach is commonly just known as Hoare logic as Hoare was the first to apply it to text-based programs, while Floyd had applied it to flowcharts. Here we present the axioms and rules of Hoare logic in a natural deduction style.
 
-- Hoare logic and Hoare Type Theory
+As noted above, this technique involves the use of Hoare triples of the form:
+\begin{mathpar}
+    \{P\}\ c\ \{Q\}
+\end{mathpar}
+which can be interpreted as ``if the pre-condition $P$ is true before the execution of the program $c$, then the post-condition $Q$ will be true on its completion.''
+
+In the classical setting, the most important command is an assignment statement. Hoare logic states the following axiom for assignment:
+
+\begin{mathpar}
+    \inferrule
+    { }
+    {\{P[x \rightarrow e]\}\ x := e\ \{P\}}
+    \quad\textsc{Axiom of Assignment}
+\end{mathpar}
+
+where $x$ is an assignable (variable) and $e$ is an expression. The meaning of this fact is that the pre-condition is obtained from the post-condition $P$ by substituting $e$ for all free occurrences of $x$ in $P$.
+
+Further, there are rules of inference that are required to derive new theorems from one or more axioms or theorems already proved. We first look at the two ``rules of consequence'':
+
+\begin{mathpar}
+    \inferrule
+    {\{P\}\ c\ \{Q\} \\ Q \Rightarrow R}
+    {\{P\}\ c\ \{R\}}
+    \quad\textsc{Weakening the post-condition}
+
+    \inferrule
+    {P \Rightarrow Q \\ \{Q\}\ c\ \{R\}}
+    {\{P\}\ c\ \{R\}}
+    \quad\textsc{Strengthening the pre-condition}
+\end{mathpar}
+
+The first rule says that if the execution of a program $c$ ensures the truth of post-condition $Q$, then it also ensures the truth of any proposition $R$ logically implied by $Q$. This effectively lets us weaken the post-condition.
+
+In the other direction, we can strengthen the pre-condition using the second rule which says that if $Q$ is a pre-condition of program $c$, then so is any other proposition $P$ that logically implies $Q$.
+
+The next rule lets us compose sequential programs together:
+\begin{mathpar}
+    \inferrule
+    {\{P\}\ c\ \{Q\} \\ \{Q\}\ d\ \{R\}}
+    {\{P\}\ c\ \textbf{;}\ d\ \{R\}}
+    \quad\textsc{Rule of Composition}
+\end{mathpar}
+where semicolon denotes sequential composition of programs. The rule of composition states that if the post-condition of the first program is identical to the pre-condition of the second program under which it satisfies its post-condition $R$, then the composition of the programs will satisfy $R$, given that the first program satisfies its pre-condition $P$.
+
+These are the most important rules that we will need to understand the formal system presented below. We do not present other rules such as that for iteration (which we will not need) and others that can be derived. We also note that since we do not have an iteration construct in our system, we do not run into the issue of reasoning about termination of programs. In other words, all programs presented in our system will be terminating.
+
+\subsection{Hoare Type Theory}
+
+
+\subsection{Quantum Computing}
+TODO:
 
 - basics of quantum computing (4 laws, superposition and entanglement, pure vs mixed states)
 
-- Quantum Hoare Logic
+\subsection{Quantum Hoare logic with ghost variables}
 
 - define the meaning of subspace/projector-based predicates/propositions.
 
@@ -210,7 +263,7 @@ In this program we see the use of an unentangled ghost variable, $u_x$, at line 
 
 \section{Discussion and related work}
 
-In \cref{sec:teleport}, when we presented code for quantum teleportation, it is not apparent from its type (or specification) whether the quantum variables q (input) and b (output) are different. We can improve the specification by requiring the Bell state, $\ket{\beta_{00}}$, to be part of the input, but this requires changing the implementation as well. Another solution could be to specify that q is discarded in the postcondition (equivalent to saying that it gets consumed). This latter solution, although not currently expressible in our system, could be better. Even better would be to have a way to specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
+In \cref{sec:teleport}, when we presented code for quantum teleportation, it is not apparent from its type (or specification) whether the quantum variables q (input) and b (output) are different. We can improve the specification by requiring the Bell state, $\ket{\beta_{00}}$, to be part of the input, but this requires changing the implementation as well. Another solution could be to specify that q is discarded in the post-condition (equivalent to saying that it gets consumed). This latter solution, although not currently expressible in our system, could be better. Even better would be to have a way to specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
 
 \section{Conclusion and perspectives}
 

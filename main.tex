@@ -137,18 +137,15 @@ As noted above, this technique involves the use of Hoare triples of the form:
 which can be interpreted as ``if the pre-condition $P$ is true before the execution of the program $c$, then the post-condition $Q$ will be true on its completion.''
 
 In the classical setting, the most important command is an assignment statement. Hoare logic states the following axiom for assignment:
-
 \begin{mathpar}
     \inferrule
     { }
     {\{P[x \rightarrow e]\}\ x := e\ \{P\}}
     \quad\textsc{Axiom of Assignment}
 \end{mathpar}
-
 where $x$ is an assignable (variable) and $e$ is an expression. The meaning of this fact is that the pre-condition is obtained from the post-condition $P$ by substituting $e$ for all free occurrences of $x$ in $P$.
 
 Further, there are rules of inference that are required to derive new theorems from one or more axioms or theorems already proved. We first look at the two ``rules of consequence'':
-
 \begin{mathpar}
     \inferrule
     {\{P\}\ c\ \{Q\} \\ Q \Rightarrow R}
@@ -160,7 +157,6 @@ Further, there are rules of inference that are required to derive new theorems f
     {\{P\}\ c\ \{R\}}
     \quad\textsc{Strengthening the pre-condition}
 \end{mathpar}
-
 The first rule says that if the execution of a program $c$ ensures the truth of post-condition $Q$, then it also ensures the truth of any proposition $R$ logically implied by $Q$. This effectively lets us weaken the post-condition.
 
 In the other direction, we can strengthen the pre-condition using the second rule which says that if $Q$ is a pre-condition of program $c$, then so is any other proposition $P$ that logically implies $Q$.
@@ -178,6 +174,12 @@ These are the most important rules that we will need to understand the formal sy
 
 \subsection{Hoare Type Theory}
 
+A type theory is a formal system of rewriting in which each term has a type, notated as $t:A$ for a term $t$ and a type $A$. A type theory that admits dependent types can be called a dependent type theory. Hoare Type Theory or HTT is a specific dependent type theory that introduces a type constructor called a ``Hoare type'' which isolates effectful programs from the remaining functional core language. In its most basic form, a Hoare type is written as:
+\begin{mathpar}
+    \{P\}x:A\{Q\}
+\end{mathpar}
+
+ where $P$ and $Q$ are pre- and post-conditions and $x:A$ is the return value, thus incorporating the specification methodology of Hoare logic into types. A Hoare type can also be seen as a refinement of the concept of a ``monad'' that are common in functional programming and are similarly used to isolate effects. The main addition is that such a ``Hoare monad'' is not only indexed by the the type of computation but also with the pre- and post-conditions that must be satisfied by the given computation.
 
 \subsection{Quantum Computing}
 TODO:

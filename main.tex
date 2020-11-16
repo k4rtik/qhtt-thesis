@@ -91,13 +91,29 @@
 
 % \listoftables
 
-\clearpage
-
 \pagenumbering{arabic}
 
 \section{Introduction}
 
-\blindtext
+Quantum computing is fast becoming a reality over the last couple of years with the advent of real machines as recent breakthroughs such as Google's recent demonstration of the so called ``quantum supremacy'' shows. With advances in hardware, there is similar acceleration in the development of software for quantum machines which in turn requires development of special-purpose programming languages. Several efforts in this direction both from academia and industry have recently led to a number of programming languages aimed at quantum computing such as Q\#, Quipper, Scaffold, and Silq.
+
+There is also a sudden need to prepare and train the upcoming generation of quantum programmers who sometimes have little to no previous exposure to the fundamental concepts in quantum computation. If we were to put ourselves in the position of a beginner to quantum programming, we may start by learning basic concepts such as what is a qubit, what does it mean for a qubit to be a superposition of 0 and 1, and the most perplexing of all: entanglement. We may then try to write some simple programs in a suitable quantum programming language to aid our understanding. We may even be able to run some of these programs on simulators and even on real machines. But we will make mistakes while writing these programs and sometimes those mistakes may be apparent from the output, a lot of the times (as a beginner) they may be not. What can we do?
+
+A common method to test our assumptions while programming in the classical realm is to write assertions about what we believe to be the truth at a point in the program. These assertions are usually dynamic in nature, meaning they are only tested while running the program and involve a cycle of writing, running, debugging and rerunning the program. While this may be a suitable approach in classical computing, it is quite wasteful of the limited quantum resources if we were to apply it to quantum programming. Further, this approach is impossible to use if the number of qubits is just over 50 or so as we hit the limits of both current quantum machines and classical simulation. Yet, there have been a lot of recent proposals to use runtime assertions for debugging quantum programs.
+
+What can we from the programming languages community offer that can help the upcoming workforce of quantum programers avoid mistakes in their programs?
+
+In classical software development, the use of strong static type systems has been proven to be hugely beneficial in avoiding large classes of bugs before running the programs. Recent mainstream languages such as Rust even manage to statically prevent memory safety bugs that have been notorious for being the root causes of a large swath of security vulnerabilities found in production software written in unsafe languages such as C. There is a similar need for innovation in type systems for quantum programming languages.
+
+Recent academic languages such as QWire and Silq that employ a linear type system to statically enforce the no-cloning theorem of quantum mechanics show promise in the validity of statically preventing bugs in the quantum domain. However, semantic properties about the quantum state such as whether a qubit is in superposition or whether it is entangled with some other qubit have not been tackled with the help of types. Further, assertions in the form of pre and post-conditions around small pieces of code have shown the most promise in the quantum domain. It seems fair as we humans can only hold so much information about the quantum state in our brains that it makes sense to be able to reason about pieces of quantum code in a modular manner.
+
+The most common approach to reason with pre and post-conditions in the classical domain is to use variations of Floyd-Hoare logic that utilize specification triples of the form ${P} c {Q}$, where $c$ is the program to be executed, $P$ a proposition on the initial state associated with the program (pre-condition) and, $Q$ that on the final state (post-condition). The intuitive reading of such as triple is that if the pre-condition holds true on the program state before executing the program, then if the program terminates, the post-condition must hold true. These triples along with a set of axioms and inference rules for composing them together have proven to be quite effective in proving correctness of classical programs over the last several decades. It is no surprise that similar logics have appeared in the quantum computing domain as well.
+
+Hoare Type Theory (HTT) incorporates Hoare-style specifications into types that can then be used to statically enforce desired properties about the program state. This is made possible with the use of dependent types that can depend on values (instead of just another types) and add immense expressive power to a programming language. In this work, we consider the problem of reasoning about quantum programs in HTT and present our Quantum Hoare Type Theory (QHTT).
+
+To achieve this, we replace the classical state-manipulating primitive commands from the original HTT with primitive quantum-specific commands and make use of a novel approach by Unruh \cite{unruh2019} to employ ghost variables for reasoning locally about quantum state in our predicate logic.
+
+Our investigation suggests that QHTT has the potential to be a unified system for programming, specifying, and reasoning about quantum programs.
 
 \section{Background}
 
@@ -153,8 +169,6 @@ Here is how we can prove whether this program conforms to the given specificatio
 \label{sec:teleport}
 Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum computation and the corresponding code follows:
 
-\clearpage
-
 \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -171,8 +185,6 @@ Our second example shows how we can compose circuits defined in QHTT together an
 \end{figure}
 
 \lstinputlisting[language=QHaskell,lastline=12,caption=Quantum teleportation]{teleport.qh}
-
-\clearpage
 
 Verification steps follow:
 
@@ -202,8 +214,6 @@ In \cref{sec:teleport}, when we presented code for quantum teleportation, it is 
 \bibliographystyle{eptcsalpha}
 \bibliography{references}
 
-\clearpage
-
 \appendix
 
 \section{Metatheory}
@@ -219,7 +229,7 @@ In \cref{sec:teleport}, when we presented code for quantum teleportation, it is 
 \subsection{Deutsch's algorithm}
 This example demonstrates that our system works in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation.
 
-\begin{figure}[b]
+\begin{figure}
     \centering
     \begin{tikzpicture}
         \node[scale=1.0] {

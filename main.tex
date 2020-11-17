@@ -310,18 +310,17 @@ In \cref{sec:teleport}, when we presented code for quantum teleportation, it is 
 \section{Grammar}
 
 \nonterms{Typ}
-\nonterms{Prop}
-\nonterms{ElimTm}
-\nonterms{IntroTm}
+\nonterms{Tm}
 \nonterms{MonoTyp}
-\nonterms{Comm}
-\nonterms{U}
+\nonterms{Prop}
+\nonterms{Cmd}
+\nonterms{Unitary}
 \nonterms{Comp}
-\nonterms{Delta}
+\nonterms{Ctx}
 
 \section{Typing rules}
 
-\drules[ctx]{$\vdash \Delta$ \textbf{ctx}}{context formation}{Empty,Type,Prop}
+\drules[ctx]{$\vdash \Gamma$ \textbf{ctx}}{context formation}{Empty,Type,Prop}
 
 \section{Other examples}
 

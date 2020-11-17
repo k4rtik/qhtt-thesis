@@ -28,60 +28,65 @@
 \newcommand{\ottmetavars}{
 \ottmetavartabular{
  $ \ottmv{termvar} ,\, \ottmv{x} $ &  \\
+ $ \ottmv{ghostvar} ,\, \ottmv{g} ,\, \ottmv{e} ,\, \ottmv{u} $ &  \\
+ $ \ottmv{subspace} ,\, \ottmv{S} $ &  \\
+ $ \psi ,\, \psi $ &  \\
+ $ \ottmv{distribution} ,\, \ottmv{D} $ &  \\
 }}
 
 \newcommand{\ottTyp}{
 \ottrulehead{\ottnt{Typ}  ,\ \ottnt{A}  ,\ \ottnt{B}  ,\ \ottnt{C}}{::=}{\ottcom{Types}}\ottprodnewline
 \ottfirstprodline{|}{\ottnt{K}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{bool}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{prop}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{bit}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{qbit}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{prop}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{mono}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottnt{A}  \rightarrow  \ottnt{B}} {\textsf{S}}{}{}{}\ottprodnewline
-\ottprodline{|}{\Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottnt{A} \, \times \, \ottnt{B}} {\textsf{S}}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{}}
+\ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{\ottcom{Dependent Product}}\ottprodnewline
+\ottprodline{|}{\ottnt{A}  \rightarrow  \ottnt{B}}{}{}{}{\ottcom{Sugar for Pi type}}\ottprodnewline
+\ottprodline{|}{\Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{\ottcom{Dependent Sum}}\ottprodnewline
+\ottprodline{|}{\ottnt{A} \, \otimes \, \ottnt{B}}{}{}{}{\ottcom{Sugar for Sigma type}}\ottprodnewline
+\ottprodline{|}{\ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}{}{}{}{\ottcom{Type Refinement}}\ottprodnewline
+\ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{\ottcom{Hoare Type}}}
 
-\newcommand{\ottElimTm}{
-\ottrulehead{\ottnt{ElimTm}  ,\ \ottnt{K}  ,\ \ottnt{L}}{::=}{\ottcom{Elim Terms}}\ottprodnewline
+\newcommand{\ottTm}{
+\ottrulehead{\ottnt{Tm}  ,\ \ottnt{K}  ,\ \ottnt{L}  ,\ \ottnt{M}  ,\ \ottnt{N}}{::=}{\ottcom{Terms}}\ottprodnewline
 \ottfirstprodline{|}{\ottmv{x}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottnt{K} \, \ottnt{N}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{fst} \, \ottnt{K}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{snd} \, \ottnt{K}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{out} \, \ottnt{K}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottnt{M}  \ottsym{:}  \ottnt{A}}{}{}{}{}}
-
-\newcommand{\ottIntroTm}{
-\ottrulehead{\ottnt{IntroTm}  ,\ \ottnt{M}  ,\ \ottnt{N}}{::=}{\ottcom{Intro Terms}}\ottprodnewline
-\ottfirstprodline{|}{\ottnt{K}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{true}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{false}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottsym{0}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottsym{1}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottsym{()}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\lambda  \ottmv{x}  \ottsym{.}  \ottnt{M}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottnt{K} \, \ottnt{N}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{fst} \, \ottnt{K}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{snd} \, \ottnt{K}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{in} \, \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{do} \, \ottnt{E}}{}{}{}{}}
+\ottprodline{|}{\ottkw{out} \, \ottnt{K}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{do} \, \ottnt{E}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottnt{M}  \ottsym{:}  \ottnt{A}}{}{}{}{}}
 
 \newcommand{\ottProp}{
-\ottrulehead{\ottnt{Prop}  ,\ \ottnt{P}  ,\ \ottnt{Q}  ,\ \ottnt{R}}{::=}{\ottcom{Propositions (InTm)}}\ottprodnewline
-\ottfirstprodline{|}{\top}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\bot}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottnt{P}  \wedge  \ottnt{Q}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottnt{P}  \vee  \ottnt{Q}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottnt{P} \, \supset \, \ottnt{Q}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\neg \, \ottnt{P}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\forall \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\exists \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{xid} \, \ottsym{(}  \ottnt{A}  \ottsym{,}  \ottnt{B}  \ottsym{;}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}}{}{}{}{}}
+\ottrulehead{\ottnt{Prop}  ,\ \ottnt{P}  ,\ \ottnt{Q}  ,\ \ottnt{R}}{::=}{\ottcom{Propositions}}\ottprodnewline
+\ottfirstprodline{|}{\top}{}{}{}{\ottcom{Complete state space, trivial}}\ottprodnewline
+\ottprodline{|}{\bot}{}{}{}{\ottcom{\{0\}, trivial}}\ottprodnewline
+\ottprodline{|}{\ottnt{P}  \wedge  \ottnt{Q}}{}{}{}{\ottcom{Intersection of subspaces. P, Q}}\ottprodnewline
+\ottprodline{|}{\ottnt{P}  \ottsym{,}  \ottnt{Q}} {\textsf{S}}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottnt{P}  \vee  \ottnt{Q}}{}{}{}{\ottcom{Sum of subspaces}}\ottprodnewline
+\ottprodline{|}{\ottnt{U} \, \cdot \, \ottnt{P}}{}{}{}{\ottcom{Operator}}\ottprodnewline
+\ottprodline{|}{\ottmv{x} \, \in_q \, \ottmv{S}}{}{}{}{\ottcom{x lies in subspace S}}\ottprodnewline
+\ottprodline{|}{\ottmv{x}  =_q  \psi}{}{}{}{\ottcom{x is equal to state $\psi$}}\ottprodnewline
+\ottprodline{|}{\ottkw{distrib} \, \ottsym{(}  \ottmv{x}  \ottsym{,}  \ottmv{D}  \ottsym{)}} {\textsf{S}}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{uniform} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is uniformly distributed}}\ottprodnewline
+\ottprodline{|}{\ottmv{x_{{\mathrm{1}}}}  \equiv_q  \ottmv{x_{{\mathrm{2}}}}}{}{}{}{\ottcom{quantum equality}}\ottprodnewline
+\ottprodline{|}{\ottkw{separable} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is separable. x $\equiv_q$ u}}\ottprodnewline
+\ottprodline{|}{\ottmv{x_{{\mathrm{1}}}}  \equiv_{cl}  \ottmv{x_{{\mathrm{2}}}}}{}{}{}{\ottcom{classical equality}}\ottprodnewline
+\ottprodline{|}{\ottkw{class} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is classical. x $\equiv_{cl}$ u}}}
 
-\newcommand{\ottComm}{
-\ottrulehead{\ottnt{Comm}  ,\ \ottnt{c}}{::=}{\ottcom{Commands}}\ottprodnewline
+\newcommand{\ottCmd}{
+\ottrulehead{\ottnt{Cmd}  ,\ \ottnt{c}}{::=}{\ottcom{Commands}}\ottprodnewline
 \ottfirstprodline{|}{\ottkw{init} \, \ottnt{M}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{apply} \, \ottnt{U} \, \ottkw{to} \, \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{meas} \, \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{if} \, \ottnt{M} \, \ottkw{then} \, \ottnt{E_{{\mathrm{1}}}} \, \ottkw{else} \, \ottnt{E_{{\mathrm{2}}}}}{}{}{}{}}
+\ottprodline{|}{\ottkw{meas} \, \ottnt{M}}{}{}{}{}}
 
 \newcommand{\ottUnitary}{
 \ottrulehead{\ottnt{Unitary}  ,\ \ottnt{U}}{::=}{\ottcom{Unitaries}}\ottprodnewline
@@ -90,42 +95,41 @@
 \ottprodline{|}{\ottkw{Y}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{Z}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{H}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{S}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{CX}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{CZ}}{}{}{}{}}
 
 \newcommand{\ottComp}{
 \ottrulehead{\ottnt{Comp}  ,\ \ottnt{E}  ,\ \ottnt{F}}{::=}{\ottcom{Computations}}\ottprodnewline
 \ottfirstprodline{|}{\ottkw{return} \, \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{run} \, \ottmv{x}  \ottsym{=}  \ottnt{K} \, \ottkw{in} \, \ottnt{E}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottmv{x}  \ottsym{=}  \ottnt{c}  \ottsym{;}  \ottnt{E}}{}{}{}{}}
+\ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{K}  \ottsym{;}  \ottnt{E}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{c}  \ottsym{;}  \ottnt{E}}{}{}{}{}}
 
 \newcommand{\ottMonoTyp}{
-\ottrulehead{\ottnt{MonoTyp}  ,\ \tau  ,\ \sigma}{::=}{\ottcom{Monotypes (InTm)}}\ottprodnewline
-\ottfirstprodline{|}{\ottkw{bool}}{}{}{}{}\ottprodnewline
+\ottrulehead{\ottnt{MonoTyp}  ,\ \tau  ,\ \sigma}{::=}{\ottcom{Monotypes}}\ottprodnewline
+\ottfirstprodline{|}{\ottkw{bit}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{qbit}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{prop}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottsym{()}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \tau  \ottsym{.}  \sigma}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\Sigma \, \ottmv{x}  \ottsym{:}  \tau  \ottsym{.}  \sigma}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottsym{\{}  \ottmv{x}  \ottsym{:}  \tau  \ottsym{.}  \ottnt{P}  \ottsym{\}}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \sigma  \ottsym{:}  \tau  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{}}
 
-\newcommand{\ottDelta}{
-\ottrulehead{\ottnt{Delta}  ,\ \Delta}{::=}{\ottcom{Contexts}}\ottprodnewline
-\ottfirstprodline{|}{\ottsym{.}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\Delta  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\Delta  \ottsym{,}  \ottnt{P}}{}{}{}{}}
+\newcommand{\ottCtx}{
+\ottrulehead{\ottnt{Ctx}  ,\ \Gamma}{::=}{\ottcom{Contexts}}\ottprodnewline
+\ottfirstprodline{|}{\cdot}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\Gamma  \ottsym{,}  \ottnt{P}}{}{}{}{}}
 
 \newcommand{\ottgrammar}{\ottgrammartabular{
 \ottTyp\ottinterrule
-\ottElimTm\ottinterrule
-\ottIntroTm\ottinterrule
+\ottTm\ottinterrule
 \ottProp\ottinterrule
-\ottComm\ottinterrule
+\ottCmd\ottinterrule
 \ottUnitary\ottinterrule
 \ottComp\ottinterrule
 \ottMonoTyp\ottinterrule
-\ottDelta\ottafterlastrule
+\ottCtx\ottafterlastrule
 }}
 
 % defnss
@@ -133,29 +137,29 @@
 %% defn ctx
 \newcommand{\ottdrulectxXXEmpty}[1]{\ottdrule[#1]{%
 }{
-\vdash  \ottsym{.} \, \ottkw{ctx}}{%
+\vdash  \cdot \, \ottkw{ctx}}{%
 {\ottdrulename{ctx\_Empty}}{}%
 }}
 
 
 \newcommand{\ottdrulectxXXType}[1]{\ottdrule[#1]{%
-\ottpremise{\vdash  \Delta \, \ottkw{ctx}}%
-\ottpremise{\Delta  \vdash  \ottnt{A} \, \ottkw{type}}%
+\ottpremise{\vdash  \Gamma \, \ottkw{ctx}}%
+\ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
 }{
-\vdash  \Delta  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A} \, \ottkw{ctx}}{%
+\vdash  \Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A} \, \ottkw{ctx}}{%
 {\ottdrulename{ctx\_Type}}{}%
 }}
 
 
 \newcommand{\ottdrulectxXXProp}[1]{\ottdrule[#1]{%
-\ottpremise{\vdash  \Delta \, \ottkw{ctx}}%
-\ottpremise{\Delta  \vdash  \ottnt{P} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottkw{prop}}%
+\ottpremise{\vdash  \Gamma \, \ottkw{ctx}}%
+\ottpremise{\Gamma  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}}%
 }{
-\vdash  \Delta  \ottsym{,}  \ottnt{P} \, \ottkw{ctx}}{%
+\vdash  \Gamma  \ottsym{,}  \ottnt{P} \, \ottkw{ctx}}{%
 {\ottdrulename{ctx\_Prop}}{}%
 }}
 
-\newcommand{\ottdefnctx}[1]{\begin{ottdefnblock}[#1]{$\vdash  \Delta \, \ottkw{ctx}$}{\ottcom{Checking contexts}}
+\newcommand{\ottdefnctx}[1]{\begin{ottdefnblock}[#1]{$\vdash  \Gamma \, \ottkw{ctx}$}{\ottcom{Checking contexts}}
 \ottusedrule{\ottdrulectxXXEmpty{}}
 \ottusedrule{\ottdrulectxXXType{}}
 \ottusedrule{\ottdrulectxXXProp{}}
@@ -163,81 +167,76 @@
 
 %% defn Type
 \newcommand{\ottdruletyXXElim}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottkw{mono}}%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottkw{mono}}%
 }{
-\Delta  \vdash  \ottnt{K} \, \ottkw{type}}{%
+\Gamma  \vdash  \ottnt{K} \, \ottkw{type}}{%
 {\ottdrulename{ty\_Elim}}{}%
 }}
 
 
-\newcommand{\ottdruletyXXBool}[1]{\ottdrule[#1]{%
+\newcommand{\ottdruletyXXBit}[1]{\ottdrule[#1]{%
 }{
-\Delta  \vdash  \ottkw{bool} \, \ottkw{type}}{%
-{\ottdrulename{ty\_Bool}}{}%
+\Gamma  \vdash  \ottkw{bit} \, \ottkw{type}}{%
+{\ottdrulename{ty\_Bit}}{}%
 }}
 
 
 \newcommand{\ottdruletyXXProp}[1]{\ottdrule[#1]{%
 }{
-\Delta  \vdash  \ottkw{prop} \, \ottkw{type}}{%
+\Gamma  \vdash  \ottkw{prop} \, \ottkw{type}}{%
 {\ottdrulename{ty\_Prop}}{}%
 }}
 
 
 \newcommand{\ottdruletyXXMono}[1]{\ottdrule[#1]{%
 }{
-\Delta  \vdash  \ottkw{mono} \, \ottkw{type}}{%
+\Gamma  \vdash  \ottkw{mono} \, \ottkw{type}}{%
 {\ottdrulename{ty\_Mono}}{}%
 }}
 
 
 \newcommand{\ottdruletyXXUnit}[1]{\ottdrule[#1]{%
 }{
-\Delta  \vdash  \ottkw{unit} \, \ottkw{type}}{%
+\Gamma  \vdash  \ottkw{unit} \, \ottkw{type}}{%
 {\ottdrulename{ty\_Unit}}{}%
 }}
 
 
 \newcommand{\ottdruletyXXPi}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{A} \, \ottkw{type}}%
-\ottpremise{\Delta  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{B} \, \ottkw{type}}%
+\ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
+\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{B} \, \ottkw{type}}%
 }{
-\Delta  \vdash  \Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B} \, \ottkw{type}}{%
+\Gamma  \vdash  \Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B} \, \ottkw{type}}{%
 {\ottdrulename{ty\_Pi}}{}%
 }}
 
 
 \newcommand{\ottdruletyXXSig}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{A} \, \ottkw{type}}%
-\ottpremise{\Delta  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{B} \, \ottkw{type}}%
+\ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
+\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{B} \, \ottkw{type}}%
 }{
-\Delta  \vdash  \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B} \, \ottkw{type}}{%
+\Gamma  \vdash  \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B} \, \ottkw{type}}{%
 {\ottdrulename{ty\_Sig}}{}%
 }}
 
 
 \newcommand{\ottdruletyXXRefine}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{A} \, \ottkw{type}}%
-\ottpremise{\Delta  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{P} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottkw{prop}}%
+\ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
+\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}}%
 }{
-\Delta  \vdash  \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}} \, \ottkw{type}}{%
+\Gamma  \vdash  \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}} \, \ottkw{type}}{%
 {\ottdrulename{ty\_Refine}}{}%
 }}
 
-\newcommand{\ottdefnType}[1]{\begin{ottdefnblock}[#1]{$\Delta  \vdash  \ottnt{A} \, \ottkw{type}$}{\ottcom{$\ottnt{A}$ is a type}}
+\newcommand{\ottdefnType}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{A} \, \ottkw{type}$}{\ottcom{$\ottnt{A}$ is a type}}
 \ottusedrule{\ottdruletyXXElim{}}
-\ottusedrule{\ottdruletyXXBool{}}
+\ottusedrule{\ottdruletyXXBit{}}
 \ottusedrule{\ottdruletyXXProp{}}
 \ottusedrule{\ottdruletyXXMono{}}
 \ottusedrule{\ottdruletyXXUnit{}}
 \ottusedrule{\ottdruletyXXPi{}}
 \ottusedrule{\ottdruletyXXSig{}}
 \ottusedrule{\ottdruletyXXRefine{}}
-\end{ottdefnblock}}
-
-%% defn Term
-
-\newcommand{\ottdefnTerm}[1]{\begin{ottdefnblock}[#1]{$\Delta  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}$}{\ottcom{term $\ottnt{M}$ has type $\ottnt{A}$}}
 \end{ottdefnblock}}
 
 %% defn TyEq
@@ -247,131 +246,128 @@
 
 %% defn TmEq
 
-\newcommand{\ottdefnTmEq}[1]{\begin{ottdefnblock}[#1]{$\Delta  \vdash  \ottnt{M}  \ottsym{=}  \ottnt{N}  \ottsym{:}  \ottnt{A}$}{\ottcom{$\ottnt{M}$ and $\ottnt{N}$ are equal as terms of type $\ottnt{A}$}}
+\newcommand{\ottdefnTmEq}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{M}  \ottsym{=}  \ottnt{N}  \ottsym{:}  \ottnt{A}$}{\ottcom{$\ottnt{M}$ and $\ottnt{N}$ are equal as terms of type $\ottnt{A}$}}
 \end{ottdefnblock}}
 
 %% defn Prop
 
-\newcommand{\ottdefnProp}[1]{\begin{ottdefnblock}[#1]{$\Delta  \vdash  \ottnt{P} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottkw{prop}$}{\ottcom{$\ottnt{P}$ type checks as a $\ottkw{prop}$}}
+\newcommand{\ottdefnProp}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}$}{\ottcom{$\ottnt{P}$ type checks as a $\ottkw{prop}$}}
 \end{ottdefnblock}}
 
-%% defn TyIntro
-\newcommand{\ottdruleTyInXXPi}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{M} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottnt{B}}%
+%% defn Term
+\newcommand{\ottdruletmXXPiI}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{B}}%
 }{
-\Delta  \vdash  \lambda  \ottmv{x}  \ottsym{.}  \ottnt{M} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{%
-{\ottdrulename{TyIn\_Pi}}{}%
+\Gamma  \vdash  \lambda  \ottmv{x}  \ottsym{.}  \ottnt{M}  \ottsym{:}  \Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{%
+{\ottdrulename{tm\_PiI}}{}%
 }}
 
 
-\newcommand{\ottdruleTyInXXSig}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{M} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottnt{A}}%
-\ottpremise{\Delta  \vdash  \ottnt{N} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottnt{B}  \ottsym{[}  \ottnt{M}  \ottsym{/}  \ottmv{x}  \ottsym{]}}%
+\newcommand{\ottdruletmXXSigI}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
+\ottpremise{\Gamma  \vdash  \ottnt{N}  \ottsym{:}  \ottnt{B}  \ottsym{[}  \ottnt{M}  \ottsym{/}  \ottmv{x}  \ottsym{]}}%
 }{
-\Delta  \vdash  \ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{%
-{\ottdrulename{TyIn\_Sig}}{}%
+\Gamma  \vdash  \ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}  \ottsym{:}  \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{%
+{\ottdrulename{tm\_SigI}}{}%
 }}
 
 
-\newcommand{\ottdruleTyInXXRefine}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{M} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottnt{A}}%
-\ottpremise{\Delta  \models  \ottnt{P}  \ottsym{[}  \ottnt{M}  \ottsym{/}  \ottmv{x}  \ottsym{]}}%
+\newcommand{\ottdruletmXXRefineI}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
+\ottpremise{\ottmv{D}  \ottsym{\mbox{$\mid$}=}  \ottnt{P}  \ottsym{[}  \ottnt{M}  \ottsym{/}  \ottmv{x}  \ottsym{]}}%
 }{
-\Delta  \vdash  \ottkw{in} \, \ottnt{M} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}{%
-{\ottdrulename{TyIn\_Refine}}{}%
+\Gamma  \vdash  \ottkw{in} \, \ottnt{M}  \ottsym{:}  \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}{%
+{\ottdrulename{tm\_RefineI}}{}%
 }}
 
 
-\newcommand{\ottdruleTyInXXElim}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottnt{A}}%
+\newcommand{\ottdruletmXXElim}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottnt{A}}%
 \ottpremise{\ottnt{A}  \ottsym{=}  \ottnt{B}}%
 }{
-\Delta  \vdash  \ottnt{K} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottnt{B}}{%
-{\ottdrulename{TyIn\_Elim}}{}%
+\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottnt{B}}{%
+{\ottdrulename{tm\_Elim}}{}%
 }}
 
-\newcommand{\ottdefnTyIntro}[1]{\begin{ottdefnblock}[#1]{$\Delta  \vdash  \ottnt{M} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottnt{A}$}{\ottcom{$\ottnt{M}$ checks against type $\ottnt{A}$}}
-\ottusedrule{\ottdruleTyInXXPi{}}
-\ottusedrule{\ottdruleTyInXXSig{}}
-\ottusedrule{\ottdruleTyInXXRefine{}}
-\ottusedrule{\ottdruleTyInXXElim{}}
-\end{ottdefnblock}}
 
-%% defn TyElim
-\newcommand{\ottdruleTyElXXPi}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}%
-\ottpremise{\Delta  \vdash  \ottnt{M} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottnt{A}}%
+\newcommand{\ottdruletmXXPiE}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}%
+\ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
 }{
-\Delta  \vdash  \ottnt{K} \, \ottnt{M} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottnt{B}  \ottsym{[}  \ottnt{M}  \ottsym{/}  \ottmv{x}  \ottsym{]}}{%
-{\ottdrulename{TyEl\_Pi}}{}%
+\Gamma  \vdash  \ottnt{K} \, \ottnt{M}  \ottsym{:}  \ottnt{B}  \ottsym{[}  \ottnt{M}  \ottsym{/}  \ottmv{x}  \ottsym{]}}{%
+{\ottdrulename{tm\_PiE}}{}%
 }}
 
 
-\newcommand{\ottdruleTyElXXFst}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}%
+\newcommand{\ottdruletmXXFstE}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}%
 }{
-\Delta  \vdash  \ottkw{fst} \, \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottnt{A}}{%
-{\ottdrulename{TyEl\_Fst}}{}%
+\Gamma  \vdash  \ottkw{fst} \, \ottnt{K}  \ottsym{:}  \ottnt{A}}{%
+{\ottdrulename{tm\_FstE}}{}%
 }}
 
 
-\newcommand{\ottdruleTyElXXSnd}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}%
+\newcommand{\ottdruletmXXSndE}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}%
 }{
-\Delta  \vdash  \ottkw{snd} \, \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottnt{B}  \ottsym{[}  \ottkw{fst} \, \ottnt{K}  \ottsym{/}  \ottmv{x}  \ottsym{]}}{%
-{\ottdrulename{TyEl\_Snd}}{}%
+\Gamma  \vdash  \ottkw{snd} \, \ottnt{K}  \ottsym{:}  \ottnt{B}  \ottsym{[}  \ottkw{fst} \, \ottnt{K}  \ottsym{/}  \ottmv{x}  \ottsym{]}}{%
+{\ottdrulename{tm\_SndE}}{}%
 }}
 
 
-\newcommand{\ottdruleTyElXXRefine}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}%
+\newcommand{\ottdruletmXXRefineE}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}%
 }{
-\Delta  \vdash  \ottkw{out} \, \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottnt{A}}{%
-{\ottdrulename{TyEl\_Refine}}{}%
+\Gamma  \vdash  \ottkw{out} \, \ottnt{K}  \ottsym{:}  \ottnt{A}}{%
+{\ottdrulename{tm\_RefineE}}{}%
 }}
 
 
-\newcommand{\ottdruleTyElXXAscription}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{A} \, \ottkw{type}}%
-\ottpremise{\Delta  \vdash  \ottnt{M} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottnt{A}}%
+\newcommand{\ottdruletmXXAscriptionE}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
+\ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
 }{
-\Delta  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottnt{A}}{%
-{\ottdrulename{TyEl\_Ascription}}{}%
+\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}  \ottsym{:}  \ottnt{A}}{%
+{\ottdrulename{tm\_AscriptionE}}{}%
 }}
 
-\newcommand{\ottdefnTyElim}[1]{\begin{ottdefnblock}[#1]{$\Delta  \vdash  \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottnt{A}$}{\ottcom{$\ottnt{K}$ synthesizes type $\ottnt{A}$}}
-\ottusedrule{\ottdruleTyElXXPi{}}
-\ottusedrule{\ottdruleTyElXXFst{}}
-\ottusedrule{\ottdruleTyElXXSnd{}}
-\ottusedrule{\ottdruleTyElXXRefine{}}
-\ottusedrule{\ottdruleTyElXXAscription{}}
+\newcommand{\ottdefnTerm}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}$}{\ottcom{term $\ottnt{M}$ has type $\ottnt{A}$}}
+\ottusedrule{\ottdruletmXXPiI{}}
+\ottusedrule{\ottdruletmXXSigI{}}
+\ottusedrule{\ottdruletmXXRefineI{}}
+\ottusedrule{\ottdruletmXXElim{}}
+\ottusedrule{\ottdruletmXXPiE{}}
+\ottusedrule{\ottdruletmXXFstE{}}
+\ottusedrule{\ottdruletmXXSndE{}}
+\ottusedrule{\ottdruletmXXRefineE{}}
+\ottusedrule{\ottdruletmXXAscriptionE{}}
 \end{ottdefnblock}}
 
 %% defn Prove
 \newcommand{\ottdrulePrXXRefine}[1]{\ottdrule[#1]{%
-\ottpremise{\Delta  \vdash  \ottnt{K} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}%
 }{
-\Delta  \models  \ottnt{P}  \ottsym{[}  \ottkw{out} \, \ottnt{K}  \ottsym{/}  \ottmv{x}  \ottsym{]}}{%
+\ottmv{D}  \ottsym{\mbox{$\mid$}=}  \ottnt{P}  \ottsym{[}  \ottkw{out} \, \ottnt{K}  \ottsym{/}  \ottmv{x}  \ottsym{]}}{%
 {\ottdrulename{Pr\_Refine}}{}%
 }}
 
-\newcommand{\ottdefnProve}[1]{\begin{ottdefnblock}[#1]{$\Delta  \models  \ottnt{P}$}{\ottcom{Proof obligation $\ottnt{P}$}}
+\newcommand{\ottdefnProve}[1]{\begin{ottdefnblock}[#1]{$\ottmv{D}  \ottsym{\mbox{$\mid$}=}  \ottnt{P}$}{\ottcom{Proof obligation $\ottnt{P}$}}
 \ottusedrule{\ottdrulePrXXRefine{}}
 \end{ottdefnblock}}
 
 %% defn CompIntro
 
-\newcommand{\ottdefnCompIntro}[1]{\begin{ottdefnblock}[#1]{$\Delta  \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E} \, \textcolor{blue}{\stackrel{\leftarrow}{\in} } \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\Delta, \ottnt{P}, \ottnt{A}$ check that $\ottnt{E}$ returns a value of type $\ottnt{A}$ with postcond. $\ottnt{Q}$}}
+\newcommand{\ottdefnCompIntro}[1]{\begin{ottdefnblock}[#1]{$\ottmv{D}  \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\ottmv{D}, \ottnt{P}, \ottnt{A}$ check that $\ottnt{E}$ returns a value of type $\ottnt{A}$ with postcond. $\ottnt{Q}$}}
 \end{ottdefnblock}}
 
 %% defn CompElim
 
-\newcommand{\ottdefnCompElim}[1]{\begin{ottdefnblock}[#1]{$\Delta  \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E} \, \textcolor{red}{\stackrel{\rightarrow}{\in} } \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\Delta, \ottnt{P}, \ottnt{E}, \ottnt{A}$ as input, synthesize the strongest postcondition $\ottnt{Q}$}}
+\newcommand{\ottdefnCompElim}[1]{\begin{ottdefnblock}[#1]{$\ottmv{D}  \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\ottmv{D}, \ottnt{P}, \ottnt{E}, \ottnt{A}$ as input, synthesize the strongest postcondition $\ottnt{Q}$}}
 \end{ottdefnblock}}
 
 
 \newcommand{\ottdefnsJtype}{
-\ottdefnctx{}\ottdefnType{}\ottdefnTerm{}\ottdefnTyEq{}\ottdefnTmEq{}\ottdefnProp{}\ottdefnTyIntro{}\ottdefnTyElim{}\ottdefnProve{}\ottdefnCompIntro{}\ottdefnCompElim{}}
+\ottdefnctx{}\ottdefnType{}\ottdefnTyEq{}\ottdefnTmEq{}\ottdefnProp{}\ottdefnTerm{}\ottdefnProve{}\ottdefnCompIntro{}\ottdefnCompElim{}}
 
 \newcommand{\ottdefnss}{
 \ottdefnsJtype

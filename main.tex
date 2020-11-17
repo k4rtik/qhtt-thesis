@@ -140,24 +140,21 @@ which can be interpreted as ``if the pre-condition $P$ is true before the execut
 
 In the classical setting, the most important command is an assignment statement. Hoare logic states the following axiom for assignment:
 \begin{mathpar}
-    \inferrule
+    \inferrule[Axiom of Assignment]
     { }
     {\{P[x \rightarrow e]\}\ x := e\ \{P\}}
-    \quad\textsc{Axiom of Assignment}
 \end{mathpar}
 where $x$ is an assignable (variable) and $e$ is an expression. The meaning of this fact is that the pre-condition is obtained from the post-condition $P$ by substituting $e$ for all free occurrences of $x$ in $P$.
 
 Further, there are rules of inference that are required to derive new theorems from one or more axioms or theorems already proved. We first look at the two ``rules of consequence'':
 \begin{mathpar}
-    \inferrule
+    \inferrule[Weakening the post-condition]
     {\{P\}\ c\ \{Q\} \\ Q \Rightarrow R}
     {\{P\}\ c\ \{R\}}
-    \quad\textsc{Weakening the post-condition}
 
-    \inferrule
+    \inferrule[Strengthening the pre-condition]
     {P \Rightarrow Q \\ \{Q\}\ c\ \{R\}}
     {\{P\}\ c\ \{R\}}
-    \quad\textsc{Strengthening the pre-condition}
 \end{mathpar}
 The first rule says that if the execution of a program $c$ ensures the truth of post-condition $Q$, then it also ensures the truth of any proposition $R$ logically implied by $Q$. This effectively lets us weaken the post-condition.
 
@@ -165,10 +162,9 @@ In the other direction, we can strengthen the pre-condition using the second rul
 
 The next rule lets us compose sequential programs together:
 \begin{mathpar}
-    \inferrule
+    \inferrule[Rule of Composition]
     {\{P\}\ c\ \{Q\} \\ \{Q\}\ d\ \{R\}}
     {\{P\}\ c\ \textbf{;}\ d\ \{R\}}
-    \quad\textsc{Rule of Composition}
 \end{mathpar}
 where semicolon denotes sequential composition of programs. The rule of composition states that if the post-condition of the first program is identical to the pre-condition of the second program under which it satisfies its post-condition $R$, then the composition of the programs will satisfy $R$, given that the first program satisfies its pre-condition $P$.
 

@@ -47,7 +47,8 @@
 \ottprodline{|}{\Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{\ottcom{Dependent Sum}}\ottprodnewline
 \ottprodline{|}{\ottnt{A} \, \otimes \, \ottnt{B}}{}{}{}{\ottcom{Sugar for Sigma type}}\ottprodnewline
 \ottprodline{|}{\ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}{}{}{}{\ottcom{Type Refinement}}\ottprodnewline
-\ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{\ottcom{Hoare Type}}}
+\ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{\ottcom{Hoare Type}}\ottprodnewline
+\ottprodline{|}{\ottkw{QST} \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{}{}{}{\ottcom{Sugar for Q. Hoare Type}}}
 
 \newcommand{\ottTm}{
 \ottrulehead{\ottnt{Tm}  ,\ \ottnt{K}  ,\ \ottnt{L}  ,\ \ottnt{M}  ,\ \ottnt{N}}{::=}{\ottcom{Terms}}\ottprodnewline
@@ -102,7 +103,8 @@
 \ottrulehead{\ottnt{Comp}  ,\ \ottnt{E}  ,\ \ottnt{F}}{::=}{\ottcom{Computations}}\ottprodnewline
 \ottfirstprodline{|}{\ottkw{return} \, \ottnt{M}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{K}  \ottsym{;}  \ottnt{E}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{c}  \ottsym{;}  \ottnt{E}}{}{}{}{}}
+\ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{c}  \ottsym{;}  \ottnt{E}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottmv{x}  \ottsym{=}  \ottnt{M}  \ottsym{;}  \ottnt{E}}{}{}{}{}}
 
 \newcommand{\ottMonoTyp}{
 \ottrulehead{\ottnt{MonoTyp}  ,\ \tau  ,\ \sigma}{::=}{\ottcom{Monotypes}}\ottprodnewline

@@ -24,6 +24,8 @@ Typ, A, B, C :: Ty ::= {{ com Types }}
   | A times B          ::   :: Pair         {{ com Sugar for Sigma type }}
   | { x : A . P }      ::   :: Refinement   {{ com Type Refinement }}
   | { P } x : A { Q }  ::   :: Hoare        {{ com Hoare Type }}
+  | QST x : A ( requires { P } )
+    ( ensures { Q } )  ::   :: QHoare        {{ com Sugar for Q. Hoare Type }}
   | A [ M / x ]        :: M :: Substitution
 
 Tm, K, L, M, N :: Tm ::= {{ com Terms }}
@@ -78,6 +80,7 @@ Comp, E, F :: '' ::= {{ com Computations }}
   | return M        :: :: Return
   | x <- K ; E      :: :: Run
   | x <- c ; E      :: :: Bind
+  | x = M ; E       :: :: Let
 
 MonoTyp, t {{ tex \tau }}, s {{ tex \sigma }} :: 'Mon' ::= {{ com Monotypes }}
   | bit               :: :: Bit

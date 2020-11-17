@@ -1,0 +1,242 @@
+metavar termvar, x ::=
+
+grammar
+
+Typ, A, B, C :: Ty ::= {{ com Types }}
+  | K                  ::   :: K
+  | bool               ::   :: Bool
+  | prop               ::   :: Proposition
+  | unit               ::   :: Unit
+  | mono               ::   :: MonoType
+  | Pi x : A . B       ::   :: DependentProduct
+  | A -> B             :: S :: Arrow
+  | Sig x : A . B      ::   :: DependentSum
+  | A times B          :: S :: Pair
+  | { x : A . P }      ::   :: Refinement
+  | { P } x : A { Q }  ::   :: Hoare
+  | A [ M / x ]        :: M :: Substitution
+
+ElimTm, K, L :: ElTm ::= {{ com Elim Terms }}
+  | x           ::  :: Var
+  | K N         ::  :: App
+  | fst K       ::  :: Fst
+  | snd K       ::  :: Snd
+  | out K       ::  :: Out
+  | M : A       ::  :: Ascription
+
+IntroTm, M, N :: InTm ::= {{ com Intro Terms }}
+  | K           :: :: ETm
+  | true        :: :: True
+  | false       :: :: False
+  | ()          :: :: Unit
+  | \ x . M     :: :: Lam
+  | ( M , N )   :: :: Pair
+  | in M        :: :: In
+  | do E        :: :: Do
+
+Prop, P, Q, R :: '' ::= {{ com Propositions (InTm) }}
+  | top                   ::  :: Top
+  | bot                   ::  :: Bottom
+  | P /\ Q                ::  :: Conjunction
+  | P \/ Q                ::  :: Disjunction
+  | P imp Q               ::  :: Implication
+  | not P                 ::  :: Not
+  | forall x : A . P      ::  :: ForAll
+  | exists x : A . P      ::  :: Exists
+  | xid ( A , B ; M , N ) ::  :: HeterogeneousEquality
+  | P [ M / x ]           :: M:: Substitution
+
+Comm, c :: '' ::= {{ com Commands }}
+  | init M                :: :: Initialize
+  | apply U to M          :: :: ApplyU
+  | meas M                :: :: Measurement
+  | if M then E1 else E2  :: :: IfThenElse
+
+Unitary, U :: '' ::= {{ com Unitaries }}
+  | I     :: :: Identity
+  | X     :: :: X
+  | Y     :: :: Y
+  | Z     :: :: Z
+  | H     :: :: Hadamard
+  | S     :: :: Phase
+  | CX    :: :: ControlledX
+  | CZ    :: :: ControlledZ
+
+Comp, E, F :: '' ::= {{ com Computations }}
+  | return M        :: :: Return
+  | run x = K in E  :: :: Run
+  | x = c ; E       :: :: Bind
+
+MonoTyp, t {{ tex \tau }}, s {{ tex \sigma }} :: 'Mon' ::= {{ com Monotypes (InTm) }}
+  | bool              :: :: Bool
+  | prop              :: :: Prop
+  | ()                :: :: Unit
+  | Pi x : t . s      :: :: Pi
+  | Sig x : t . s     :: :: Sigma
+  | { x : t . P }     :: :: Refinement
+  | { P } s : t { Q } :: :: Hoare
+
+Delta, D {{ tex \Delta }} :: 'Ctx' ::= {{ com Contexts }}
+  | .               :: :: Empty
+  | D , x : A       :: :: Type
+  | D , P           :: :: Prop
+
+
+terminals :: 'terminals_' ::=
+  | \                      ::   :: lambda     {{ tex \lambda }}
+  | -->                    ::   :: red        {{ tex \longrightarrow }}
+  | |=                     ::   :: seqimp     {{ tex \models }}
+  |  ->                    ::   :: arrow      {{ tex \rightarrow }}
+  | <-                     ::   :: larrow     {{ tex \leftarrow }}
+  | <=                     ::   :: lbarrow    {{ tex \Leftarrow }}
+  |  =>                    ::   :: rbarrow    {{ tex \Rightarrow }}
+  | <                      ::   :: langle     {{ tex \langle }}
+  | >                      ::   :: rangle     {{ tex \rangle }}
+  | |-                     ::   :: turnstile  {{ tex \vdash }}
+  | syn                    ::   :: syn        {{ tex \textcolor{red}{\stackrel{\rightarrow}{\in} } }}
+  | chk                    ::   :: chk        {{ tex \textcolor{blue}{\stackrel{\leftarrow}{\in} } }}
+  | inc                    ::   :: in         {{ tex \in }}
+  | inq                    ::   :: inq        {{ tex \in_q }}
+  | =q                     ::   :: eqq        {{ tex =_q }}
+  | <-q                    ::   :: initq      {{ tex \stackrel{q}{\leftarrow} }}
+  | Pi                     ::   :: pi         {{ tex \Pi }}
+  | Sig                    ::   :: Sigma      {{ tex \Sigma }}
+  | tau                    ::   :: tau        {{ tex \tau }}
+  | sigma                  ::   :: sigma      {{ tex \sigma }}
+  | psi                    ::   :: psi        {{ tex \psi }}
+  | times                  ::   :: times      {{ tex \times }}
+  | top                    ::   :: top        {{ tex \top }}
+  | bot                    ::   :: bot        {{ tex \bot }}
+  | /\                     ::   :: and        {{ tex \wedge }}
+  | \/                     ::   :: or         {{ tex \vee }}
+  | imp                    ::   :: imp        {{ tex \supset }}
+  | not                    ::   :: not        {{ tex \neg }}
+  | exists                 ::   :: exists     {{ tex \exists }}
+  | forall                 ::   :: forall     {{ tex \forall }}
+  | |->                    ::   :: SMapsto    {{ tex \mapsto }}
+
+
+defns
+  Jtype :: '' ::=
+
+defn
+  |- D ctx :: :: ctx :: ctx_ {{ com Checking contexts }} by
+
+    -------- :: Empty
+    |- . ctx
+
+    |- D ctx
+    D |- A type
+    ------------- :: Type
+    |- D, x:A ctx
+
+    |- D ctx
+    D |- P chk prop
+    --------------- :: Prop
+    |- D, P ctx
+
+defn
+  D |- A type :: :: Type :: ty_ {{ com $[[A]]$ is a type }} by
+
+    D |- K syn mono
+    --------------- :: Elim
+    D |- K type
+
+    -------------- :: Bool
+    D |- bool type
+
+    -------------- :: Prop
+    D |- prop type
+
+    -------------- :: Mono
+    D |- mono type
+
+    -------------- :: Unit
+    D |- unit type
+
+    D |- A type
+    D, x:A |- B type
+    ------------------ :: Pi
+    D |- Pi x:A.B type
+
+    D |- A type
+    D, x:A |- B type
+    ------------------ :: Sig
+    D |- Sig x:A.B type
+
+    D |- A type
+    D, x:A |- P chk prop
+    -------------------- :: Refine
+    D |- {x:A.P} type
+
+defn
+  D |- M : A :: :: Term :: tm_ {{ com term $[[M]]$ has type $[[A]]$ }} by
+
+defn
+  A = B :: :: TyEq :: tyeq_ {{ com $[[A]]$ and $[[B]]$ are equal as types }} by
+
+defn
+  D |- M = N : A :: :: TmEq :: tmeq_ {{ com $[[M]]$ and $[[N]]$ are equal as terms of type $[[A]]$ }} by
+
+defn
+  D |- P chk prop :: :: Prop :: prop_ {{ com $[[P]]$ type checks as a $[[prop]]$ }} by
+
+defn
+  D |- M chk A :: :: TyIntro :: TyIn_  {{ com $[[M]]$ checks against type $[[A]]$ }} by
+
+    D, x:A |- M chk B
+    ---------------------- :: Pi
+    D |- \x.M chk Pi x:A.B
+
+    D |- M chk A
+    D |- N chk B[M/x]
+    ------------------------- :: Sig
+    D |- (M, N) chk Sig x:A.B
+
+    D |- M chk A
+    D |= P[M/x]
+    --------------------- :: Refine
+    D |- in M chk {x:A.P}
+
+    D |- K syn A
+    A = B
+    ------------ :: Elim
+    D |- K chk B
+
+defn
+  D |- K syn A :: :: TyElim :: TyEl_ {{ com $[[K]]$ synthesizes type $[[A]]$ }} by
+
+    D |- K syn Pi x:A.B
+    D |- M chk A
+    ------------------- :: Pi
+    D |- K M syn B[M/x]
+
+    D |- K syn Sig x:A.B
+    -------------------- :: Fst
+    D |- fst K syn A
+
+    D |- K syn Sig x:A.B
+    --------------------------- :: Snd
+    D |- snd K syn B[fst K / x]
+
+    D |- K syn {x:A.P}
+    ------------------ :: Refine
+    D |- out K syn A
+
+    D |- A type
+    D |- M chk A
+    -------------- :: Ascription
+    D |- M:A syn A
+
+defn
+  D |= P :: :: Prove :: Pr_ {{ com Proof obligation $[[P]]$ }} by
+
+    D |- K syn {x:A.P}
+    ------------------ :: Refine
+    D |= P[out K / x]
+
+defn
+  D ; P |- E chk x : A . Q :: :: CompIntro :: CompIn_ {{ com With $[[D]], [[P]], [[A]]$ check that $[[E]]$ returns a value of type $[[A]]$ with postcond. $[[Q]]$ }} by
+
+defn
+  D ; P |- E syn x : A . Q :: :: CompElim :: CompEl_ {{ com With $[[D]], [[P]], [[E]], [[A]]$ as input, synthesize the strongest postcondition $[[Q]]$ }} by

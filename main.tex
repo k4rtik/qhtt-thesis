@@ -183,10 +183,6 @@ A type theory is a formal system of rewriting in which each term has a type, not
 
 where $P$ and $Q$ are pre- and post-conditions and $x:A$ is the return value, thus incorporating the specification methodology of Hoare logic into types. A Hoare type can also be seen as a refinement of the concept of a ``monad'' that are common in functional programming and are similarly used to isolate effects. The main addition is that such a ``Hoare monad'' is not only indexed by the the type of computation but also with the pre- and post-conditions that must be satisfied by the given computation.
 
-\nonterms{Typ}
-
-\drule{tyRefine}
-
 \subsection{Quantum Computing}
 TODO:
 
@@ -284,6 +280,22 @@ In \cref{sec:teleport}, when we presented code for quantum teleportation, it is 
 \bibliography{references}
 
 \appendix
+
+\section{Grammar}
+
+\nonterms{Typ}
+\nonterms{Prop}
+\nonterms{ElimTm}
+\nonterms{IntroTm}
+\nonterms{MonoTyp}
+\nonterms{Comm}
+\nonterms{U}
+\nonterms{Comp}
+\nonterms{Delta}
+
+\section{Typing rules}
+
+\drules[ctx]{$\vdash \Delta$ \textbf{ctx}}{context formation}{Empty,Type,Prop}
 
 \section{Other examples}
 

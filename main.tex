@@ -27,7 +27,7 @@
 \lstloadlanguages{Haskell}
 \lstdefinelanguage{QHaskell}{
     language     = Haskell,
-    morekeywords = {bit, qbit, U, C, meas, apply, to, requires, ensures},
+    morekeywords = {bit, qbit, unit, U, C, meas, apply, to, requires, ensures},
 }
 
 \lstset{
@@ -119,9 +119,9 @@ Recent academic languages such as QWire and Silq that employ a linear type syste
 
 The most common approach to reason with pre-and post-conditions in the classical domain is to use variations of Floyd-Hoare logic that utilize specification triples of the form ${P} c {Q}$, where $c$ is the program to be executed, $P$ a proposition on the initial state associated with the program (pre-condition) and, $Q$ that on the final state (post-condition). The intuitive reading of such as triple is that if the pre-condition holds true on the program state before executing the program, then if the program terminates, the post-condition must hold true. These triples along with a set of axioms and inference rules for composing them together have proven to be quite effective in proving correctness of classical state-manipulating (imperative) programs over the last several decades. It is no surprise that similar logics have appeared in the quantum computing domain as well.
 
-Hoare Type Theory (HTT) incorporates Hoare-style specifications into types that can then be used to statically enforce desired properties about the program state. This is made possible with the use of dependent types that can depend on values (instead of just another types) and add immense expressive power to a programming language. In effect, we obtain a functional programming language in which imperative code is encapsulated within a computation type which is indexed by the type of the result of the computation, and its specification in the form of pre- and post-conditions. In this work, we consider the problem of reasoning about quantum programs in HTT and present our Quantum Hoare Type Theory (QHTT).
+Hoare Type Theory (HTT) incorporates Hoare-style specifications into types that can then be used to statically enforce desired properties about the program state. This is made possible with the use of dependent types that can depend on values (instead of just other types) and add immense expressive power to a programming language. In effect, we obtain a functional programming language in which imperative code is encapsulated within a computation type which is indexed by the type of the result of the computation, and its specification in the form of pre- and post-conditions. We then obtain a system where the process of type checking a program becomes equivalent to verifying that the program meets the given specification. In this work, we consider the problem of reasoning about quantum programs in HTT and present our Quantum Hoare Type Theory (QHTT).
 
-To achieve this, we replace the classical primitive commands from the original HTT with quantum-specific primitive commands and make use of a novel approach by Unruh \cite{unruh2019} and employ ghost variables for reasoning locally about quantum state in our quantum proposition logic.
+To achieve this, we replace the classical primitive commands from the original HTT with quantum-specific primitive commands and make use of a novel approach by Unruh \cite{unruh2019} and employ ghost variables for reasoning locally about quantum state in our quantum proposition logic. Further, the use of ghost variables enables an expressive language of propositions in which we can specify predicates about the equality, superposition and entanglement of qubits.
 
 We limit our presentation to quantum programs that do not involve iteration. This is not to suggest that iteration is not supported in the system, only that we are yet to study it.
 
@@ -156,9 +156,17 @@ Further, there are rules of inference that are required to derive new theorems f
     {P \Rightarrow Q \\ \{Q\}\ c\ \{R\}}
     {\{P\}\ c\ \{R\}}
 \end{mathpar}
+
 The first rule says that if the execution of a program $c$ ensures the truth of post-condition $Q$, then it also ensures the truth of any proposition $R$ logically implied by $Q$. This effectively lets us weaken the post-condition.
 
 In the other direction, we can strengthen the pre-condition using the second rule which says that if $Q$ is a pre-condition of program $c$, then so is any other proposition $P$ that logically implies $Q$.
+
+Alternatively, we can provide a single rule combining the two above:
+\begin{mathpar}
+    \inferrule[Rule of consequence]
+    {P \Rightarrow Q \\ \{Q\}\ c\ \{R\} \\ R \Rightarrow S}
+    {\{P\}\ c\ \{S\}}
+\end{mathpar}
 
 The next rule lets us compose sequential programs together:
 \begin{mathpar}
@@ -170,14 +178,36 @@ where semicolon denotes sequential composition of programs. The rule of composit
 
 These are the most important rules that we will need to understand the formal system presented below. We do not present other rules such as that for iteration (which we will not need) and others that can be derived. We also note that since we do not have an iteration construct in our system, we do not run into the issue of reasoning about termination of programs. In other words, all programs presented in our system will be terminating.
 
+There is one other crucial concept we need to understand before moving to the next section. Let us motivate it with the help of an example that will also serve the purpose of demonstrating how to use Hoare logic. Suppose we are given the following simple triple:
+\begin{mathpar}
+    \{x = 1\}\ x := 5\ \{x > 0\}
+\end{mathpar}
+
+This obviously seems correct. But how can we mechanically use the formal system just described to show this triple is valid? The missing piece is the idea of a ``strongest post-condition''. Given the assignment statement, we can compute the strongest possible post-condition to be $x = 5$, which implies $x > 0$ that is the given post-condition. Now, we can use the first rule of consequence (weakening the post-condition) to derive the given triple. We will use the notation $sp(c, P)$ for the function that computes the strongest post-condition for a given statement $c$ and pre-condition $P$.
+
+In Hoare Type Theory that we describe next and its quantum variant later, inferring the strongest post-condition for each statement will be the most important step during the process of type checking.
+
 \subsection{Hoare Type Theory}
 
 A type theory is a formal system of rewriting in which each term has a type, notated as $t:A$ for a term $t$ and a type $A$. A type theory that admits dependent types can be called a dependent type theory. Hoare Type Theory or HTT is a specific dependent type theory that introduces a type constructor called a ``Hoare type'' which isolates effectful programs from the remaining functional core language. In its most basic form, a Hoare type is written as:
 \begin{mathpar}
     \{P\}x:A\{Q\}
 \end{mathpar}
-
 where $P$ and $Q$ are pre- and post-conditions and $x:A$ is the return value, thus incorporating the specification methodology of Hoare logic into types. A Hoare type can also be seen as a refinement of the concept of a ``monad'' that are common in functional programming and are similarly used to isolate effects. The main addition is that such a ``Hoare monad'' is not only indexed by the the type of computation but also with the pre- and post-conditions that must be satisfied by the given computation.
+
+How do we verify programs in HTT? Like we saw above in the example for Hoare logic, a user can provide arbitrary pre- and post-conditions as the type for their program. In HTT, the process of verifying that the given triple is valid is performed during type checking. In order to do so, the type checking process in HTT is carefully divided into two phases: The first phase performs basic type checking and infers the strongest post-conditions in the form of verification conditions at each step of the program. In the second phase, we need to verify that the verification conditions hold. The first phase is decidable but the second phase may not be, hence for the second phase, either the verification conditions are deferred to an automated theorem prover (such as Z3) or need to be validated manually (in an interactive theorem prover such as Coq).
+
+Let's consider the example we saw in the previous section written in HTT:
+\begin{lstlisting}[language=QHaskell]
+    x := 5 : {x = 1} r:unit {x > 0}
+\end{lstlisting}
+where $r$ is the variable that holds the result of the assignment statement. Since an assignment returns nothing, we see the type of output is $unit$ and the pre- and post-conditions are same as before.
+
+In an alternate syntax inspired by the F* programming language (which takes a hybrid approach between automated and interactive theorem proving and is an evolution of HTT), that we will use in our presentation in this work, we can write the above triple as:
+\begin{lstlisting}[language=QHaskell]
+    x := 5 : ST r:unit (requires {x = 1}) (ensures {x > 0})
+\end{lstlisting}
+which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify state (here assignment) and it is indexed by the result of the computation and its two pre- and post-conditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we will christen our quantum state monad as $QST$. But let us first talk about quantum computing.
 
 \subsection{Quantum Computing}
 TODO:

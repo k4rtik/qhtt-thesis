@@ -142,7 +142,7 @@ which can be interpreted as ``if the pre-condition $P$ is true before the execut
 In the classical setting, the most important command is an assignment statement. Hoare logic states the following axiom for assignment:
 \begin{mathpar}
     \inferrule[Axiom of Assignment]
-    { }
+    {}
     {\{P[x \rightarrow e]\}\ x := e\ \{P\}}
 \end{mathpar}
 where $x$ is an assignable (variable) and $e$ is an expression. The meaning of this fact is that the pre-condition is obtained from the post-condition $P$ by substituting $e$ for all free occurrences of $x$ in $P$.
@@ -219,7 +219,25 @@ TODO:
 
 - define the meaning of subspace/projector-based predicates/propositions.
 
+\nonterms{Prop}
+\nonterms{Cmd}
+
+\begin{mathpar}
+    \inferrule[Unitary]
+    {}
+    {\{P\}\ \textbf{apply}\ U\ \textbf{to}\ x\ \{(U\ \textbf{on}\ x) \cdot P\}}
+\end{mathpar}
+\begin{mathpar}
+    \inferrule[Initialization]
+    {}
+    {\{P\}\ \textbf{init}\ x\ \{P[e \rightarrow x],\ x =_q \ket{0}\}}
+\end{mathpar}
+
 \section{Quantum Hoare Type Theory}
+
+\nonterms{Unitary}
+
+
 
 TODO:
 

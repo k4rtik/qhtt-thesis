@@ -3,11 +3,12 @@ U_f (f: bit -> bit) : (a, b) : (qbit⊗qbit) ->
                           (requires {(a, b) =q |x,y⟩})
                           (ensures  {(c, d) =q |x,y⊕f(x)⟩})
 
-deutsch : U_f -> QST r: bit
-                     (requires {⊤})
-                     (ensures  { (r =c 0 ⇒ f(0) == f(1))
-                               ∧ (r =c 1 ⇒ f(0) != f(1)) })
-deutsch = circ (U_f) -> do
+deutsch : ((qbit⊗qbit) -> QST (qbit⊗qbit)) ->
+          QST r: bit
+              (requires {⊤})
+              (ensures  { (r =c 0 ⇒ f(0) == f(1))
+                        ∧ (r =c 1 ⇒ f(0) != f(1)) })
+deutsch = \U_f -> do
              -- ⊤
              a <- init 0
              -- a =q |0⟩

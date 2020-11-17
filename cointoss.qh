@@ -1,16 +1,16 @@
-cointoss : () -> QST b: bit
-                     (requires {⊤})
-                     (ensures  {uniform(b)})
-cointoss = circ () -> do
+cointoss : unit -> QST b: bit
+                       (requires {⊤})
+                       (ensures  {uniform(b)})
+cointoss = \x.do
               q <- init 0
               apply H to q
               b <- meas q
               return b
 
-cointoss : () -> QST b: bit
-                     (requires {⊤})
-                     (ensures  {uniform(b)})
-cointoss = circ () -> do
+cointoss : unit -> QST b: bit
+                       (requires {⊤})
+                       (ensures  {uniform(b)})
+cointoss = \x.do
               -- ⊤
               q <- init 0
               -- q =q |0⟩

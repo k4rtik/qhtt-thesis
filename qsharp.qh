@@ -1,6 +1,6 @@
 stateFlip : q: qbit -> QST r: qbit
                            (requires {q =q α|0⟩+β|1⟩})
                            (ensures  {r =q α|1⟩+β|0⟩})
-stateFlip = circ (q) -> do
+stateFlip = \q -> do
                apply X to q
                return q

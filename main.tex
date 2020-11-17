@@ -48,6 +48,7 @@
         {|}{{$\vert$}}1 {⟩}{{$\rangle$}}1
         {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1
         {∈}{{$\in$}}1 {Π}{{$\Pi$}}2
+        {\\}{{$\lambda$}}1
         {∃}{{$\exists$}}2 {∀}{{$\forall$}}2
         {⊗}{{$\otimes$}}2 {⊕}{{$\oplus$}}2
         {⊤}{{$\top$}}2
@@ -326,7 +327,7 @@ In \cref{sec:teleport}, when we presented code for quantum teleportation, it is 
 
 \subsection{Modular teleportation with classical control}
 
-Here is another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with an annotated version with verification steps to ease readability. We do not have any information about the distribution of outcomes for the given bit (lines 42-43) and hence cannot say anything worthwhile in the specification. The max we can do is consider all the outcomes as we end up doing in the inferred propositions in lines 53-59. But this leads to an awkward requirement of an unexplored merge operation when bob's circuit is called (lines 85-98).
+Here is another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with an annotated version with verification steps to ease readability. We do not have any information about the distribution of outcomes for the given bit (lines 45-46) and hence cannot say anything worthwhile in the specification. The max we can do is consider all the outcomes as we end up doing in the inferred propositions in lines 57-63. But this leads to an awkward requirement of an unexplored merge operation when bob's circuit is called (lines 89-102).
 
 \lstinputlisting[language=QHaskell,caption=Modular teleport with if then else]{teleport2.qh}
 

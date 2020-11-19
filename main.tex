@@ -201,17 +201,13 @@ where $P$ and $Q$ are pre- and postconditions and $x:A$ is the return value, thu
 
 How do we verify programs in HTT? Like we saw above in the example for Hoare logic, a user can provide arbitrary pre- and postconditions as the type for their program. In HTT, the process of verifying that the given triple is valid is performed during type checking. In order to do so, the type checking process in HTT is carefully divided into two phases: The first phase performs basic type checking and infers the strongest postconditions in the form of verification conditions at each step of the program. In the second phase, we need to verify that the verification conditions hold. The first phase is decidable but the second phase may not be, hence for the second phase, either the verification conditions are deferred to an automated theorem prover (such as Z3) or need to be validated manually (in an interactive theorem prover such as Coq).
 
-Let's consider the example we saw in the previous section written in HTT:
-\begin{lstlisting}[language=QHaskell]
-    x := 5 : {x = 1} r:unit {x > 0}
-\end{lstlisting}
-where $r$ is the variable that holds the result of the assignment statement. Since an assignment returns nothing, we see the type of output is $unit$ and the pre- and postconditions are same as before.
+Let's consider the example we saw in the previous section written in HTT:\medskip\\
+\lstinline[language=QHaskell]!x := 5 : {x = 1} r:unit {x > 0}!
+\medskip\\where $r$ is the variable that holds the result of the assignment statement. Since an assignment returns nothing, we see the type of output is $unit$ and the pre- and postconditions are same as before.
 
-In an alternate syntax inspired by the F* programming language (which takes a hybrid approach between automated and interactive theorem proving and is an evolution of HTT), that we will use in our presentation in this work, we can write the above triple as:
-\begin{lstlisting}[language=QHaskell]
-    x := 5 : ST r:unit (requires {x = 1}) (ensures {x > 0})
-\end{lstlisting}
-which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify state (here assignment) and it is indexed by the result of the computation and its two pre- and postconditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we will christen our quantum state monad as $QST$. But let us first talk about quantum computing.
+In an alternate syntax inspired by the F* programming language (which takes a hybrid approach between automated and interactive theorem proving and is an evolution of HTT), that we will use in our presentation in this work, we can write the above triple as:\medskip\\
+\lstinline[language=QHaskell]!x := 5 : ST r:unit (requires {x = 1}) (ensures {x > 0})!
+\medskip\\which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify state (here assignment) and it is indexed by the result of the computation and its two pre- and postconditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we will christen our quantum state monad as $QST$. But let us first talk about quantum computing.
 
 \subsection{Quantum Computing}
 TODO:
@@ -223,7 +219,6 @@ TODO:
 - define the meaning of subspace/projector-based predicates/propositions.
 
 \nonterms{Prop}
-\nonterms{Cmd}
 
 \begin{mathpar}
     \inferrule[Unitary]
@@ -237,10 +232,48 @@ TODO:
 \end{mathpar}
 
 \section{Quantum Hoare Type Theory}
+To design a Hoare Type Theory for quantum computation, we need to consider some assumptions about quantum state and its programming model.
+
+We will use the term ``state space'' to refer to the quantum state throughout that refers to the finite-dimensional complex inner product space. Each program is assumed to have access to a pool of countably infinite number of logical qubits that can be used on demand. With ``logical'' we mean a qubit with no errors; this may be realized using quantum error correction techniques. We define primitive quantum commands for qubit initialization, unitary application and measurement next.
+
+\subsection{Primitive quantum commands}
+
+\subsubsection{Initialization}
+\lstinline[language=QHaskell]{init M : bit -> QST qbit}\medskip
+
+We can initialize only one qubit at a time in either of the two computational basis states, $\ket{0}$ or $\ket{1}$. The initialization command \lstinline[language=QHaskell]{x <- init 0} allocates a fresh qubit from the global pool, initializes it to $\ket{0}$ and returns a reference to the qubit and binds it to $x$.
+
+\subsubsection{Measurement}
+
+\lstinline[language=QHaskell]{meas M : qbit -> QST bit}\medskip
+
+The measurement command, in effect, returns the qubit back to the pool after returning the result of measurement as a bit. We assume all measurements to be in the computational basis.
+
+\subsubsection{Unitary application}
+
+\lstinline[language=QHaskell]{apply G to M : U -> qbit⊗...⊗qbit -> QST unit}\medskip
+
+The unitary application command takes a gate from the set of predefined unitary gates and applies it a given number of qubits (can be a single qubit or a tuple of qubits matching the number of qubits required by the gate). Since it modifies the state in place, it returns the trivial unit output.
+
+\nonterms{Typ}
+
+\nonterms{Tm}
 
 \nonterms{Unitary}
 
+\nonterms{Cmd}
 
+TODO:
+
+- a more general version could be
+
+init M : bitstr -> QST qbitstr
+
+\begin{mathpar}
+    \inferrule[Measure]
+    {}
+    {\HoareT{P}{\textbf{meas}\ q}{P[e \rightarrow x],\ x =_q \ket{0}}}
+\end{mathpar}
 
 TODO:
 

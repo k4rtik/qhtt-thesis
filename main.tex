@@ -11,7 +11,6 @@
 \usepackage{xspace}
 \usepackage[capitalize]{cleveref}
 \crefformat{section}{\S#2#1#3}
-% \crefformat{figure}{Fig. #2#1#3}
 
 % \usepackage{adjustbox}
 \usepackage{tikz}
@@ -59,6 +58,10 @@
         {\ .\ }{{$\cdot$}}1
         {β00}{{$\beta_{00}$}}2
         {==}{{$=$}}1 {!=}{{$\neq$}}1
+}
+
+\newcommand{\HoareT}[3]{
+    \{#1\} ~#2~ \{#3\}
 }
 
 \usepackage{blindtext}
@@ -118,7 +121,7 @@ In classical software development, the use of strong static type systems has bee
 
 Recent academic languages such as QWire and Silq that employ a linear type system to statically enforce the no-cloning theorem of quantum mechanics show promise in the validity of statically preventing bugs in the quantum domain. However, semantic properties about the quantum state such as whether a qubit is in superposition or whether it is entangled with some other qubit have not been tackled with the help of types. Further, assertions in the form of pre- and postconditions around small pieces of code have shown the most promise in the quantum domain. It seems fair as we humans can only hold so much information about the quantum state in our brains that it makes sense to be able to reason about pieces of quantum code in a modular manner.
 
-The most common approach to reason with pre- and postconditions in the classical domain is to use variations of Floyd-Hoare logic that utilize specification triples of the form ${P} c {Q}$, where $c$ is the program to be executed, $P$ a proposition on the initial state associated with the program (precondition) and, $Q$ that on the final state (postcondition). The intuitive reading of such as triple is that if the precondition holds true on the program state before executing the program, then if the program terminates, the postcondition must hold true. These triples along with a set of axioms and inference rules for composing them together have proven to be quite effective in proving correctness of classical state-manipulating (imperative) programs over the last several decades. It is no surprise that similar logics have appeared in the quantum computing domain as well.
+The most common approach to reason with pre- and postconditions in the classical domain is to use variations of Floyd-Hoare logic that utilize specification triples of the form $\HoareT{P}{c}{Q}$, where $c$ is the program to be executed, $P$ a proposition on the initial state associated with the program (precondition) and, $Q$ that on the final state (postcondition). The intuitive reading of such as triple is that if the precondition holds true on the program state before executing the program, then if the program terminates, the postcondition must hold true. These triples along with a set of axioms and inference rules for composing them together have proven to be quite effective in proving correctness of classical state-manipulating (imperative) programs over the last several decades. It is no surprise that similar logics have appeared in the quantum computing domain as well.
 
 Hoare Type Theory (HTT) incorporates Hoare-style specifications into types that can then be used to statically enforce desired properties about the program state. This is made possible with the use of dependent types that can depend on values (instead of just other types) and add immense expressive power to a programming language. In effect, we obtain a functional programming language in which imperative code is encapsulated within a computation type which is indexed by the type of the result of the computation, and its specification in the form of pre- and postconditions. We then obtain a system where the process of type checking a program becomes equivalent to verifying that the program meets the given specification. In this work, we consider the problem of reasoning about quantum programs in HTT and present our Quantum Hoare Type Theory (QHTT).
 
@@ -135,7 +138,7 @@ In the late 1960's, Robert Floyd and Tony Hoare came up with a set of axioms and
 
 As noted above, this technique involves the use of Hoare triples of the form:
 \begin{mathpar}
-    \{P\}\ c\ \{Q\}
+    \HoareT{P}{c}{Q}
 \end{mathpar}
 which can be interpreted as ``if the precondition $P$ is true before the execution of the program $c$, then the postcondition $Q$ will be true on its completion.''
 
@@ -143,19 +146,19 @@ In the classical setting, the most important command is an assignment statement.
 \begin{mathpar}
     \inferrule[Axiom of Assignment]
     {}
-    {\{P[x \rightarrow e]\}\ x := e\ \{P\}}
+    {\HoareT{P[x \rightarrow e]}{x := e}{P}}
 \end{mathpar}
 where $x$ is an assignable (variable) and $e$ is an expression. The meaning of this fact is that the precondition is obtained from the postcondition $P$ by substituting $e$ for all free occurrences of $x$ in $P$.
 
 Further, there are rules of inference that are required to derive new theorems from one or more axioms or theorems already proved. We first look at the two ``rules of consequence'':
 \begin{mathpar}
     \inferrule[Weakening the postcondition]
-    {\{P\}\ c\ \{Q\} \\ Q \Rightarrow R}
-    {\{P\}\ c\ \{R\}}
+    {\HoareT{P}{c}{Q} \\ Q \Rightarrow R}
+    {\HoareT{P}{c}{R}}
 
     \inferrule[Strengthening the precondition]
-    {P \Rightarrow Q \\ \{Q\}\ c\ \{R\}}
-    {\{P\}\ c\ \{R\}}
+    {P \Rightarrow Q \\ \HoareT{Q}{c}{R}}
+    {\HoareT{P}{c}{R}}
 \end{mathpar}
 
 The first rule says that if the execution of a program $c$ ensures the truth of postcondition $Q$, then it also ensures the truth of any proposition $R$ logically implied by $Q$. This effectively lets us weaken the postcondition.
@@ -165,15 +168,15 @@ In the other direction, we can strengthen the precondition using the second rule
 Alternatively, we can provide a single rule combining the two above:
 \begin{mathpar}
     \inferrule[Rule of consequence]
-    {P \Rightarrow Q \\ \{Q\}\ c\ \{R\} \\ R \Rightarrow S}
-    {\{P\}\ c\ \{S\}}
+    {P \Rightarrow Q \\ \HoareT{Q}{c}{R} \\ R \Rightarrow S}
+    {\HoareT{P}{c}{S}}
 \end{mathpar}
 
 The next rule lets us compose sequential programs together:
 \begin{mathpar}
     \inferrule[Rule of Composition]
-    {\{P\}\ c\ \{Q\} \\ \{Q\}\ d\ \{R\}}
-    {\{P\}\ c\ \textbf{;}\ d\ \{R\}}
+    {\HoareT{P}{c}{Q} \\ \HoareT{Q}{d}{R}}
+    {\HoareT{P}{c\ \textbf{;}\ d}{R}}
 \end{mathpar}
 where semicolon denotes sequential composition of programs. The rule of composition states that if the postcondition of the first program is identical to the precondition of the second program under which it satisfies its postcondition $R$, then the composition of the programs will satisfy $R$, given that the first program satisfies its precondition $P$.
 
@@ -181,7 +184,7 @@ These are the most important rules that we will need to understand the formal sy
 
 There is one other crucial concept we need to understand before moving to the next section. Let us motivate it with the help of an example that will also serve the purpose of demonstrating how to use Hoare logic. Suppose we are given the following simple triple:
 \begin{mathpar}
-    \{x = 1\}\ x := 5\ \{x > 0\}
+    \HoareT{x = 1}{x := 5}{x > 0}
 \end{mathpar}
 
 This obviously seems correct. But how can we mechanically use the formal system just described to show this triple is valid? The missing piece is the idea of a ``strongest postcondition''. Given the assignment statement, we can compute the strongest possible postcondition to be $x = 5$, which implies $x > 0$ that is the given postcondition. Now, we can use the first rule of consequence (weakening the postcondition) to derive the given triple. We will use the notation $sp(c, P)$ for the function that computes the strongest postcondition for a given statement $c$ and precondition $P$.
@@ -192,7 +195,7 @@ In Hoare Type Theory that we describe next and its quantum variant later, inferr
 
 A type theory is a formal system of rewriting in which each term has a type, notated as $t:A$ for a term $t$ and a type $A$. A type theory that admits dependent types can be called a dependent type theory. Hoare Type Theory or HTT is a specific dependent type theory that introduces a type constructor called a ``Hoare type'' which isolates effectful programs from the remaining functional core language. In its most basic form, a Hoare type is written as:
 \begin{mathpar}
-    \{P\}x:A\{Q\}
+    \HoareT{P}{x:A}{Q}
 \end{mathpar}
 where $P$ and $Q$ are pre- and postconditions and $x:A$ is the return value, thus incorporating the specification methodology of Hoare logic into types. A Hoare type can also be seen as a refinement of the concept of a ``monad'' that are common in functional programming and are similarly used to isolate effects. The main addition is that such a ``Hoare monad'' is not only indexed by the the type of computation but also with the pre- and postconditions that must be satisfied by the given computation.
 
@@ -225,12 +228,12 @@ TODO:
 \begin{mathpar}
     \inferrule[Unitary]
     {}
-    {\{P\}\ \textbf{apply}\ U\ \textbf{to}\ x\ \{(U\ \textbf{on}\ x) \cdot P\}}
+    {\HoareT{P}{\textbf{apply}\ U\ \textbf{to}\ x}{(U\ \textbf{on}\ x) \cdot P}}
 \end{mathpar}
 \begin{mathpar}
     \inferrule[Initialization]
     {}
-    {\{P\}\ \textbf{init}\ x\ \{P[e \rightarrow x],\ x =_q \ket{0}\}}
+    {\HoareT{P}{\textbf{init}\ x}{P[e \rightarrow x],\ x =_q \ket{0}}}
 \end{mathpar}
 
 \section{Quantum Hoare Type Theory}

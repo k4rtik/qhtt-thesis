@@ -7,6 +7,7 @@
 \usepackage{mathpartir}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{braket}
 \usepackage{xspace}
 \usepackage[capitalize]{cleveref}
@@ -64,6 +65,11 @@
     \{#1\} ~#2~ \{#3\}
 }
 
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
 \usepackage{blindtext}
 \usepackage{ottalt}
 \inputott{htt.ott.tex}
@@ -99,11 +105,11 @@
 
 \tableofcontents
 
+\listoftables
+
 \listoffigures
 
 \lstlistoflistings
-
-% \listoftables
 
 \pagenumbering{arabic}
 
@@ -132,6 +138,7 @@ We limit our presentation to quantum programs that do not involve iteration. Thi
 Our investigation suggests that QHTT has the potential to be a unified system for programming, specifying, and reasoning about quantum programs.
 
 \section{Background}
+In this section, we provide background on the core ideas from existing literature that form the foundation for our work --- Hoare logic, Hoare Type Theory (HTT), quantum computing, and quantum Hoare logic defined with ghost variables.
 
 \subsection{Floyd-Hoare logic}
 In the late 1960's, Robert Floyd and Tony Hoare came up with a set of axioms and rules of inference that can be used to prove properties of computer programs. This approach is commonly just known as Hoare logic as Hoare was the first to apply it to text-based programs, while Floyd had applied it to flowcharts. Here we present the axioms and rules of Hoare logic in a natural deduction style.
@@ -207,12 +214,101 @@ Let's consider the example we saw in the previous section written in HTT:\medski
 
 In an alternate syntax inspired by the F* programming language (which takes a hybrid approach between automated and interactive theorem proving and is an evolution of HTT), that we will use in our presentation in this work, we can write the above triple as:\medskip\\
 \lstinline[language=QHaskell]!x := 5 : ST r:unit (requires {x = 1}) (ensures {x > 0})!
-\medskip\\which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify state (here assignment) and it is indexed by the result of the computation and its two pre- and postconditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we will christen our quantum state monad as $QST$. But let us first talk about quantum computing.
+\medskip\\which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify state (here assignment) and it is indexed by the result of the computation and its two pre- and postconditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we will christen our quantum state monad as $QST$. But let us first talk about quantum computation.
 
-\subsection{Quantum Computing}
+\subsection{Quantum Computation}
+It is well known that quantum computation can be described in terms of elementary linear algebra. Before we say anything more about quantum computation, let us make precise some specific mathematical definitions that we will need. We assume familiarity with basic notions such as vectors, matrices, vector spaces, inner product, bases, linear independence, etc.
+
+% \begin{definition}[Vector Space]
+%     TODO: scalar field and operations
+% \end{definition}
+
+\begin{definition}[Vector Subspace]
+	A subspace of a vector space is a subset of its vectors which is closed under the operations of vector addition and scalar multiplication.
+\end{definition}
+
+\begin{remark}
+    All vector spaces are equipped with at least two (\textit{trivial}) subspaces: the singleton set, $\{ 0 \}$, consisting of the zero vector and the vector space itself.
+\end{remark}
+
+Quantum computation is usually described over a specific vector space called \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space equipped with an inner product ($\mathbb{C}^n$). In this work, we will often use the term ``state space'' to refer to a finite dimensional Hilbert space.
+
+\begin{definition}[Span of a subspace]
+	For any subspace $X$ in a Hilbert space $\mathcal{H}$, written ($X \subseteq \mathcal{H}$), $\mathit{span}(X)$ is the smallest closed subspace of $\mathcal{H}$ containing $X$. In other words, $\mathit{span}(X)$ is the set of linear combinations of vectors in $X$.
+\end{definition}
+
+The basic unit of information in quantum computing is a qubit, that can be represented using a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can write an arbitrary qubit, $\ket{\psi}$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
+\begin{mathpar}
+ \ket{\psi} = \alpha\ket{0} + \beta\ket{1}   
+\end{mathpar}
+where $\ket{0}=\begin{bsmallmatrix}
+1 \\
+0
+\end{bsmallmatrix}$ and $\ket{1}=\begin{bsmallmatrix}
+0 \\
+1
+\end{bsmallmatrix}$, and the two constants $\alpha, \beta$ are complex amplitudes that are normalized using the constraint $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured, the probability of the qubit being in the state 0 is $|\alpha|^2$ and that for the state 1 is $|\beta|^2$. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$. Computation is performed by the application of unitary quantum gates, such as the Hadamard (\textbf{H}) gate or the controlled-Not (\textbf{CX}) gate, that can be represented as square matrices. Mathematically, a gate application is equivalent to multiplying the matrix representing the gate with the state vector of the qubit(s). \cref{table:gates} shows some commonly used gates along with their matrix representations.
+
+This basic unit of information is not the only reason why quantum computing is fundamentally different from classical computing---certain quantum mechanical phenomenon are highly counter-intuitive! One such phenomenon is \textit{quantum entanglement} which, at its most basic level, involves a correlation between two qubits such that when one is measured, the outcome obtained necessarily influences the measurement outcome of the other qubit (even if the two qubits are far apart).
+
+\begin{table}
+\centering
+\begin{tabular}{ c c c c }
+ \textbf{Gate} & \textbf{Name} & \textbf{Notation} & \textbf{Matrix}\\[2mm]
+ I & Identity & \begin{tikzcd} & \gate{I} & \qw \end{tikzcd} & $\begin{bmatrix}
+1 & 0 \\
+0 & 1
+\end{bmatrix}$\\[4mm]
+ X & Pauli X & \begin{tikzcd}
+     & \gate{X} & \qw 
+ \end{tikzcd} & $\begin{bmatrix}
+0 & 1\\
+1 & 0
+\end{bmatrix}$\\[4mm]
+ Y & Pauli Y & \begin{tikzcd}
+     & \gate{Y} & \qw 
+ \end{tikzcd} & $\begin{bmatrix}
+0 & -i\\
+i & 0
+\end{bmatrix}$\\[4mm]
+ Z & Pauli Z & \begin{tikzcd}
+     & \gate{Z} & \qw 
+ \end{tikzcd} & $\begin{bmatrix}
+1 & 0 \\
+0 & -1
+\end{bmatrix}$\\[4mm]
+ H & Hadamard & \begin{tikzcd}
+     & \gate{H} & \qw 
+ \end{tikzcd} & $\frac{1}{\sqrt{2}}\begin{bmatrix}
+1 & 1 \\
+1 & -1
+\end{bmatrix}$\\[4mm]
+ CX & controlled-NOT & \begin{tikzcd}
+     & \ctrl{1} & \qw \\
+     & \targ{} & \qw
+ \end{tikzcd} & $\begin{bmatrix}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 0 & 1\\
+0 & 0 & 1 & 0
+\end{bmatrix}$\\[8mm]
+ CZ & controlled-Z & \begin{tikzcd}
+    & \ctrl{1} & \qw \\
+    & \gate{Z} & \qw
+ \end{tikzcd} & $\begin{bmatrix}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & -1
+\end{bmatrix}$    
+\end{tabular}
+\caption{Common unitary gates in quantum computation}
+\label{table:gates}
+\end{table}
+
 TODO:
 
-- basics of quantum computing (4 laws, superposition and entanglement, pure vs mixed states)
+- 4 laws? pure vs mixed states
 
 \subsection{Quantum Hoare logic with ghost variables}
 
@@ -234,7 +330,7 @@ TODO:
 \section{Quantum Hoare Type Theory}
 To design a Hoare Type Theory for quantum computation, we need to consider some assumptions about quantum state and its programming model.
 
-We will use the term ``state space'' to refer to the quantum state throughout that refers to the finite-dimensional complex inner product space. Each program is assumed to have access to a pool of countably infinite number of logical qubits that can be used on demand. With ``logical'' we mean a qubit with no errors; this may be realized using quantum error correction techniques. We define primitive quantum commands for qubit initialization, unitary application and measurement next.
+Each program is assumed to have access to a pool of countably infinite number of logical qubits that can be used on demand. With ``logical'' we mean a qubit with no errors; this may be realized using quantum error correction techniques. We define primitive quantum commands for qubit initialization, unitary application and measurement next.
 
 \subsection{Primitive quantum commands}
 

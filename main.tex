@@ -70,7 +70,7 @@
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 
-\usepackage{blindtext}
+% \usepackage{blindtext}
 \usepackage{ottalt}
 \inputott{htt.ott.tex}
 
@@ -98,7 +98,9 @@
 \maketitle
 
 \begin{abstract}
-    \blindtext
+    As quantum computers become real, it is high time we come up with effective techniques that help programmers write correct quantum programs. In classical computing, formal verification and sound static type systems prevent several classes of bugs from being introduced. There is a need for similar techniques in the quantum regime. Inspired by Hoare Type Theory in the classical paradigm, we propose Quantum Hoare Types by extending the Quantum IO Monad by indexing it with pre- and postconditions that serve as program specifications. In this paper, we introduce Quantum Hoare Type Theory (QHTT), present its syntax and typing rules, and demonstrate its effectiveness with the help of examples.
+
+    QHTT has the potential to be a unified system for programming, specifying, and reasoning about quantum programs.
 \end{abstract}
 
 \thispagestyle{empty}
@@ -110,8 +112,6 @@
 \listoffigures
 
 \lstlistoflistings
-
-\pagenumbering{arabic}
 
 \section{Introduction}
 
@@ -239,7 +239,7 @@ Quantum computation is usually described over a specific vector space called \te
 
 The basic unit of information in quantum computing is a qubit, that can be represented using a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can write an arbitrary qubit, $\ket{\psi}$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
 \begin{mathpar}
- \ket{\psi} = \alpha\ket{0} + \beta\ket{1}   
+ \ket{\psi} = \alpha\ket{0} + \beta\ket{1}
 \end{mathpar}
 where $\ket{0}=\begin{bsmallmatrix}
 1 \\
@@ -260,25 +260,25 @@ This basic unit of information is not the only reason why quantum computing is f
 0 & 1
 \end{bmatrix}$\\[4mm]
  X & Pauli X & \begin{tikzcd}
-     & \gate{X} & \qw 
+     & \gate{X} & \qw
  \end{tikzcd} & $\begin{bmatrix}
 0 & 1\\
 1 & 0
 \end{bmatrix}$\\[4mm]
  Y & Pauli Y & \begin{tikzcd}
-     & \gate{Y} & \qw 
+     & \gate{Y} & \qw
  \end{tikzcd} & $\begin{bmatrix}
 0 & -i\\
 i & 0
 \end{bmatrix}$\\[4mm]
  Z & Pauli Z & \begin{tikzcd}
-     & \gate{Z} & \qw 
+     & \gate{Z} & \qw
  \end{tikzcd} & $\begin{bmatrix}
 1 & 0 \\
 0 & -1
 \end{bmatrix}$\\[4mm]
  H & Hadamard & \begin{tikzcd}
-     & \gate{H} & \qw 
+     & \gate{H} & \qw
  \end{tikzcd} & $\frac{1}{\sqrt{2}}\begin{bmatrix}
 1 & 1 \\
 1 & -1
@@ -300,7 +300,7 @@ i & 0
 0 & 1 & 0 & 0\\
 0 & 0 & 1 & 0\\
 0 & 0 & 0 & -1
-\end{bmatrix}$    
+\end{bmatrix}$
 \end{tabular}
 \caption{Common unitary gates in quantum computation}
 \label{table:gates}
@@ -379,7 +379,7 @@ TODO:
 
 \subsection{Examples}
 
-\blindtext
+In this section, we show some simple examples annotated with their program specifications using their Quantum Hoare types. We provide some commentary on propositions specified for these programs.
 
 \subsubsection{Bell states}
 
@@ -448,10 +448,27 @@ In \cref{sec:teleport}, when we presented code for quantum teleportation, it is 
 
 \section{Conclusion and perspectives}
 
-\blindtext
+\label{sec:conclusion}
+In this paper, we described our work on Quantum Hoare Type Theory which is a dependently typed functional programming language with support for quantum computation. We used the novel quantum Hoare logic by Unruh~\cite{unruh2019} that helped us compactly specify properties about quantum state. This approach has the potential to be a unified system for programming, specification, and reasoning about quantum programs.
+
+There are several avenues of future work to explore:
+
+\paragraph{Quantum Language} Our programming language currently does not support conditionals or any iterative or recursive constructs. We would like to add those in future.
+
+\paragraph{Mechanization} There are multiple implementations of HTT in Coq such as Ynot~\cite{ynot2008}. We would like to mechanize QHTT in Coq, F* or some such dependent type theory for higher assurance of the usefulness and soundness of QHTT. This will also enable us to extract verified circuits in a lower level quantum language such as OpenQASM for execution on real machines.
+
+% \paragraph{Quantum Predicate Logic} An obvious need is to come up with a predicate logic similar to Separation Logic~\cite{reynolds2002} for quantum computing so as to be able to reason about only the interesting portions of the quantum state while still ensuring correctness of non-local effects such as entanglement. Various Quantum Hoare Logics that exist~\cite{ying_floydhoare_2012} currently do not support frame rules that provide Separation Logic its power. The closest approach is that taken by \citet{unruh2019} that allows predicates on quantum state similar to what we would like in our setting, such as whether certain qubits are in classical state, or in uniform superposition, entangled or separable. We hope to incorporate these ideas in this work; this may require us to use a subspace semantics for the quantum state as shown in \citet{unruh2019}. We share preliminary work in that direction in the appendix below.
+
+\paragraph{Linearity} Peter Selinger and collaborators have recently proposed a linear dependent typed version of Proto-Quipper (dubbed Proto-Quipper-D)~\cite{selinger2020,fu2020linear}. It is an interesting challenge to reconcile linearity in our theory based on their proposal.
+
+\paragraph{Circuits as Arrows} Further, Proto-Quipper treats quantum circuits as first class citizens of the language. We would like to explore modifying our theory to treat Quantum Hoare types as arrows instead of as monads as was suggested by \cite{so-arrows}. It makes sense from the perspective of sequential composition as arrows can have an arbitrary number of input/outputs as opposed to monads.
+
+\paragraph{Behavioural Types} Another venue for exploration is to incorporate more precise types that can distinguish between qubits in pure classical state vs. those in superposition vs. those in entanglement such as those inspired by the various quantum resource theories or the Heisenberg representation of quantum mechanics. This may help us provide more specific postconditions that quantum programmers expect to hold true of their programs.
+
+\paragraph{Classical Effects} Finally, it will be an interesting challenge to reconcile both classical and quantum effects together in a single grand unified theory for effects.
 
 \section*{Acknowledgements}
-\blindtext
+I thank John Reppy, Robert Rand and the anonymous reviewers of QPL 2020 for their feedback on an earlier presentation of this work.
 
 \bibliographystyle{eptcsalpha}
 \bibliography{references}

@@ -358,9 +358,15 @@ Each program is assumed to have access to a pool of countably infinite number of
 \subsection{Primitive quantum commands}
 
 \subsubsection{Initialization}
-\indent\indent\indent\lstinline[language=QHaskell]{init M : bit -> QST qbit}\medskip
+\begin{lstlisting}[language=QHaskell]
+init M : b: bit -> QST (q: qbit)
+                       (requires {⊤})
+                       (ensures {q =q |b⟩}
+\end{lstlisting}
 
 We can initialize only one qubit at a time in either of the two computational basis states, $\ket{0}$ or $\ket{1}$. The initialization command \lstinline[language=QHaskell]{x <- init 0} allocates a fresh qubit from the global pool, initializes it to $\ket{0}$ and returns a reference to the qubit and binds it to $x$.
+
+Note that our initialization command is different from Unruh's work discussed in the previous section. The argument to our command is the initial classical value, while in Unruh's $init$ the argument is a qubit that gets initialized to $\ket{0}$.
 
 TODO:
 
@@ -370,17 +376,31 @@ init M : bitstr -> QST qbitstr
 
 \subsubsection{Measurement}
 
-\indent\indent\indent\lstinline[language=QHaskell]{meas M : qbit -> QST bit}\medskip
+\begin{lstlisting}[language=QHaskell]
+meas M : (q: qbit) -> QST (b: bit)
+                          (∃|ψ⟩)
+                          (requires {(q⊗V) =q |ψ⟩})
+                          (ensures {class(b) ∧ ∃e.(e⊗V) =q |ψ⟩})
+\end{lstlisting}
 
 The measurement command, in effect, returns the qubit back to the pool after returning the result of measurement as a bit. We assume all measurements to be in the computational basis.
 
 \subsubsection{Unitary application}
+It is helpful to think of our unitary application command in terms of two variants: one that takes a single-qubit gate and applies to a single qubit and another that takes a two-qubit gate and applies it to a pair of qubits.
 
-\indent\indent\indent\lstinline[language=QHaskell]{apply_1 G_1 to M_1 : U_1 -> qbit -> QST unit}\\
+\begin{lstlisting}[language=QHaskell]
+apply_1 G_1 to M_1 : U_1 -> qbit -> QST unit
+apply_2 G_2 to M_2 : U_2 -> (qbit⊗qbit) -> QST unit
+\end{lstlisting}
 
-\indent\indent\lstinline[language=QHaskell]{apply_2 G_2 to M_2 : U_2 -> qbit⊗qbit -> QST unit}\medskip
+Since it modifies the state in place, it returns the trivial unit output. The pre- and postconditions on the apply command are similar for either of the above two cases:
 
-It is helpful to think of our unitary application command in terms of two variants: one that takes a single-qubit gate and applies to a single qubit and another that takes a two-qubit gate and applies it to a pair of qubits. Since it modifies the state in place, it returns the trivial unit output.
+\begin{lstlisting}[language=QHaskell]
+apply G to M : (g: U) -> qs: (qbit⊗...⊗qbit) -> QST unit
+                                                    (∃P)
+                                                    (requires {P})
+                                                    (ensures {(apply g on qs) . P})
+\end{lstlisting}
 
 \subsection{Syntax}
 

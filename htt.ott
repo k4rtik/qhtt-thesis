@@ -22,7 +22,6 @@ Typ, A, B, C :: Ty ::= {{ com Types }}
   | A -> B             ::   :: Arrow        {{ com Sugar for Pi type }}
   | Sig x : A . B      ::   :: DepSum       {{ com Dependent Sum }}
   | A times B          ::   :: Pair         {{ com Sugar for Sigma type }}
-  % | { x : A . P }      ::   :: Refinement   {{ com Type Refinement }}
   | { P } x : A { Q }  ::   :: Hoare        {{ com Hoare Type }}
   | QST x : A ( requires { P } )
     ( ensures { Q } )  ::   :: QHoare        {{ com Sugar for Q. Hoare Type }}
@@ -38,8 +37,6 @@ Tm, K, L, M, N :: Tm ::= {{ com Terms }}
   | ( M , N )   ::  :: Pair
   | fst K       ::  :: Fst
   | snd K       ::  :: Snd
-  % | in M        ::  :: In
-  % | out K       ::  :: Out
   | do E        ::  :: Do
   | M : A       ::  :: Ascription
 
@@ -64,7 +61,7 @@ Cmd, c :: '' ::= {{ com Commands }}
   | init M                :: :: Initialize
   | apply U to M          :: :: ApplyU
   | meas M                :: :: Measurement
-  % | if M then E1 else E2  :: :: IfThenElse
+  | if M then E1 else E2  :: :: IfThenElse
 
 Unitary, U :: '' ::= {{ com Unitaries }}
   | I     :: :: Identity
@@ -72,7 +69,6 @@ Unitary, U :: '' ::= {{ com Unitaries }}
   | Y     :: :: Y
   | Z     :: :: Z
   | H     :: :: Hadamard
-  % | S     :: :: Phase
   | CX    :: :: ControlledX
   | CZ    :: :: ControlledZ
 
@@ -89,7 +85,6 @@ MonoTyp, t {{ tex \tau }}, s {{ tex \sigma }} :: 'Mon' ::= {{ com Monotypes }}
   | prop              :: :: Proposition
   | Pi x : t . s      :: :: Pi
   | Sig x : t . s     :: :: Sigma
-  % | { x : t . P }     :: :: Refinement
   | { P } s : t { Q } :: :: Hoare
 
 Ctx, G {{ tex \Gamma }} :: 'Ctx' ::= {{ com Contexts }}
@@ -104,7 +99,7 @@ terminals :: 'terminals_' ::=
   | ==cl                   ::   :: eqClass    {{ tex \equiv_{cl} }}
   | o                      ::   :: operator   {{ tex \cdot }}
   % | -->                    ::   :: red        {{ tex \longrightarrow }}
-  % | |=                     ::   :: seqimp     {{ tex \models }}
+  | |=                     ::   :: seqimp     {{ tex \models }}
   |  ->                    ::   :: arrow      {{ tex \rightarrow }}
   | <-                     ::   :: larrow     {{ tex \leftarrow }}
   |  =>                    ::   :: rbarrow    {{ tex \Rightarrow }}

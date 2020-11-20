@@ -16,7 +16,7 @@ bell00 = \x.do
             qa <- init 0
             -- qa =q |0⟩
             apply H to qa
-            -- (H on qa).(qa =q |0⟩) ⇒ qa =q |+⟩
+            -- (H on qa) . (qa =q |0⟩) ⇒ qa =q |+⟩
             qb <- init 0
             -- qa =q |+⟩, qb =q |0⟩
             apply CX to (qa, qb)

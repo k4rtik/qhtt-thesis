@@ -56,6 +56,7 @@
         {⊗}{{$\otimes$}}2 {⊕}{{$\oplus$}}2
         {⊤}{{$\top$}}2
         {=q}{{$=_q$}}2 {=c}{{$=_c$}}2
+        {_1}{{$_1$}}1 {_2}{{$_2$}}1
         {α}{{$\alpha$}}1 {β}{{$\beta$}}1
         {ψ}{{$\psi$}}1
         {_i}{{$_i$}}1 {_x}{{$_x$}}1 {_y}{{$_y$}}1
@@ -331,8 +332,6 @@ TODO
 	\item $X \vee Y$ is modeled as the sum (linear combination) of the subspaces $X$ and $Y$. In other words, it is the closed subspace of the union of the two subspaces: $\overline{\mathit{span}(X \cup Y)}$, where $\overline{X}$ denotes the closure of $X$.
 \end{itemize}
 
-
-
 \nonterms{Prop}
 
 \begin{mathpar}
@@ -344,6 +343,11 @@ TODO
     \inferrule[Initialization]
     {}
     {\HoareT{P}{\textbf{init}\ x}{P[e \rightarrow x],\ x =_q \ket{0}}}
+\end{mathpar}
+\begin{mathpar}
+    \inferrule[Measure]
+    {}
+    {\HoareT{P}{\textbf{meas}\ q}{P[e \rightarrow x],\ x =_q \ket{0}}}
 \end{mathpar}
 
 \section{Quantum Hoare Type Theory}
@@ -372,9 +376,11 @@ The measurement command, in effect, returns the qubit back to the pool after ret
 
 \subsubsection{Unitary application}
 
-\indent\indent\indent\lstinline[language=QHaskell]{apply G to M : U -> qbit⊗...⊗qbit -> QST unit}\medskip
+\indent\indent\indent\lstinline[language=QHaskell]{apply_1 G_1 to M_1 : U_1 -> qbit -> QST unit}\\
 
-The unitary application command takes a gate from the set of predefined unitary gates and applies it a given number of qubits (can be a single qubit or a tuple of qubits matching the number of qubits required by the gate). Since it modifies the state in place, it returns the trivial unit output.
+\indent\indent\lstinline[language=QHaskell]{apply_2 G_2 to M_2 : U_2 -> qbit⊗qbit -> QST unit}\medskip
+
+It is helpful to think of our unitary application command in terms of two variants: one that takes a single-qubit gate and applies to a single qubit and another that takes a two-qubit gate and applies it to a pair of qubits. Since it modifies the state in place, it returns the trivial unit output.
 
 \subsection{Syntax}
 
@@ -391,14 +397,6 @@ The unitary application command takes a gate from the set of predefined unitary 
 TODO:
 
 - proof rules at each step
-
-
-\begin{mathpar}
-    \inferrule[Measure]
-    {}
-    {\HoareT{P}{\textbf{meas}\ q}{P[e \rightarrow x],\ x =_q \ket{0}}}
-\end{mathpar}
-
 
 \subsection{Examples}
 

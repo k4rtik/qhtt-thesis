@@ -84,7 +84,8 @@
 \ottrulehead{\ottnt{Cmd}  ,\ \ottnt{c}}{::=}{\ottcom{Commands}}\ottprodnewline
 \ottfirstprodline{|}{\ottkw{init} \, \ottnt{M}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{apply} \, \ottnt{U} \, \ottkw{to} \, \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{meas} \, \ottnt{M}}{}{}{}{}}
+\ottprodline{|}{\ottkw{meas} \, \ottnt{M}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{if} \, \ottnt{M} \, \ottkw{then} \, \ottnt{E_{{\mathrm{1}}}} \, \ottkw{else} \, \ottnt{E_{{\mathrm{2}}}}}{}{}{}{}}
 
 \newcommand{\ottUnitary}{
 \ottrulehead{\ottnt{Unitary}  ,\ \ottnt{U}}{::=}{\ottcom{Unitaries}}\ottprodnewline
@@ -314,7 +315,7 @@
 
 %% defn Prove
 
-\newcommand{\ottdefnProve}[1]{\begin{ottdefnblock}[#1]{$\ottmv{D}  \ottsym{\mbox{$\mid$}=}  \ottnt{P}$}{\ottcom{Proof obligation $\ottnt{P}$}}
+\newcommand{\ottdefnProve}[1]{\begin{ottdefnblock}[#1]{$\ottmv{D}  \models  \ottnt{P}$}{\ottcom{Proof obligation $\ottnt{P}$}}
 \end{ottdefnblock}}
 
 %% defn CompIntro

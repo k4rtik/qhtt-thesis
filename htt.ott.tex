@@ -46,7 +46,6 @@
 \ottprodline{|}{\ottnt{A}  \rightarrow  \ottnt{B}}{}{}{}{\ottcom{Sugar for Pi type}}\ottprodnewline
 \ottprodline{|}{\Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{\ottcom{Dependent Sum}}\ottprodnewline
 \ottprodline{|}{\ottnt{A} \, \otimes \, \ottnt{B}}{}{}{}{\ottcom{Sugar for Sigma type}}\ottprodnewline
-\ottprodline{|}{\ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}{}{}{}{\ottcom{Type Refinement}}\ottprodnewline
 \ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{\ottcom{Hoare Type}}\ottprodnewline
 \ottprodline{|}{\ottkw{QST} \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{}{}{}{\ottcom{Sugar for Q. Hoare Type}}}
 
@@ -61,8 +60,6 @@
 \ottprodline{|}{\ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{fst} \, \ottnt{K}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{snd} \, \ottnt{K}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{in} \, \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{out} \, \ottnt{K}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{do} \, \ottnt{E}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottnt{M}  \ottsym{:}  \ottnt{A}}{}{}{}{}}
 
@@ -114,7 +111,6 @@
 \ottprodline{|}{\ottkw{prop}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \tau  \ottsym{.}  \sigma}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\Sigma \, \ottmv{x}  \ottsym{:}  \tau  \ottsym{.}  \sigma}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottsym{\{}  \ottmv{x}  \ottsym{:}  \tau  \ottsym{.}  \ottnt{P}  \ottsym{\}}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \sigma  \ottsym{:}  \tau  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{}}
 
 \newcommand{\ottCtx}{
@@ -221,15 +217,6 @@
 {\ottdrulename{ty\_Sig}}{}%
 }}
 
-
-\newcommand{\ottdruletyXXRefine}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
-\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}}%
-}{
-\Gamma  \vdash  \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}} \, \ottkw{type}}{%
-{\ottdrulename{ty\_Refine}}{}%
-}}
-
 \newcommand{\ottdefnType}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{A} \, \ottkw{type}$}{\ottcom{$\ottnt{A}$ is a type}}
 \ottusedrule{\ottdruletyXXElim{}}
 \ottusedrule{\ottdruletyXXBit{}}
@@ -238,7 +225,6 @@
 \ottusedrule{\ottdruletyXXUnit{}}
 \ottusedrule{\ottdruletyXXPi{}}
 \ottusedrule{\ottdruletyXXSig{}}
-\ottusedrule{\ottdruletyXXRefine{}}
 \end{ottdefnblock}}
 
 %% defn TyEq
@@ -271,15 +257,6 @@
 }{
 \Gamma  \vdash  \ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}  \ottsym{:}  \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{%
 {\ottdrulename{tm\_SigI}}{}%
-}}
-
-
-\newcommand{\ottdruletmXXRefineI}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
-\ottpremise{\ottmv{D}  \ottsym{\mbox{$\mid$}=}  \ottnt{P}  \ottsym{[}  \ottnt{M}  \ottsym{/}  \ottmv{x}  \ottsym{]}}%
-}{
-\Gamma  \vdash  \ottkw{in} \, \ottnt{M}  \ottsym{:}  \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}{%
-{\ottdrulename{tm\_RefineI}}{}%
 }}
 
 
@@ -317,14 +294,6 @@
 }}
 
 
-\newcommand{\ottdruletmXXRefineE}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}%
-}{
-\Gamma  \vdash  \ottkw{out} \, \ottnt{K}  \ottsym{:}  \ottnt{A}}{%
-{\ottdrulename{tm\_RefineE}}{}%
-}}
-
-
 \newcommand{\ottdruletmXXAscriptionE}[1]{\ottdrule[#1]{%
 \ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
 \ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
@@ -336,25 +305,16 @@
 \newcommand{\ottdefnTerm}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}$}{\ottcom{term $\ottnt{M}$ has type $\ottnt{A}$}}
 \ottusedrule{\ottdruletmXXPiI{}}
 \ottusedrule{\ottdruletmXXSigI{}}
-\ottusedrule{\ottdruletmXXRefineI{}}
 \ottusedrule{\ottdruletmXXElim{}}
 \ottusedrule{\ottdruletmXXPiE{}}
 \ottusedrule{\ottdruletmXXFstE{}}
 \ottusedrule{\ottdruletmXXSndE{}}
-\ottusedrule{\ottdruletmXXRefineE{}}
 \ottusedrule{\ottdruletmXXAscriptionE{}}
 \end{ottdefnblock}}
 
 %% defn Prove
-\newcommand{\ottdrulePrXXRefine}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottsym{\{}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{P}  \ottsym{\}}}%
-}{
-\ottmv{D}  \ottsym{\mbox{$\mid$}=}  \ottnt{P}  \ottsym{[}  \ottkw{out} \, \ottnt{K}  \ottsym{/}  \ottmv{x}  \ottsym{]}}{%
-{\ottdrulename{Pr\_Refine}}{}%
-}}
 
 \newcommand{\ottdefnProve}[1]{\begin{ottdefnblock}[#1]{$\ottmv{D}  \ottsym{\mbox{$\mid$}=}  \ottnt{P}$}{\ottcom{Proof obligation $\ottnt{P}$}}
-\ottusedrule{\ottdrulePrXXRefine{}}
 \end{ottdefnblock}}
 
 %% defn CompIntro

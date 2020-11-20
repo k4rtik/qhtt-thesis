@@ -22,7 +22,7 @@ Typ, A, B, C :: Ty ::= {{ com Types }}
   | A -> B             ::   :: Arrow        {{ com Sugar for Pi type }}
   | Sig x : A . B      ::   :: DepSum       {{ com Dependent Sum }}
   | A times B          ::   :: Pair         {{ com Sugar for Sigma type }}
-  | { x : A . P }      ::   :: Refinement   {{ com Type Refinement }}
+  % | { x : A . P }      ::   :: Refinement   {{ com Type Refinement }}
   | { P } x : A { Q }  ::   :: Hoare        {{ com Hoare Type }}
   | QST x : A ( requires { P } )
     ( ensures { Q } )  ::   :: QHoare        {{ com Sugar for Q. Hoare Type }}
@@ -38,8 +38,8 @@ Tm, K, L, M, N :: Tm ::= {{ com Terms }}
   | ( M , N )   ::  :: Pair
   | fst K       ::  :: Fst
   | snd K       ::  :: Snd
-  | in M        ::  :: In
-  | out K       ::  :: Out
+  % | in M        ::  :: In
+  % | out K       ::  :: Out
   | do E        ::  :: Do
   | M : A       ::  :: Ascription
 
@@ -89,7 +89,7 @@ MonoTyp, t {{ tex \tau }}, s {{ tex \sigma }} :: 'Mon' ::= {{ com Monotypes }}
   | prop              :: :: Proposition
   | Pi x : t . s      :: :: Pi
   | Sig x : t . s     :: :: Sigma
-  | { x : t . P }     :: :: Refinement
+  % | { x : t . P }     :: :: Refinement
   | { P } s : t { Q } :: :: Hoare
 
 Ctx, G {{ tex \Gamma }} :: 'Ctx' ::= {{ com Contexts }}
@@ -180,11 +180,6 @@ defn
     ------------------ :: Sig
     G |- Sig x:A.B type
 
-    G |- A type
-    G, x:A |- P : prop
-    -------------------- :: Refine
-    G |- {x:A.P} type
-
 defn
   A = B :: :: TyEq :: tyeq_ {{ com $[[A]]$ and $[[B]]$ are equal as types }} by
 
@@ -206,11 +201,6 @@ defn
     ------------------------- :: SigI
     G |- (M, N) : Sig x:A.B
 
-    G |- M : A
-    D |= P[M/x]
-    --------------------- :: RefineI
-    G |- in M : {x:A.P}
-
     G |- K : A
     A = B
     ------------ :: Elim
@@ -229,10 +219,6 @@ defn
     --------------------------- :: SndE
     G |- snd K : B[fst K / x]
 
-    G |- K : {x:A.P}
-    ------------------ :: RefineE
-    G |- out K : A
-
     G |- A type
     G |- M : A
     -------------- :: AscriptionE
@@ -241,9 +227,9 @@ defn
 defn
   D |= P :: :: Prove :: Pr_ {{ com Proof obligation $[[P]]$ }} by
 
-    G |- K : {x:A.P}
-    ------------------ :: Refine
-    D |= P[out K / x]
+    % G |- K : {x:A.P}
+    % ------------------ :: Refine
+    % D |= P[out K / x]
 
 defn
   D ; P |- E : x : A . Q :: :: CompIntro :: CompIn_ {{ com With $[[D]], [[P]], [[A]]$ check that $[[E]]$ returns a value of type $[[A]]$ with postcond. $[[Q]]$ }} by

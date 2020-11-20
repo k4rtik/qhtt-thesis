@@ -12,6 +12,10 @@
 \usepackage{xspace}
 \usepackage[capitalize]{cleveref}
 \crefformat{section}{\S#2#1#3}
+\crefformat{lstlisting}{Listing #2#1#3}
+\crefmultiformat{lstlisting}{Listings~#2#1#3}%
+{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\crefrangeformat{lstlisting}{Listings~#3#1#4--#5#2#6}
 
 % \usepackage{adjustbox}
 \usepackage{tikz}
@@ -317,7 +321,18 @@ Let us make precise some mathematical definitions that we will need in this sect
 	For any subspace $X$ in a Hilbert space $\mathcal{H}$, written ($X \subseteq \mathcal{H}$), $\mathit{span}(X)$ is the smallest closed subspace of $\mathcal{H}$ containing $X$. In other words, $\mathit{span}(X)$ is the set of linear combinations of vectors in $X$.
 \end{definition}
 
+TODO
+
 - define the meaning of subspace/projector-based predicates/propositions.
+
+\begin{itemize}
+	\item $\top$ represents the complete state space, $\mathcal{H}$, under consideration.
+	\item $\bot$ represents the zero-dimension subspace of Hilbert space, $\{0\}$.
+	\item $X \wedge Y$ is taken to be the set intersection of the two subspaces: $X \cap Y$.
+	\item $X \vee Y$ is modeled as the sum (linear combination) of the subspaces $X$ and $Y$. In other words, it is the closed subspace of the union of the two subspaces: $\overline{\mathit{span}(X \cup Y)}$, where $\overline{X}$ denotes the closure of $X$.
+\end{itemize}
+
+
 
 \nonterms{Prop}
 
@@ -406,15 +421,15 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
 
 \lstinputlisting[language=QHaskell,float,label=lst:bell,lastline=9,caption=Generating Bell state]{bell00.qh}
 
-This circuit corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns to two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: the top, $\top$, predicate that is satisfied by any state space and the $X =_q \ket{\psi}$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\ket{\psi}$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
+\cref{lst:bell} shows a circuit that corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns to two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: the top, $\top$, predicate that is satisfied by any state space and the $X =_q \ket{\psi}$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\ket{\psi}$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
 
-Here is how we can prove whether this program conforms to the given specification.
+\cref{lst:bella} shows how we can prove whether this program conforms to the given specification.
 
 \lstinputlisting[language=QHaskell,float,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
 
 \subsubsection{Quantum teleportation}
 \label{sec:teleport}
-Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum computation and the corresponding code follows:
+Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum teleportation and the corresponding code is shown in \cref{lst:tele}.
 
 \begin{figure}
     \centering
@@ -433,23 +448,44 @@ Our second example shows how we can compose circuits defined in QHTT together an
 
 \lstinputlisting[language=QHaskell,float,label=lst:tele,lastline=12,caption=Quantum teleportation]{teleport.qh}
 
-Verification steps follow:
-
 \lstinputlisting[language=QHaskell,float,label=lst:telea,firstline=14,caption=Annotated quantum teleportation program]{teleport.qh}
 
-At line 18, something interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either 0 or 1 based on the distribution of either outcomes. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded with the measurement operation) in the subsystem under consideration with a ghost variable. If the quantum variable was previously entangled, it is replaced with a entangled ghost ($e$) and if it was unentangled with an unentangled ghost ($u$). Further, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So above, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 22-24, $e_y$ is introduced corresponding to $y$. This helps us in the following two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\ket{\psi}$ at the end.
+Verification steps for this program are shown in \cref{lst:telea}. At line 18, something interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either 0 or 1 based on the distribution of either outcomes. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded with the measurement operation) in the subsystem under consideration with a ghost variable. If the quantum variable was previously entangled, it is replaced with a entangled ghost ($e$) and if it was unentangled with an unentangled ghost ($u$). Further, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So above, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 22-24, $e_y$ is introduced corresponding to $y$. This helps us in the following two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\ket{\psi}$ at the end.
+
+\subsection{Modular teleportation with classical control}
+
+\cref{lst:alice,lst:bob,lst:mtele} show another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with their annotated versions in \cref{lst:alicea,lst:boba,lst:mtelea} with verification steps to ease readability.
+
+\lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=11]{teleport2.qh}
+
+\lstinputlisting[language=QHaskell,float,label=lst:bob,caption=Bob's portion of teleportation,firstline=39,lastline=47]{teleport2.qh}
+
+\lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=66,lastline=73]{teleport2.qh}
+
+\lstinputlisting[language=QHaskell,float,label=lst:alicea,caption=Annotated code for alice,firstline=13,lastline=37]{teleport2.qh}
+
+\lstinputlisting[language=QHaskell,float,label=lst:boba,caption=Annotated code for bob,firstline=49,lastline=64]{teleport2.qh}
+
+\lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=75]{teleport2.qh}
 
 \subsubsection{Fair coin toss}
 
-Here we write a program along with its verification steps which produces a uniformly random bit:
+\cref{lst:toss} shows a program along with its verification steps which produces a uniformly random bit. In this program we see the use of an unentangled ghost variable, $u_x$, at line 11 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
 
 \lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
-
-In this program we see the use of an unentangled ghost variable, $u_x$, at line 11 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
 
 \section{Discussion and related work}
 
 In \cref{sec:teleport}, when we presented code for quantum teleportation, it is not apparent from its type (or specification) whether the quantum variables q (input) and b (output) are different. We can improve the specification by requiring the Bell state, $\ket{\beta_{00}}$, to be part of the input, but this requires changing the implementation as well. Another solution could be to specify that q is discarded in the postcondition (equivalent to saying that it gets consumed). This latter solution, although not currently expressible in our system, could be better. Even better would be to have a way to specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
+
+TODO:
+
+- compare with existing hoare logics
+
+\subsection{Verification of Quantum Programs}
+Previous work, such as Proto-Quipper~\cite{rios2017,rios2017} and QWire~\cite{qwire2017,qwirepractice2017,rand2018} utilize a linear type system and dependent types to enforce a small subset of semantic properties, such as the no-cloning restriction and whether a unitary gate is of the right dimension. These advances in quantum type systems, although helpful, still fall short in encoding and enforcing even more useful properties that one would like to be able to express for the purpose of verification.
+
+Our approach builds upon previous work in reasoning about quantum programs such as Quantum Weakest Preconditions~\cite{dhondt2006} and Quantum Hoare Logic~\cite{floydhoare2012} in the spirit of \cite{hoare1969} and \cite{dijkstra1976} but attempts to bring those reasoning techniques into the type system. The hope is that programmers will be able to encode some of the semantic properties that they expect of their programs as specifications in their code and type checking will ensure correctness of some of those properties. In the classical setting, Hoare Type Theory (HTT)~\cite{nanevski2008} accomplishes exactly this goal. Our attempt is to merge these ideas for the quantum realm.
 
 \section{Conclusion and perspectives}
 \label{sec:conclusion}
@@ -457,7 +493,7 @@ In this paper, we described our work on Quantum Hoare Type Theory which is a dep
 
 With future work on code extraction, our approach can become a unified system for programming, specification, and reasoning about quantum computation.
 
-There are several other avenues of future work to explore:
+There are several other avenues to explore:
 
 \paragraph{Quantum Language} Our programming language currently does not support any iterative or recursive constructs. We would like to add those in future.
 
@@ -499,24 +535,8 @@ of the author and do not necessarily reflect the views of the National Science F
 
 \section{Other examples}
 
-\subsection{Modular teleportation with classical control}
-
-Here is another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with an annotated version with verification steps to ease readability.
-
-\lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=11]{teleport2.qh}
-
-\lstinputlisting[language=QHaskell,float,label=lst:alicea,caption=Annotated code for alice,firstline=13,lastline=37]{teleport2.qh}
-
-\lstinputlisting[language=QHaskell,float,label=lst:bob,caption=Bob's portion of teleportation,firstline=39,lastline=47]{teleport2.qh}
-
-\lstinputlisting[language=QHaskell,float,label=lst:boba,caption=Annotated code for bob,firstline=49,lastline=64]{teleport2.qh}
-
-\lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=66,lastline=73]{teleport2.qh}
-
-\lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=75]{teleport2.qh}
-
 \subsection{Deutsch's algorithm}
-This example demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone. The final consequence still requires some manual intervention and may not be fully inferrable by the system.
+\cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone. The final consequence still requires some manual intervention and may not be fully inferrable by the system.
 
 \begin{figure}
     \centering

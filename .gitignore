@@ -297,3 +297,4 @@ TSWLatexianTemp*
 *.pdf.1st.make
 *.run.cookie
 *.auxbbl.make.temp
+*.lot.make

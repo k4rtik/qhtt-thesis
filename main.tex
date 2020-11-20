@@ -209,11 +209,11 @@ where $P$ and $Q$ are pre- and postconditions and $x:A$ is the return value, thu
 How do we verify programs in HTT? Like we saw above in the example for Hoare logic, a user can provide arbitrary pre- and postconditions as the type for their program. In HTT, the process of verifying that the given triple is valid is performed during type checking. In order to do so, the type checking process in HTT is carefully divided into two phases: The first phase performs basic type checking and infers the strongest postconditions in the form of verification conditions at each step of the program. In the second phase, we need to verify that the verification conditions hold. The first phase is decidable but the second phase may not be, hence for the second phase, either the verification conditions are deferred to an automated theorem prover (such as Z3) or need to be validated manually (in an interactive theorem prover such as Coq).
 
 Let's consider the example we saw in the previous section written in HTT:\medskip\\
-\lstinline[language=QHaskell]!x := 5 : {x = 1} r:unit {x > 0}!
+\indent\indent\lstinline[language=QHaskell]!x := 5 : {x = 1} r:unit {x > 0}!
 \medskip\\where $r$ is the variable that holds the result of the assignment statement. Since an assignment returns nothing, we see the type of output is $unit$ and the pre- and postconditions are same as before.
 
 In an alternate syntax inspired by the F* programming language (which takes a hybrid approach between automated and interactive theorem proving and is an evolution of HTT), that we will use in our presentation in this work, we can write the above triple as:\medskip\\
-\lstinline[language=QHaskell]!x := 5 : ST r:unit (requires {x = 1}) (ensures {x > 0})!
+\indent\indent\lstinline[language=QHaskell]!x := 5 : ST r:unit (requires {x = 1}) (ensures {x > 0})!
 \medskip\\which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify state (here assignment) and it is indexed by the result of the computation and its two pre- and postconditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we will christen our quantum state monad as $QST$. But let us first talk about quantum computation.
 
 \subsection{Quantum Computation}
@@ -241,13 +241,18 @@ The basic unit of information in quantum computing is a qubit, that can be repre
 \begin{mathpar}
  \ket{\psi} = \alpha\ket{0} + \beta\ket{1}
 \end{mathpar}
-where $\ket{0}=\begin{bsmallmatrix}
+where
+\begin{mathpar}
+\ket{0}=\begin{bmatrix}
 1 \\
 0
-\end{bsmallmatrix}$ and $\ket{1}=\begin{bsmallmatrix}
+\end{bmatrix} \and
+\ket{1}=\begin{bmatrix}
 0 \\
 1
-\end{bsmallmatrix}$, and the two constants $\alpha, \beta$ are complex amplitudes that are normalized using the constraint $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured, the probability of the qubit being in the state 0 is $|\alpha|^2$ and that for the state 1 is $|\beta|^2$. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$. Computation is performed by the application of unitary quantum gates, such as the Hadamard (\textbf{H}) gate or the controlled-Not (\textbf{CX}) gate, that can be represented as square matrices. Mathematically, a gate application is equivalent to multiplying the matrix representing the gate with the state vector of the qubit(s). \cref{table:gates} shows some commonly used gates along with their matrix representations.
+\end{bmatrix}
+\end{mathpar}
+and the two constants $\alpha, \beta$ are complex amplitudes that are normalized using the constraint $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured, the probability of the qubit being in the state 0 is $|\alpha|^2$ and that for the state 1 is $|\beta|^2$. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$. Computation is performed by the application of unitary quantum gates, such as the Hadamard (\textbf{H}) gate or the controlled-Not (\textbf{CX}) gate, that can be represented as square matrices. Mathematically, a gate application is equivalent to multiplying the matrix representing the gate with the state vector of the qubit(s). \cref{table:gates} shows some commonly used gates along with their matrix representations.
 
 This basic unit of information is not the only reason why quantum computing is fundamentally different from classical computing---certain quantum mechanical phenomenon are highly counter-intuitive! One such phenomenon is \textit{quantum entanglement} which, at its most basic level, involves a correlation between two qubits such that when one is measured, the outcome obtained necessarily influences the measurement outcome of the other qubit (even if the two qubits are far apart).
 
@@ -447,28 +452,30 @@ In this program we see the use of an unentangled ghost variable, $u_x$, at line 
 In \cref{sec:teleport}, when we presented code for quantum teleportation, it is not apparent from its type (or specification) whether the quantum variables q (input) and b (output) are different. We can improve the specification by requiring the Bell state, $\ket{\beta_{00}}$, to be part of the input, but this requires changing the implementation as well. Another solution could be to specify that q is discarded in the postcondition (equivalent to saying that it gets consumed). This latter solution, although not currently expressible in our system, could be better. Even better would be to have a way to specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
 
 \section{Conclusion and perspectives}
-
 \label{sec:conclusion}
-In this paper, we described our work on Quantum Hoare Type Theory which is a dependently typed functional programming language with support for quantum computation. We used the novel quantum Hoare logic by Unruh~\cite{unruh2019} that helped us compactly specify properties about quantum state. This approach has the potential to be a unified system for programming, specification, and reasoning about quantum programs.
+In this paper, we described our work on Quantum Hoare Type Theory which is a dependently typed functional programming language with support for quantum computation. We used the novel quantum Hoare logic by Unruh~\cite{unruh2019} that helped us compactly specify properties about quantum state. We further demonstrated the usefulness of our approach using basic examples including bell state preparation and quantum teleportation.
 
-There are several avenues of future work to explore:
+With future work on code extraction, our approach can become a unified system for programming, specification, and reasoning about quantum computation.
 
-\paragraph{Quantum Language} Our programming language currently does not support conditionals or any iterative or recursive constructs. We would like to add those in future.
+There are several other avenues of future work to explore:
 
-\paragraph{Mechanization} There are multiple implementations of HTT in Coq such as Ynot~\cite{ynot2008}. We would like to mechanize QHTT in Coq, F* or some such dependent type theory for higher assurance of the usefulness and soundness of QHTT. This will also enable us to extract verified circuits in a lower level quantum language such as OpenQASM for execution on real machines.
+\paragraph{Quantum Language} Our programming language currently does not support any iterative or recursive constructs. We would like to add those in future.
 
-% \paragraph{Quantum Predicate Logic} An obvious need is to come up with a predicate logic similar to Separation Logic~\cite{reynolds2002} for quantum computing so as to be able to reason about only the interesting portions of the quantum state while still ensuring correctness of non-local effects such as entanglement. Various Quantum Hoare Logics that exist~\cite{ying_floydhoare_2012} currently do not support frame rules that provide Separation Logic its power. The closest approach is that taken by \citet{unruh2019} that allows predicates on quantum state similar to what we would like in our setting, such as whether certain qubits are in classical state, or in uniform superposition, entangled or separable. We hope to incorporate these ideas in this work; this may require us to use a subspace semantics for the quantum state as shown in \citet{unruh2019}. We share preliminary work in that direction in the appendix below.
+\paragraph{Mechanization} There are multiple implementations of HTT in Coq such as Ynot~\cite{ynot2008}. We would like to mechanize QHTT in Coq, F* or some such dependent type theory for higher assurance of the usefulness and soundness of QHTT. This will also enable us to extract verified circuits in a lower level quantum language such as OpenQASM~\cite{cross2017} for execution on real machines.
 
 \paragraph{Linearity} Peter Selinger and collaborators have recently proposed a linear dependent typed version of Proto-Quipper (dubbed Proto-Quipper-D)~\cite{selinger2020,fu2020linear}. It is an interesting challenge to reconcile linearity in our theory based on their proposal.
 
 \paragraph{Circuits as Arrows} Further, Proto-Quipper treats quantum circuits as first class citizens of the language. We would like to explore modifying our theory to treat Quantum Hoare types as arrows instead of as monads as was suggested by \cite{so-arrows}. It makes sense from the perspective of sequential composition as arrows can have an arbitrary number of input/outputs as opposed to monads.
 
-\paragraph{Behavioural Types} Another venue for exploration is to incorporate more precise types that can distinguish between qubits in pure classical state vs. those in superposition vs. those in entanglement such as those inspired by the various quantum resource theories or the Heisenberg representation of quantum mechanics. This may help us provide more specific postconditions that quantum programmers expect to hold true of their programs.
+\paragraph{Behavioural Types} Another venue for exploration is to incorporate more precise types that can distinguish between qubits in pure classical state vs. those in superposition vs. those in entanglement~\cite{JorrandPerdrix2009} such as those inspired by the various quantum resource theories or the Heisenberg representation of quantum mechanics~\cite{rssl2019,rssl20}. This may help us provide more specific postconditions that quantum programmers expect to hold true of their programs.
 
 \paragraph{Classical Effects} Finally, it will be an interesting challenge to reconcile both classical and quantum effects together in a single grand unified theory for effects.
 
 \section*{Acknowledgements}
 I thank John Reppy, Robert Rand and the anonymous reviewers of QPL 2020 for their feedback on an earlier presentation of this work.
+
+This material is based upon work supported by EPiQC, an NSF Expedition in Computing, under Grant No. 1730449. Any opinions, findings, and conclusions or recommendations expressed in this material are those
+of the author and do not necessarily reflect the views of the National Science Foundation.
 
 \bibliographystyle{eptcsalpha}
 \bibliography{references}

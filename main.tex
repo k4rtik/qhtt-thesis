@@ -452,7 +452,7 @@ Our second example shows how we can compose circuits defined in QHTT together an
 
 Verification steps for this program are shown in \cref{lst:telea}. At line 18, something interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either 0 or 1 based on the distribution of either outcomes. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded with the measurement operation) in the subsystem under consideration with a ghost variable. If the quantum variable was previously entangled, it is replaced with a entangled ghost ($e$) and if it was unentangled with an unentangled ghost ($u$). Further, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So above, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 22-24, $e_y$ is introduced corresponding to $y$. This helps us in the following two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\ket{\psi}$ at the end.
 
-\subsection{Modular teleportation with classical control}
+\subsubsection{Modular teleportation with classical control}
 
 \cref{lst:alice,lst:bob,lst:mtele} show another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with their annotated versions in \cref{lst:alicea,lst:boba,lst:mtelea} with verification steps to ease readability.
 
@@ -473,6 +473,26 @@ Verification steps for this program are shown in \cref{lst:telea}. At line 18, s
 \cref{lst:toss} shows a program along with its verification steps which produces a uniformly random bit. In this program we see the use of an unentangled ghost variable, $u_x$, at line 11 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
 
 \lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
+
+\subsubsection{Deutsch's algorithm}
+\cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone. The final consequence still requires some manual intervention and may not be fully inferrable by the system.
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \node[scale=1.0] {
+            \begin{quantikz}
+                \lstick{$\ket{0}$} & \gate{H} & \gate[wires=2][1.7cm]{U_f}\gateinput{$x$}
+                \gateoutput{$x$} & \gate{H} & \meter{} \\
+                \lstick{$\ket{1}$} & \gate{H} & \gateinput{$y$}\gateoutput{$y\oplus f(x)$} & \qw & \qw \\
+            \end{quantikz}
+        };
+    \end{tikzpicture}
+    \caption{Quantum circuit for Deutsch's algorithm}
+    \label{fig:deutsch}
+\end{figure}
+
+\lstinputlisting[language=QHaskell,float,label=lst:deutsch,caption=Deutsch's algorithm]{deutsch.qh}
 
 \section{Discussion and related work}
 
@@ -532,28 +552,6 @@ of the author and do not necessarily reflect the views of the National Science F
 \section{Typing rules}
 
 \drules[ctx]{$\vdash \Gamma$ \textbf{ctx}}{context formation}{Empty,Type,Prop}
-
-\section{Other examples}
-
-\subsection{Deutsch's algorithm}
-\cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone. The final consequence still requires some manual intervention and may not be fully inferrable by the system.
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \node[scale=1.0] {
-            \begin{quantikz}
-                \lstick{$\ket{0}$} & \gate{H} & \gate[wires=2][1.7cm]{U_f}\gateinput{$x$}
-                \gateoutput{$x$} & \gate{H} & \meter{} \\
-                \lstick{$\ket{1}$} & \gate{H} & \gateinput{$y$}\gateoutput{$y\oplus f(x)$} & \qw & \qw \\
-            \end{quantikz}
-        };
-    \end{tikzpicture}
-    \caption{Quantum circuit for Deutsch's algorithm}
-    \label{fig:deutsch}
-\end{figure}
-
-\lstinputlisting[language=QHaskell,float,label=lst:deutsch,caption=Deutsch's algorithm]{deutsch.qh}
 
 % \subsection{Trivial examples}
 

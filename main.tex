@@ -516,7 +516,7 @@ With future work on code extraction, our approach can become a unified system fo
 
 There are several other avenues to explore:
 
-\paragraph{Quantum Language} Our programming language currently does not support any iterative or recursive constructs. We would like to add those in future.
+\paragraph{Quantum Language} Our programming language currently does not support any iterative or recursive constructs. We would like to add those in future. Further, currently it is not possible to construct pure unitary operators directly in our language apart from those provided as constants. As \cite{qio} show, unitary operations form an algebraic monoidal structure and it will be really nice to be able construct arbitrary unitaries in the language which will greatly enhance its expressive power from current Clifford circuits to a universal language.
 
 \paragraph{Mechanization} There are multiple implementations of HTT in Coq such as Ynot~\cite{ynot2008}. We would like to mechanize QHTT in Coq, F* or some such dependent type theory for higher assurance of the usefulness and soundness of QHTT. This will also enable us to extract verified circuits in a lower level quantum language such as OpenQASM~\cite{cross2017} for execution on real machines.
 

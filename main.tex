@@ -217,25 +217,9 @@ In an alternate syntax inspired by the F* programming language (which takes a hy
 \medskip\\which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify state (here assignment) and it is indexed by the result of the computation and its two pre- and postconditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we will christen our quantum state monad as $QST$. But let us first talk about quantum computation.
 
 \subsection{Quantum Computation}
-It is well known that quantum computation can be described in terms of elementary linear algebra. Before we say anything more about quantum computation, let us make precise some specific mathematical definitions that we will need. We assume familiarity with basic notions such as vectors, matrices, vector spaces, inner product, bases, linear independence, etc.
+It is well known that quantum computation can be described in terms of elementary linear algebra. We assume familiarity with basic notions such as vectors, matrices, vector spaces, inner product, bases, linear independence, etc.
 
-% \begin{definition}[Vector Space]
-%     TODO: scalar field and operations
-% \end{definition}
-
-\begin{definition}[Vector Subspace]
-	A subspace of a vector space is a subset of its vectors which is closed under the operations of vector addition and scalar multiplication.
-\end{definition}
-
-\begin{remark}
-    All vector spaces are equipped with at least two (\textit{trivial}) subspaces: the singleton set, $\{ 0 \}$, consisting of the zero vector and the vector space itself.
-\end{remark}
-
-Quantum computation is usually described over a specific vector space called \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space equipped with an inner product ($\mathbb{C}^n$). In this work, we will often use the term ``state space'' to refer to a finite dimensional Hilbert space.
-
-\begin{definition}[Span of a subspace]
-	For any subspace $X$ in a Hilbert space $\mathcal{H}$, written ($X \subseteq \mathcal{H}$), $\mathit{span}(X)$ is the smallest closed subspace of $\mathcal{H}$ containing $X$. In other words, $\mathit{span}(X)$ is the set of linear combinations of vectors in $X$.
-\end{definition}
+Quantum computation is usually described over a specific vector space called the \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space equipped with an inner product ($\mathbb{C}^n$). In this work, we will often use the term ``state space'' to refer to a finite dimensional Hilbert space.
 
 The basic unit of information in quantum computing is a qubit, that can be represented using a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can write an arbitrary qubit, $\ket{\psi}$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
 \begin{mathpar}
@@ -317,6 +301,22 @@ TODO:
 
 \subsection{Quantum Hoare logic with ghost variables}
 
+We will need a predicate logic analogous to Separation Logic~\cite{reynolds2002} for quantum computation so as to be able to reason about only the interesting portions of the quantum state while still ensuring correctness of non-local effects such as entanglement. Various Quantum Hoare Logics that have been proposed~\cite{floydhoare2012} (\textit{add more citations here}) currently do not support frame rules that provide Separation Logic its power. The closest approach is that taken by \cite{unruh2019} that allows predicates on quantum state similar to what we would like in our setting, such as whether certain qubits are in classical state, or in uniform superposition, entangled or separable. In this section, we provide an introduction to Unruh's Quantum Hoare logic with ghost variables that we will use in our predicate language.
+
+Let us make precise some mathematical definitions that we will need in this section.
+
+\begin{definition}[Vector Subspace]
+	A subspace of a vector space is a subset of its vectors which is closed under the operations of vector addition and scalar multiplication.
+\end{definition}
+
+\begin{remark}
+    All vector spaces are equipped with at least two (\textit{trivial}) subspaces: the singleton set, $\{ 0 \}$, consisting of the zero vector and the vector space itself.
+\end{remark}
+
+\begin{definition}[Span of a subspace]
+	For any subspace $X$ in a Hilbert space $\mathcal{H}$, written ($X \subseteq \mathcal{H}$), $\mathit{span}(X)$ is the smallest closed subspace of $\mathcal{H}$ containing $X$. In other words, $\mathit{span}(X)$ is the set of linear combinations of vectors in $X$.
+\end{definition}
+
 - define the meaning of subspace/projector-based predicates/propositions.
 
 \nonterms{Prop}
@@ -340,19 +340,19 @@ Each program is assumed to have access to a pool of countably infinite number of
 \subsection{Primitive quantum commands}
 
 \subsubsection{Initialization}
-\lstinline[language=QHaskell]{init M : bit -> QST qbit}\medskip
+\indent\indent\indent\lstinline[language=QHaskell]{init M : bit -> QST qbit}\medskip
 
 We can initialize only one qubit at a time in either of the two computational basis states, $\ket{0}$ or $\ket{1}$. The initialization command \lstinline[language=QHaskell]{x <- init 0} allocates a fresh qubit from the global pool, initializes it to $\ket{0}$ and returns a reference to the qubit and binds it to $x$.
 
 \subsubsection{Measurement}
 
-\lstinline[language=QHaskell]{meas M : qbit -> QST bit}\medskip
+\indent\indent\indent\lstinline[language=QHaskell]{meas M : qbit -> QST bit}\medskip
 
 The measurement command, in effect, returns the qubit back to the pool after returning the result of measurement as a bit. We assume all measurements to be in the computational basis.
 
 \subsubsection{Unitary application}
 
-\lstinline[language=QHaskell]{apply G to M : U -> qbit⊗...⊗qbit -> QST unit}\medskip
+\indent\indent\indent\lstinline[language=QHaskell]{apply G to M : U -> qbit⊗...⊗qbit -> QST unit}\medskip
 
 The unitary application command takes a gate from the set of predefined unitary gates and applies it a given number of qubits (can be a single qubit or a tuple of qubits matching the number of qubits required by the gate). Since it modifies the state in place, it returns the trivial unit output.
 
@@ -467,9 +467,9 @@ There are several other avenues of future work to explore:
 
 \paragraph{Circuits as Arrows} Further, Proto-Quipper treats quantum circuits as first class citizens of the language. We would like to explore modifying our theory to treat Quantum Hoare types as arrows instead of as monads as was suggested by \cite{so-arrows}. It makes sense from the perspective of sequential composition as arrows can have an arbitrary number of input/outputs as opposed to monads.
 
-\paragraph{Behavioural Types} Another venue for exploration is to incorporate more precise types that can distinguish between qubits in pure classical state vs. those in superposition vs. those in entanglement~\cite{JorrandPerdrix2009} such as those inspired by the various quantum resource theories or the Heisenberg representation of quantum mechanics~\cite{rssl2019,rssl20}. This may help us provide more specific postconditions that quantum programmers expect to hold true of their programs.
+\paragraph{Behavioural Types} Another venue for exploration is to incorporate more precise types for qubits that can distinguish between qubits in pure classical state vs. those in superposition vs. those in entanglement~\cite{JorrandPerdrix2009} such as those inspired by the various quantum resource theories or the Heisenberg representation of quantum mechanics~\cite{rssl2019,rssl20}.
 
-\paragraph{Classical Effects} Finally, it will be an interesting challenge to reconcile both classical and quantum effects together in a single grand unified theory for effects.
+\paragraph{Classical Effects} Finally, it will be an interesting challenge to reconcile both classical and quantum effects together in a single theory of effects.
 
 \section*{Acknowledgements}
 I thank John Reppy, Robert Rand and the anonymous reviewers of QPL 2020 for their feedback on an earlier presentation of this work.
@@ -501,9 +501,19 @@ of the author and do not necessarily reflect the views of the National Science F
 
 \subsection{Modular teleportation with classical control}
 
-Here is another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with an annotated version with verification steps to ease readability. We do not have any information about the distribution of outcomes for the given bit (lines 45-46) and hence cannot say anything worthwhile in the specification. The max we can do is consider all the outcomes as we end up doing in the inferred propositions in lines 57-63. But this leads to an awkward requirement of an unexplored merge operation when bob's circuit is called (lines 89-102).
+Here is another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with an annotated version with verification steps to ease readability.
 
-\lstinputlisting[language=QHaskell,caption=Modular teleport with if then else]{teleport2.qh}
+\lstinputlisting[language=QHaskell,caption=Alice's portion of teleportation,lastline=11]{teleport2.qh}
+
+\lstinputlisting[language=QHaskell,caption=Annotated code for alice,firstline=13,lastline=37]{teleport2.qh}
+
+\lstinputlisting[language=QHaskell,caption=Bob's portion of teleportation,firstline=39,lastline=47]{teleport2.qh}
+
+\lstinputlisting[language=QHaskell,caption=Annotated code for bob,firstline=49,lastline=64]{teleport2.qh}
+
+\lstinputlisting[language=QHaskell,caption=Modular teleportation,firstline=66,lastline=73]{teleport2.qh}
+
+\lstinputlisting[language=QHaskell,caption=Annotated code for modular teleportation,firstline=75]{teleport2.qh}
 
 \subsection{Deutsch's algorithm}
 This example demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone. The final consequence still requires some manual intervention and may not be fully inferrable by the system.

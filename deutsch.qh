@@ -1,10 +1,12 @@
-U_f (f: bit -> bit) : (a, b) : (qbit⊗qbit) ->
-                      QST (c, d) : (qbit⊗qbit)
-                          (requires {(a, b) =q |x,y⟩})
-                          (ensures  {(c, d) =q |x,y⊕f(x)⟩})
+U_f : (a, b) : (qbit⊗qbit) ->
+      QST (c, d) : (qbit⊗qbit)
+          (∃f: bit -> bit)
+          (requires {(a, b) =q |x,y⟩})
+          (ensures  {(c, d) =q |x,y⊕f(x)⟩})
 
 deutsch : ((qbit⊗qbit) -> QST (qbit⊗qbit)) ->
           QST r: bit
+              (∃f: bit -> bit)
               (requires {⊤})
               (ensures  { (r =c 0 ⇒ f(0) == f(1))
                         ∧ (r =c 1 ⇒ f(0) != f(1)) })

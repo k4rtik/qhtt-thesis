@@ -1,5 +1,6 @@
-alice : (q, a): qbit⊗qbit ->
+alice : (q, a): (qbit⊗qbit) ->
         QST (x, y): (bit⊗bit)
+            (∃e: qbit)
             (requires {(a, e) = |β00⟩})
             (ensures  {})
 alice = \qa -> do
@@ -10,8 +11,9 @@ alice = \qa -> do
             y <- meas a
             return (x, y)
 
-alice : (q, a): qbit⊗qbit ->
+alice : (q, a): (qbit⊗qbit) ->
         QST (x, y): (bit⊗bit)
+            (∃e: qbit)
             (requires {(a, e) = |β00⟩})
             (ensures  {})
 alice = \qa -> do
@@ -36,7 +38,7 @@ alice = \qa -> do
             --                  + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
             return (x, y)
 
-bob : (x, y, b): bit⊗bit⊗qbit ->
+bob : (x, y, b): (bit⊗bit⊗qbit) ->
       QST q: qbit
           (requires {})
           (ensures  {})
@@ -46,7 +48,7 @@ bob = \xyb -> do
           if x then apply Z to b else ()
           return b
 
-bob : (x, y, b): bit⊗bit⊗qbit ->
+bob : (x, y, b): (bit⊗bit⊗qbit) ->
       QST q: qbit
           (requires {})
           (ensures  {})
@@ -64,6 +66,7 @@ bob = \xyb -> do
           return b
 
 teleport : q: qbit -> QST b: qbit
+                          (∃|ψ⟩)
                           (requires {q =q |ψ⟩})
                           (ensures  {b =q |ψ⟩})
 teleport = \q -> do
@@ -73,6 +76,7 @@ teleport = \q -> do
               return b
 
 teleport : q: qbit -> QST b: qbit
+                          (∃|ψ⟩)
                           (requires {q =q |ψ⟩})
                           (ensures  {b =q |ψ⟩})
 teleport = \q -> do

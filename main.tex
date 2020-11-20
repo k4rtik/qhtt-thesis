@@ -447,9 +447,9 @@ Our second example shows how we can compose circuits defined in QHTT together an
     \label{fig:teleport}
 \end{figure}
 
-\lstinputlisting[language=QHaskell,float,label=lst:tele,lastline=12,caption=Quantum teleportation]{teleport.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:tele,lastline=13,caption=Quantum teleportation]{teleport.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:telea,firstline=14,caption=Annotated quantum teleportation program]{teleport.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:telea,firstline=15,caption=Annotated quantum teleportation program]{teleport.qh}
 
 Verification steps for this program are shown in \cref{lst:telea}. At line 18, something interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either 0 or 1 based on the distribution of either outcomes. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded with the measurement operation) in the subsystem under consideration with a ghost variable. If the quantum variable was previously entangled, it is replaced with a entangled ghost ($e$) and if it was unentangled with an unentangled ghost ($u$). Further, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So above, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 22-24, $e_y$ is introduced corresponding to $y$. This helps us in the following two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\ket{\psi}$ at the end.
 
@@ -457,17 +457,17 @@ Verification steps for this program are shown in \cref{lst:telea}. At line 18, s
 
 \cref{lst:alice,lst:bob,lst:mtele} show another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with their annotated versions in \cref{lst:alicea,lst:boba,lst:mtelea} with verification steps to ease readability.
 
-\lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=11]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=12]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:bob,caption=Bob's portion of teleportation,firstline=39,lastline=47]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:bob,caption=Bob's portion of teleportation,firstline=41,lastline=49]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=66,lastline=73]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=68,lastline=76]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:alicea,caption=Annotated code for alice,firstline=13,lastline=37]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:alicea,caption=Annotated code for alice,firstline=14,lastline=39]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:boba,caption=Annotated code for bob,firstline=49,lastline=64]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:boba,caption=Annotated code for bob,firstline=51,lastline=66]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=75]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=78]{teleport2.qh}
 
 \subsubsection{Fair coin toss}
 

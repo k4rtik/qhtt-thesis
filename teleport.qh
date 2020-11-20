@@ -1,4 +1,5 @@
 teleport : q: qbit -> QST b: qbit
+                          (∃|ψ⟩)
                           (requires {q =q |ψ⟩})
                           (ensures  {b =q |ψ⟩})
 teleport = \q -> do
@@ -12,6 +13,7 @@ teleport = \q -> do
               return b
 
 teleport : q: qbit -> QST b: qbit
+                          (∃|ψ⟩)
                           (requires {q =q |ψ⟩})
                           (ensures  {b =q |ψ⟩})
 teleport = \q -> do

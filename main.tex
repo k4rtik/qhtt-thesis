@@ -404,13 +404,13 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
     \label{fig:bell00}
 \end{figure}
 
-\lstinputlisting[language=QHaskell,lastline=9,caption=Generating Bell state]{bell00.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:bell,lastline=9,caption=Generating Bell state]{bell00.qh}
 
 This circuit corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns to two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: the top, $\top$, predicate that is satisfied by any state space and the $X =_q \ket{\psi}$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\ket{\psi}$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
 
 Here is how we can prove whether this program conforms to the given specification.
 
-\lstinputlisting[language=QHaskell,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
 
 \subsubsection{Quantum teleportation}
 \label{sec:teleport}
@@ -431,11 +431,11 @@ Our second example shows how we can compose circuits defined in QHTT together an
     \label{fig:teleport}
 \end{figure}
 
-\lstinputlisting[language=QHaskell,lastline=12,caption=Quantum teleportation]{teleport.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:tele,lastline=12,caption=Quantum teleportation]{teleport.qh}
 
 Verification steps follow:
 
-\lstinputlisting[language=QHaskell,firstline=14,caption=Annotated quantum teleportation program]{teleport.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:telea,firstline=14,caption=Annotated quantum teleportation program]{teleport.qh}
 
 At line 18, something interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either 0 or 1 based on the distribution of either outcomes. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded with the measurement operation) in the subsystem under consideration with a ghost variable. If the quantum variable was previously entangled, it is replaced with a entangled ghost ($e$) and if it was unentangled with an unentangled ghost ($u$). Further, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So above, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 22-24, $e_y$ is introduced corresponding to $y$. This helps us in the following two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\ket{\psi}$ at the end.
 
@@ -443,7 +443,7 @@ At line 18, something interesting happens! When we measure a quantum variable (i
 
 Here we write a program along with its verification steps which produces a uniformly random bit:
 
-\lstinputlisting[language=QHaskell,firstline=10,caption=Fair coin toss]{cointoss.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
 
 In this program we see the use of an unentangled ghost variable, $u_x$, at line 11 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
 
@@ -503,17 +503,17 @@ of the author and do not necessarily reflect the views of the National Science F
 
 Here is another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with an annotated version with verification steps to ease readability.
 
-\lstinputlisting[language=QHaskell,caption=Alice's portion of teleportation,lastline=11]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=11]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,caption=Annotated code for alice,firstline=13,lastline=37]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:alicea,caption=Annotated code for alice,firstline=13,lastline=37]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,caption=Bob's portion of teleportation,firstline=39,lastline=47]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:bob,caption=Bob's portion of teleportation,firstline=39,lastline=47]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,caption=Annotated code for bob,firstline=49,lastline=64]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:boba,caption=Annotated code for bob,firstline=49,lastline=64]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,caption=Modular teleportation,firstline=66,lastline=73]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=66,lastline=73]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,caption=Annotated code for modular teleportation,firstline=75]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=75]{teleport2.qh}
 
 \subsection{Deutsch's algorithm}
 This example demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone. The final consequence still requires some manual intervention and may not be fully inferrable by the system.
@@ -533,7 +533,7 @@ This example demonstrates that our system can work in a higher-order setting whe
     \label{fig:deutsch}
 \end{figure}
 
-\lstinputlisting[language=QHaskell,caption=Deutsch's algorithm]{deutsch.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:deutsch,caption=Deutsch's algorithm]{deutsch.qh}
 
 % \subsection{Trivial examples}
 

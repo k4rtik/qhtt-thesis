@@ -358,6 +358,12 @@ Each program is assumed to have access to a pool of countably infinite number of
 
 We can initialize only one qubit at a time in either of the two computational basis states, $\ket{0}$ or $\ket{1}$. The initialization command \lstinline[language=QHaskell]{x <- init 0} allocates a fresh qubit from the global pool, initializes it to $\ket{0}$ and returns a reference to the qubit and binds it to $x$.
 
+TODO:
+
+- a more general version could be
+
+init M : bitstr -> QST qbitstr
+
 \subsubsection{Measurement}
 
 \indent\indent\indent\lstinline[language=QHaskell]{meas M : qbit -> QST bit}\medskip
@@ -370,6 +376,8 @@ The measurement command, in effect, returns the qubit back to the pool after ret
 
 The unitary application command takes a gate from the set of predefined unitary gates and applies it a given number of qubits (can be a single qubit or a tuple of qubits matching the number of qubits required by the gate). Since it modifies the state in place, it returns the trivial unit output.
 
+\subsection{Syntax}
+
 \nonterms{Typ}
 
 \nonterms{Tm}
@@ -378,11 +386,12 @@ The unitary application command takes a gate from the set of predefined unitary 
 
 \nonterms{Cmd}
 
+\subsection{Typing Rules}
+
 TODO:
 
-- a more general version could be
+- proof rules at each step
 
-init M : bitstr -> QST qbitstr
 
 \begin{mathpar}
     \inferrule[Measure]
@@ -390,11 +399,6 @@ init M : bitstr -> QST qbitstr
     {\HoareT{P}{\textbf{meas}\ q}{P[e \rightarrow x],\ x =_q \ket{0}}}
 \end{mathpar}
 
-TODO:
-
-- define the syntax of the language
-
-- proof rules at each step
 
 \subsection{Examples}
 

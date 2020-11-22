@@ -13,34 +13,31 @@ grammar
 
 Typ, A, B, C :: Ty ::= {{ com Types }}
   | K                  ::   :: K
+  | unit               ::   :: Unit
   | bit                ::   :: Bit
   | qbit               ::   :: Qubit
-  | unit               ::   :: Unit
-  | prop               ::   :: Prop
-  | mono               ::   :: MonoType
+  | vector             ::   :: Vector
+  | prop               ::   :: Prop         {{ com The type of propositions }}
+  | mono               ::   :: MonoType     {{ com The type of small types }}
   | Pi x : A . B       ::   :: DepProd      {{ com Dependent Product }}
   | A -> B             ::   :: Arrow        {{ com Sugar for Pi type }}
-  | Sig x : A . B      ::   :: DepSum       {{ com Dependent Sum }}
-  | A times B          ::   :: Pair         {{ com Sugar for Sigma type }}
+  | A times B          ::   :: Pair         {{ com Pair }}
   | { P } x : A { Q }  ::   :: Hoare        {{ com Hoare Type }}
   | QST x : A ( requires { P } )
     ( ensures { Q } )  ::   :: QHoare        {{ com Sugar for Q. Hoare Type }}
   | A [ M / x ]        :: M :: Substitution
 
-Tm, K, L, M, N :: Tm ::= {{ com Terms }}
-  | x           ::  :: Var
-  | 0           ::  :: Zero
-  | 1           ::  :: One
-  | ()          ::  :: Unit
-  | \ x . M     ::  :: Lam
-  | K N         ::  :: App
-  | ( M , N )   ::  :: Pair
-  | fst K       ::  :: Fst
-  | snd K       ::  :: Snd
-  | do E        ::  :: Do
-  | M : A       ::  :: Ascription
+MonoTyp, t {{ tex \tau }}, s {{ tex \sigma }} :: 'Mon' ::= {{ com Small Types (\textbf{mono}) }}
+  | unit              :: :: Unit
+  | bit               :: :: Bit
+  | qbit              :: :: Qubit           {{ com Reference/Index to a logical qubit }}
+  | vector            :: :: Vector          {{ com Type of quantum state vectors }}
+  | prop              :: :: Proposition     {{ com The type of propositions }}
+  | Pi x : t . s      :: :: Pi
+  | t times s         :: :: Pair
+  | { P } s : t { Q } :: :: Hoare
 
-Prop, P, Q, R :: '' ::= {{ com Propositions }}
+Prop, P, Q, R :: '' ::= {{ com Propositions (\textbf{prop}) }}
   | top                   ::  :: Top          {{ com Complete state space, trivial }}
   | bot                   ::  :: Bottom       {{ com \{0\}, trivial }}
   | P /\ Q                ::  :: Conjunction  {{ com Intersection of subspaces. P, Q }}
@@ -57,40 +54,45 @@ Prop, P, Q, R :: '' ::= {{ com Propositions }}
   | class ( x )           ::  :: Class        {{ com x is classical. x $\equiv_{cl}$ u}}
   | P [ M / x ]           :: M:: Substitution
 
+Tm, K, L, M, N :: Tm ::= {{ com Terms }}
+  | x           ::  :: Var            {{ com Variable }}
+  | ()          ::  :: Unit           {{ com Unit }}
+  | 0           ::  :: Zero           {{ com 0 value of type bit }}
+  | 1           ::  :: One            {{ com 1 value of type bit }}
+  | psi         ::  :: Psi            {{ com Metavariable for quantum state vector }}
+  | \ x . M     ::  :: Lam            {{ com Abstraction }}
+  | K N         ::  :: App            {{ com Application }}
+  | ( M , N )   ::  :: Pair           {{ com Pair }}
+  | fst K       ::  :: Fst            {{ com First projection from a pair }}
+  | snd K       ::  :: Snd            {{ com Second projection from a pair }}
+  | do E        ::  :: Do             {{ com Suspended computation }}
+  | M : A       ::  :: Ascription     {{ com Type annotation }}
+
 Cmd, c :: '' ::= {{ com Commands }}
-  | init M                :: :: Initialize
-  | apply U to M          :: :: ApplyU
-  | meas M                :: :: Measurement
-  | if M then E1 else E2  :: :: IfThenElse
+  | init M                :: :: Initialize      {{ com Initialization }}
+  | apply U to M          :: :: ApplyU          {{ com Unitary application }}
+  | meas M                :: :: Measurement     {{ com Measurement }}
+  | if M then E1 else E2  :: :: IfThenElse      {{ com Conditional }}
 
 Unitary, U :: '' ::= {{ com Unitaries }}
-  | I     :: :: Identity
-  | X     :: :: X
-  | Y     :: :: Y
-  | Z     :: :: Z
-  | H     :: :: Hadamard
-  | CX    :: :: ControlledX
-  | CZ    :: :: ControlledZ
+  | I     :: :: Identity      {{ com Identity }}
+  | X     :: :: X             {{ com Pauli X }}
+  | Y     :: :: Y             {{ com Pauli Y }}
+  | Z     :: :: Z             {{ com Pauli Z }}
+  | H     :: :: Hadamard      {{ com Hadamard }}
+  | CX    :: :: ControlledX   {{ com CNOT }}
+  | CZ    :: :: ControlledZ   {{ com Controlled-Z }}
 
 Comp, E, F :: '' ::= {{ com Computations }}
-  | return M        :: :: Return
-  | x <- K ; E      :: :: Run
-  | x <- c ; E      :: :: Bind
-  | x = M ; E       :: :: Let
-
-MonoTyp, t {{ tex \tau }}, s {{ tex \sigma }} :: 'Mon' ::= {{ com Monotypes }}
-  | bit               :: :: Bit
-  | qbit              :: :: Qubit
-  | unit              :: :: Unit
-  | prop              :: :: Proposition
-  | Pi x : t . s      :: :: Pi
-  | Sig x : t . s     :: :: Sigma
-  | { P } s : t { Q } :: :: Hoare
+  | return M        :: :: Return  {{ com return }}
+  | x <- K ; E      :: :: Run     {{ com run computation K }}
+  | x <- c ; E      :: :: Bind    {{ com run command c }}
+  | x = M ; E       :: :: Let     {{ com let binding }}
 
 Ctx, G {{ tex \Gamma }} :: 'Ctx' ::= {{ com Contexts }}
-  | o               :: :: Empty
-  | G , x : A       :: :: Type
-  | G , P           :: :: Prop
+  | o               :: :: Empty         {{ com empty context }}
+  | G , x : A       :: :: Type          {{ com context extension }}
+  | G , P           :: :: Prop          {{ com context extension with prop }}
 
 
 terminals :: 'terminals_' ::=
@@ -171,9 +173,9 @@ defn
     G |- Pi x:A.B type
 
     G |- A type
-    G, x:A |- B type
-    ------------------ :: Sig
-    G |- Sig x:A.B type
+    G |- B type
+    ------------------- :: Pair
+    G |- A times B type
 
 defn
   A = B :: :: TyEq :: tyeq_ {{ com $[[A]]$ and $[[B]]$ are equal as types }} by
@@ -182,7 +184,7 @@ defn
   G |- M = N : A :: :: TmEq :: tmeq_ {{ com $[[M]]$ and $[[N]]$ are equal as terms of type $[[A]]$ }} by
 
 defn
-  G |- P : prop :: :: Prop :: prop_ {{ com $[[P]]$ type checks as a $[[prop]]$ }} by
+  G |- P : prop :: :: Prop :: prop_ {{ com $[[P]]$ is a $[[prop]]$ }} by
 
 defn
   G |- M : A :: :: Term :: tm_ {{ com term $[[M]]$ has type $[[A]]$ }} by
@@ -192,9 +194,9 @@ defn
     G |- \x.M : Pi x:A.B
 
     G |- M : A
-    G |- N : B[M/x]
-    ------------------------- :: SigI
-    G |- (M, N) : Sig x:A.B
+    G |- N : B
+    ----------------------- :: PairI
+    G |- (M, N) : A times B
 
     G |- K : A
     A = B
@@ -206,13 +208,13 @@ defn
     ------------------- :: PiE
     G |- K M : B[M/x]
 
-    G |- K : Sig x:A.B
+    G |- K : A times B
     -------------------- :: FstE
     G |- fst K : A
 
-    G |- K : Sig x:A.B
-    --------------------------- :: SndE
-    G |- snd K : B[fst K / x]
+    G |- K : A times B
+    ------------------ :: SndE
+    G |- snd K : B
 
     G |- A type
     G |- M : A

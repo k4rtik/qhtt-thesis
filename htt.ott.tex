@@ -37,34 +37,31 @@
 \newcommand{\ottTyp}{
 \ottrulehead{\ottnt{Typ}  ,\ \ottnt{A}  ,\ \ottnt{B}  ,\ \ottnt{C}}{::=}{\ottcom{Types}}\ottprodnewline
 \ottfirstprodline{|}{\ottnt{K}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{bit}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{qbit}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{prop}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{mono}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{vector}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{prop}}{}{}{}{\ottcom{The type of propositions}}\ottprodnewline
+\ottprodline{|}{\ottkw{mono}}{}{}{}{\ottcom{The type of small types}}\ottprodnewline
 \ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{\ottcom{Dependent Product}}\ottprodnewline
 \ottprodline{|}{\ottnt{A}  \rightarrow  \ottnt{B}}{}{}{}{\ottcom{Sugar for Pi type}}\ottprodnewline
-\ottprodline{|}{\Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{\ottcom{Dependent Sum}}\ottprodnewline
-\ottprodline{|}{\ottnt{A} \, \otimes \, \ottnt{B}}{}{}{}{\ottcom{Sugar for Sigma type}}\ottprodnewline
+\ottprodline{|}{\ottnt{A} \, \otimes \, \ottnt{B}}{}{}{}{\ottcom{Pair}}\ottprodnewline
 \ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{\ottcom{Hoare Type}}\ottprodnewline
 \ottprodline{|}{\ottkw{QST} \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{}{}{}{\ottcom{Sugar for Q. Hoare Type}}}
 
-\newcommand{\ottTm}{
-\ottrulehead{\ottnt{Tm}  ,\ \ottnt{K}  ,\ \ottnt{L}  ,\ \ottnt{M}  ,\ \ottnt{N}}{::=}{\ottcom{Terms}}\ottprodnewline
-\ottfirstprodline{|}{\ottmv{x}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottsym{0}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottsym{1}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottsym{()}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\lambda  \ottmv{x}  \ottsym{.}  \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottnt{K} \, \ottnt{N}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{fst} \, \ottnt{K}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{snd} \, \ottnt{K}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{do} \, \ottnt{E}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottnt{M}  \ottsym{:}  \ottnt{A}}{}{}{}{}}
+\newcommand{\ottMonoTyp}{
+\ottrulehead{\ottnt{MonoTyp}  ,\ \tau  ,\ \sigma}{::=}{\ottcom{Small Types (\textbf{mono})}}\ottprodnewline
+\ottfirstprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{bit}}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottkw{qbit}}{}{}{}{\ottcom{Reference/Index to a logical qubit}}\ottprodnewline
+\ottprodline{|}{\ottkw{vector}}{}{}{}{\ottcom{Type of quantum state vectors}}\ottprodnewline
+\ottprodline{|}{\ottkw{prop}}{}{}{}{\ottcom{The type of propositions}}\ottprodnewline
+\ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \tau  \ottsym{.}  \sigma}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\tau \, \otimes \, \sigma}{}{}{}{}\ottprodnewline
+\ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \sigma  \ottsym{:}  \tau  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{}}
 
 \newcommand{\ottProp}{
-\ottrulehead{\ottnt{Prop}  ,\ \ottnt{P}  ,\ \ottnt{Q}  ,\ \ottnt{R}}{::=}{\ottcom{Propositions}}\ottprodnewline
+\ottrulehead{\ottnt{Prop}  ,\ \ottnt{P}  ,\ \ottnt{Q}  ,\ \ottnt{R}}{::=}{\ottcom{Propositions (\textbf{prop})}}\ottprodnewline
 \ottfirstprodline{|}{\top}{}{}{}{\ottcom{Complete state space, trivial}}\ottprodnewline
 \ottprodline{|}{\bot}{}{}{}{\ottcom{\{0\}, trivial}}\ottprodnewline
 \ottprodline{|}{\ottnt{P}  \wedge  \ottnt{Q}}{}{}{}{\ottcom{Intersection of subspaces. P, Q}}\ottprodnewline
@@ -80,54 +77,59 @@
 \ottprodline{|}{\ottmv{x_{{\mathrm{1}}}}  \equiv_{cl}  \ottmv{x_{{\mathrm{2}}}}}{}{}{}{\ottcom{classical equality}}\ottprodnewline
 \ottprodline{|}{\ottkw{class} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is classical. x $\equiv_{cl}$ u}}}
 
+\newcommand{\ottTm}{
+\ottrulehead{\ottnt{Tm}  ,\ \ottnt{K}  ,\ \ottnt{L}  ,\ \ottnt{M}  ,\ \ottnt{N}}{::=}{\ottcom{Terms}}\ottprodnewline
+\ottfirstprodline{|}{\ottmv{x}}{}{}{}{\ottcom{Variable}}\ottprodnewline
+\ottprodline{|}{\ottsym{()}}{}{}{}{\ottcom{Unit}}\ottprodnewline
+\ottprodline{|}{\ottsym{0}}{}{}{}{\ottcom{0 value of type bit}}\ottprodnewline
+\ottprodline{|}{\ottsym{1}}{}{}{}{\ottcom{1 value of type bit}}\ottprodnewline
+\ottprodline{|}{\psi}{}{}{}{\ottcom{Metavariable for quantum state vector}}\ottprodnewline
+\ottprodline{|}{\lambda  \ottmv{x}  \ottsym{.}  \ottnt{M}}{}{}{}{\ottcom{Abstraction}}\ottprodnewline
+\ottprodline{|}{\ottnt{K} \, \ottnt{N}}{}{}{}{\ottcom{Application}}\ottprodnewline
+\ottprodline{|}{\ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}}{}{}{}{\ottcom{Pair}}\ottprodnewline
+\ottprodline{|}{\ottkw{fst} \, \ottnt{K}}{}{}{}{\ottcom{First projection from a pair}}\ottprodnewline
+\ottprodline{|}{\ottkw{snd} \, \ottnt{K}}{}{}{}{\ottcom{Second projection from a pair}}\ottprodnewline
+\ottprodline{|}{\ottkw{do} \, \ottnt{E}}{}{}{}{\ottcom{Suspended computation}}\ottprodnewline
+\ottprodline{|}{\ottnt{M}  \ottsym{:}  \ottnt{A}}{}{}{}{\ottcom{Type annotation}}}
+
 \newcommand{\ottCmd}{
 \ottrulehead{\ottnt{Cmd}  ,\ \ottnt{c}}{::=}{\ottcom{Commands}}\ottprodnewline
-\ottfirstprodline{|}{\ottkw{init} \, \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{apply} \, \ottnt{U} \, \ottkw{to} \, \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{meas} \, \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{if} \, \ottnt{M} \, \ottkw{then} \, \ottnt{E_{{\mathrm{1}}}} \, \ottkw{else} \, \ottnt{E_{{\mathrm{2}}}}}{}{}{}{}}
+\ottfirstprodline{|}{\ottkw{init} \, \ottnt{M}}{}{}{}{\ottcom{Initialization}}\ottprodnewline
+\ottprodline{|}{\ottkw{apply} \, \ottnt{U} \, \ottkw{to} \, \ottnt{M}}{}{}{}{\ottcom{Unitary application}}\ottprodnewline
+\ottprodline{|}{\ottkw{meas} \, \ottnt{M}}{}{}{}{\ottcom{Measurement}}\ottprodnewline
+\ottprodline{|}{\ottkw{if} \, \ottnt{M} \, \ottkw{then} \, \ottnt{E_{{\mathrm{1}}}} \, \ottkw{else} \, \ottnt{E_{{\mathrm{2}}}}}{}{}{}{\ottcom{Conditional}}}
 
 \newcommand{\ottUnitary}{
 \ottrulehead{\ottnt{Unitary}  ,\ \ottnt{U}}{::=}{\ottcom{Unitaries}}\ottprodnewline
-\ottfirstprodline{|}{\ottkw{I}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{X}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{Y}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{Z}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{H}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{CX}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{CZ}}{}{}{}{}}
+\ottfirstprodline{|}{\ottkw{I}}{}{}{}{\ottcom{Identity}}\ottprodnewline
+\ottprodline{|}{\ottkw{X}}{}{}{}{\ottcom{Pauli X}}\ottprodnewline
+\ottprodline{|}{\ottkw{Y}}{}{}{}{\ottcom{Pauli Y}}\ottprodnewline
+\ottprodline{|}{\ottkw{Z}}{}{}{}{\ottcom{Pauli Z}}\ottprodnewline
+\ottprodline{|}{\ottkw{H}}{}{}{}{\ottcom{Hadamard}}\ottprodnewline
+\ottprodline{|}{\ottkw{CX}}{}{}{}{\ottcom{CNOT}}\ottprodnewline
+\ottprodline{|}{\ottkw{CZ}}{}{}{}{\ottcom{Controlled-Z}}}
 
 \newcommand{\ottComp}{
 \ottrulehead{\ottnt{Comp}  ,\ \ottnt{E}  ,\ \ottnt{F}}{::=}{\ottcom{Computations}}\ottprodnewline
-\ottfirstprodline{|}{\ottkw{return} \, \ottnt{M}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{K}  \ottsym{;}  \ottnt{E}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{c}  \ottsym{;}  \ottnt{E}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottmv{x}  \ottsym{=}  \ottnt{M}  \ottsym{;}  \ottnt{E}}{}{}{}{}}
-
-\newcommand{\ottMonoTyp}{
-\ottrulehead{\ottnt{MonoTyp}  ,\ \tau  ,\ \sigma}{::=}{\ottcom{Monotypes}}\ottprodnewline
-\ottfirstprodline{|}{\ottkw{bit}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{qbit}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{prop}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \tau  \ottsym{.}  \sigma}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\Sigma \, \ottmv{x}  \ottsym{:}  \tau  \ottsym{.}  \sigma}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \sigma  \ottsym{:}  \tau  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{}}
+\ottfirstprodline{|}{\ottkw{return} \, \ottnt{M}}{}{}{}{\ottcom{lift from monad}}\ottprodnewline
+\ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{K}  \ottsym{;}  \ottnt{E}}{}{}{}{\ottcom{run computation K}}\ottprodnewline
+\ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{c}  \ottsym{;}  \ottnt{E}}{}{}{}{\ottcom{run command c}}\ottprodnewline
+\ottprodline{|}{\ottmv{x}  \ottsym{=}  \ottnt{M}  \ottsym{;}  \ottnt{E}}{}{}{}{\ottcom{let binding}}}
 
 \newcommand{\ottCtx}{
 \ottrulehead{\ottnt{Ctx}  ,\ \Gamma}{::=}{\ottcom{Contexts}}\ottprodnewline
-\ottfirstprodline{|}{\cdot}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\Gamma  \ottsym{,}  \ottnt{P}}{}{}{}{}}
+\ottfirstprodline{|}{\cdot}{}{}{}{\ottcom{empty context}}\ottprodnewline
+\ottprodline{|}{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}}{}{}{}{\ottcom{context extension}}\ottprodnewline
+\ottprodline{|}{\Gamma  \ottsym{,}  \ottnt{P}}{}{}{}{\ottcom{context extension with prop}}}
 
 \newcommand{\ottgrammar}{\ottgrammartabular{
 \ottTyp\ottinterrule
-\ottTm\ottinterrule
+\ottMonoTyp\ottinterrule
 \ottProp\ottinterrule
+\ottTm\ottinterrule
 \ottCmd\ottinterrule
 \ottUnitary\ottinterrule
 \ottComp\ottinterrule
-\ottMonoTyp\ottinterrule
 \ottCtx\ottafterlastrule
 }}
 
@@ -210,12 +212,12 @@
 }}
 
 
-\newcommand{\ottdruletyXXSig}[1]{\ottdrule[#1]{%
+\newcommand{\ottdruletyXXPair}[1]{\ottdrule[#1]{%
 \ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
-\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{B} \, \ottkw{type}}%
+\ottpremise{\Gamma  \vdash  \ottnt{B} \, \ottkw{type}}%
 }{
-\Gamma  \vdash  \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B} \, \ottkw{type}}{%
-{\ottdrulename{ty\_Sig}}{}%
+\Gamma  \vdash  \ottnt{A} \, \otimes \, \ottnt{B} \, \ottkw{type}}{%
+{\ottdrulename{ty\_Pair}}{}%
 }}
 
 \newcommand{\ottdefnType}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{A} \, \ottkw{type}$}{\ottcom{$\ottnt{A}$ is a type}}
@@ -225,7 +227,7 @@
 \ottusedrule{\ottdruletyXXMono{}}
 \ottusedrule{\ottdruletyXXUnit{}}
 \ottusedrule{\ottdruletyXXPi{}}
-\ottusedrule{\ottdruletyXXSig{}}
+\ottusedrule{\ottdruletyXXPair{}}
 \end{ottdefnblock}}
 
 %% defn TyEq
@@ -240,7 +242,7 @@
 
 %% defn Prop
 
-\newcommand{\ottdefnProp}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}$}{\ottcom{$\ottnt{P}$ type checks as a $\ottkw{prop}$}}
+\newcommand{\ottdefnProp}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}$}{\ottcom{$\ottnt{P}$ is a $\ottkw{prop}$}}
 \end{ottdefnblock}}
 
 %% defn Term
@@ -252,12 +254,12 @@
 }}
 
 
-\newcommand{\ottdruletmXXSigI}[1]{\ottdrule[#1]{%
+\newcommand{\ottdruletmXXPairI}[1]{\ottdrule[#1]{%
 \ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
-\ottpremise{\Gamma  \vdash  \ottnt{N}  \ottsym{:}  \ottnt{B}  \ottsym{[}  \ottnt{M}  \ottsym{/}  \ottmv{x}  \ottsym{]}}%
+\ottpremise{\Gamma  \vdash  \ottnt{N}  \ottsym{:}  \ottnt{B}}%
 }{
-\Gamma  \vdash  \ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}  \ottsym{:}  \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{%
-{\ottdrulename{tm\_SigI}}{}%
+\Gamma  \vdash  \ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}  \ottsym{:}  \ottnt{A} \, \otimes \, \ottnt{B}}{%
+{\ottdrulename{tm\_PairI}}{}%
 }}
 
 
@@ -280,7 +282,7 @@
 
 
 \newcommand{\ottdruletmXXFstE}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottnt{A} \, \otimes \, \ottnt{B}}%
 }{
 \Gamma  \vdash  \ottkw{fst} \, \ottnt{K}  \ottsym{:}  \ottnt{A}}{%
 {\ottdrulename{tm\_FstE}}{}%
@@ -288,9 +290,9 @@
 
 
 \newcommand{\ottdruletmXXSndE}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \Sigma \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottnt{A} \, \otimes \, \ottnt{B}}%
 }{
-\Gamma  \vdash  \ottkw{snd} \, \ottnt{K}  \ottsym{:}  \ottnt{B}  \ottsym{[}  \ottkw{fst} \, \ottnt{K}  \ottsym{/}  \ottmv{x}  \ottsym{]}}{%
+\Gamma  \vdash  \ottkw{snd} \, \ottnt{K}  \ottsym{:}  \ottnt{B}}{%
 {\ottdrulename{tm\_SndE}}{}%
 }}
 
@@ -305,7 +307,7 @@
 
 \newcommand{\ottdefnTerm}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}$}{\ottcom{term $\ottnt{M}$ has type $\ottnt{A}$}}
 \ottusedrule{\ottdruletmXXPiI{}}
-\ottusedrule{\ottdruletmXXSigI{}}
+\ottusedrule{\ottdruletmXXPairI{}}
 \ottusedrule{\ottdruletmXXElim{}}
 \ottusedrule{\ottdruletmXXPiE{}}
 \ottusedrule{\ottdruletmXXFstE{}}

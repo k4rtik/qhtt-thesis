@@ -39,26 +39,15 @@
 \ottfirstprodline{|}{\ottnt{K}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{bit}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{qbit}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{vector}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{prop}}{}{}{}{\ottcom{The type of propositions}}\ottprodnewline
-\ottprodline{|}{\ottkw{mono}}{}{}{}{\ottcom{The type of small types}}\ottprodnewline
+\ottprodline{|}{\ottkw{qbit}}{}{}{}{\ottcom{Index to a logical qubit}}\ottprodnewline
+\ottprodline{|}{\ottkw{vector}}{}{}{}{\ottcom{Quantum state vectors}}\ottprodnewline
+\ottprodline{|}{\ottkw{unitary}}{}{}{}{\ottcom{Type of unitaries}}\ottprodnewline
+\ottprodline{|}{\ottkw{prop}}{}{}{}{\ottcom{Type of propositions}}\ottprodnewline
 \ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{\ottcom{Dependent Product}}\ottprodnewline
 \ottprodline{|}{\ottnt{A}  \rightarrow  \ottnt{B}}{}{}{}{\ottcom{Sugar for Pi type}}\ottprodnewline
 \ottprodline{|}{\ottnt{A} \, \otimes \, \ottnt{B}}{}{}{}{\ottcom{Pair}}\ottprodnewline
 \ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{\ottcom{Hoare Type}}\ottprodnewline
 \ottprodline{|}{\ottkw{QST} \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{}{}{}{\ottcom{Sugar for Q. Hoare Type}}}
-
-\newcommand{\ottMonoTyp}{
-\ottrulehead{\ottnt{MonoTyp}  ,\ \tau  ,\ \sigma}{::=}{\ottcom{Small Types (\textbf{mono})}}\ottprodnewline
-\ottfirstprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{bit}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{qbit}}{}{}{}{\ottcom{Reference/Index to a logical qubit}}\ottprodnewline
-\ottprodline{|}{\ottkw{vector}}{}{}{}{\ottcom{Type of quantum state vectors}}\ottprodnewline
-\ottprodline{|}{\ottkw{prop}}{}{}{}{\ottcom{The type of propositions}}\ottprodnewline
-\ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \tau  \ottsym{.}  \sigma}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\tau \, \otimes \, \sigma}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \sigma  \ottsym{:}  \tau  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{}}
 
 \newcommand{\ottProp}{
 \ottrulehead{\ottnt{Prop}  ,\ \ottnt{P}  ,\ \ottnt{Q}  ,\ \ottnt{R}}{::=}{\ottcom{Propositions (\textbf{prop})}}\ottprodnewline
@@ -111,7 +100,7 @@
 
 \newcommand{\ottComp}{
 \ottrulehead{\ottnt{Comp}  ,\ \ottnt{E}  ,\ \ottnt{F}}{::=}{\ottcom{Computations}}\ottprodnewline
-\ottfirstprodline{|}{\ottkw{return} \, \ottnt{M}}{}{}{}{\ottcom{lift from monad}}\ottprodnewline
+\ottfirstprodline{|}{\ottkw{return} \, \ottnt{M}}{}{}{}{\ottcom{return}}\ottprodnewline
 \ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{K}  \ottsym{;}  \ottnt{E}}{}{}{}{\ottcom{run computation K}}\ottprodnewline
 \ottprodline{|}{\ottmv{x}  \leftarrow  \ottnt{c}  \ottsym{;}  \ottnt{E}}{}{}{}{\ottcom{run command c}}\ottprodnewline
 \ottprodline{|}{\ottmv{x}  \ottsym{=}  \ottnt{M}  \ottsym{;}  \ottnt{E}}{}{}{}{\ottcom{let binding}}}
@@ -124,7 +113,6 @@
 
 \newcommand{\ottgrammar}{\ottgrammartabular{
 \ottTyp\ottinterrule
-\ottMonoTyp\ottinterrule
 \ottProp\ottinterrule
 \ottTm\ottinterrule
 \ottCmd\ottinterrule
@@ -167,11 +155,10 @@
 \end{ottdefnblock}}
 
 %% defn Type
-\newcommand{\ottdruletyXXElim}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottkw{mono}}%
+\newcommand{\ottdruletyXXUnit}[1]{\ottdrule[#1]{%
 }{
-\Gamma  \vdash  \ottnt{K} \, \ottkw{type}}{%
-{\ottdrulename{ty\_Elim}}{}%
+\Gamma  \vdash  \ottkw{unit} \, \ottkw{type}}{%
+{\ottdrulename{ty\_Unit}}{}%
 }}
 
 
@@ -182,24 +169,17 @@
 }}
 
 
+\newcommand{\ottdruletyXXQbit}[1]{\ottdrule[#1]{%
+}{
+\Gamma  \vdash  \ottkw{qbit} \, \ottkw{type}}{%
+{\ottdrulename{ty\_Qbit}}{}%
+}}
+
+
 \newcommand{\ottdruletyXXProp}[1]{\ottdrule[#1]{%
 }{
 \Gamma  \vdash  \ottkw{prop} \, \ottkw{type}}{%
 {\ottdrulename{ty\_Prop}}{}%
-}}
-
-
-\newcommand{\ottdruletyXXMono}[1]{\ottdrule[#1]{%
-}{
-\Gamma  \vdash  \ottkw{mono} \, \ottkw{type}}{%
-{\ottdrulename{ty\_Mono}}{}%
-}}
-
-
-\newcommand{\ottdruletyXXUnit}[1]{\ottdrule[#1]{%
-}{
-\Gamma  \vdash  \ottkw{unit} \, \ottkw{type}}{%
-{\ottdrulename{ty\_Unit}}{}%
 }}
 
 
@@ -220,14 +200,24 @@
 {\ottdrulename{ty\_Pair}}{}%
 }}
 
+
+\newcommand{\ottdruletyXXHoare}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
+\ottpremise{\Gamma  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}}%
+\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{Q}  \ottsym{:} \, \ottkw{prop}}%
+}{
+\Gamma  \vdash  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}} \, \ottkw{type}}{%
+{\ottdrulename{ty\_Hoare}}{}%
+}}
+
 \newcommand{\ottdefnType}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{A} \, \ottkw{type}$}{\ottcom{$\ottnt{A}$ is a type}}
-\ottusedrule{\ottdruletyXXElim{}}
-\ottusedrule{\ottdruletyXXBit{}}
-\ottusedrule{\ottdruletyXXProp{}}
-\ottusedrule{\ottdruletyXXMono{}}
 \ottusedrule{\ottdruletyXXUnit{}}
+\ottusedrule{\ottdruletyXXBit{}}
+\ottusedrule{\ottdruletyXXQbit{}}
+\ottusedrule{\ottdruletyXXProp{}}
 \ottusedrule{\ottdruletyXXPi{}}
 \ottusedrule{\ottdruletyXXPair{}}
+\ottusedrule{\ottdruletyXXHoare{}}
 \end{ottdefnblock}}
 
 %% defn TyEq
@@ -240,12 +230,96 @@
 \newcommand{\ottdefnTmEq}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{M}  \ottsym{=}  \ottnt{N}  \ottsym{:}  \ottnt{A}$}{\ottcom{$\ottnt{M}$ and $\ottnt{N}$ are equal as terms of type $\ottnt{A}$}}
 \end{ottdefnblock}}
 
+%% defn Un
+
+\newcommand{\ottdefnUn}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{U}  \ottsym{:} \, \ottkw{unitary}$}{}
+\end{ottdefnblock}}
+
 %% defn Prop
+\newcommand{\ottdrulepropXXTopI}[1]{\ottdrule[#1]{%
+}{
+\Gamma  \vdash  \top  \ottsym{:} \, \ottkw{prop}}{%
+{\ottdrulename{prop\_TopI}}{}%
+}}
+
+
+\newcommand{\ottdrulepropXXBotI}[1]{\ottdrule[#1]{%
+}{
+\Gamma  \vdash  \bot  \ottsym{:} \, \ottkw{prop}}{%
+{\ottdrulename{prop\_BotI}}{}%
+}}
+
+
+\newcommand{\ottdrulepropXXConjI}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}}%
+\ottpremise{\Gamma  \vdash  \ottnt{Q}  \ottsym{:} \, \ottkw{prop}}%
+}{
+\Gamma  \vdash  \ottnt{P}  \wedge  \ottnt{Q}  \ottsym{:} \, \ottkw{prop}}{%
+{\ottdrulename{prop\_ConjI}}{}%
+}}
+
+
+\newcommand{\ottdrulepropXXDisjI}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}}%
+\ottpremise{\Gamma  \vdash  \ottnt{Q}  \ottsym{:} \, \ottkw{prop}}%
+}{
+\Gamma  \vdash  \ottnt{P}  \vee  \ottnt{Q}  \ottsym{:} \, \ottkw{prop}}{%
+{\ottdrulename{prop\_DisjI}}{}%
+}}
+
+
+\newcommand{\ottdrulepropXXUnI}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{U}  \ottsym{:} \, \ottkw{unitary}}%
+\ottpremise{\Gamma  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}}%
+}{
+\Gamma  \vdash  \ottnt{U} \, \cdot \, \ottnt{P}  \ottsym{:} \, \ottkw{prop}}{%
+{\ottdrulename{prop\_UnI}}{}%
+}}
 
 \newcommand{\ottdefnProp}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}$}{\ottcom{$\ottnt{P}$ is a $\ottkw{prop}$}}
+\ottusedrule{\ottdrulepropXXTopI{}}
+\ottusedrule{\ottdrulepropXXBotI{}}
+\ottusedrule{\ottdrulepropXXConjI{}}
+\ottusedrule{\ottdrulepropXXDisjI{}}
+\ottusedrule{\ottdrulepropXXUnI{}}
 \end{ottdefnblock}}
 
 %% defn Term
+\newcommand{\ottdruletmXXVarE}[1]{\ottdrule[#1]{%
+}{
+\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottmv{x}  \ottsym{:}  \ottnt{A}}{%
+{\ottdrulename{tm\_VarE}}{}%
+}}
+
+
+\newcommand{\ottdruletmXXUnitI}[1]{\ottdrule[#1]{%
+}{
+\Gamma  \vdash  \ottsym{()}  \ottsym{:}  \ottkw{unit}}{%
+{\ottdrulename{tm\_UnitI}}{}%
+}}
+
+
+\newcommand{\ottdruletmXXZeroI}[1]{\ottdrule[#1]{%
+}{
+\Gamma  \vdash  \ottsym{0}  \ottsym{:}  \ottkw{bit}}{%
+{\ottdrulename{tm\_ZeroI}}{}%
+}}
+
+
+\newcommand{\ottdruletmXXOneI}[1]{\ottdrule[#1]{%
+}{
+\Gamma  \vdash  \ottsym{1}  \ottsym{:}  \ottkw{bit}}{%
+{\ottdrulename{tm\_OneI}}{}%
+}}
+
+
+\newcommand{\ottdruletmXXVectorI}[1]{\ottdrule[#1]{%
+}{
+\Gamma  \vdash  \psi  \ottsym{:}  \ottkw{vector}}{%
+{\ottdrulename{tm\_VectorI}}{}%
+}}
+
+
 \newcommand{\ottdruletmXXPiI}[1]{\ottdrule[#1]{%
 \ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{B}}%
 }{
@@ -306,6 +380,11 @@
 }}
 
 \newcommand{\ottdefnTerm}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}$}{\ottcom{term $\ottnt{M}$ has type $\ottnt{A}$}}
+\ottusedrule{\ottdruletmXXVarE{}}
+\ottusedrule{\ottdruletmXXUnitI{}}
+\ottusedrule{\ottdruletmXXZeroI{}}
+\ottusedrule{\ottdruletmXXOneI{}}
+\ottusedrule{\ottdruletmXXVectorI{}}
 \ottusedrule{\ottdruletmXXPiI{}}
 \ottusedrule{\ottdruletmXXPairI{}}
 \ottusedrule{\ottdruletmXXElim{}}
@@ -332,7 +411,7 @@
 
 
 \newcommand{\ottdefnsJtype}{
-\ottdefnctx{}\ottdefnType{}\ottdefnTyEq{}\ottdefnTmEq{}\ottdefnProp{}\ottdefnTerm{}\ottdefnProve{}\ottdefnCompIntro{}\ottdefnCompElim{}}
+\ottdefnctx{}\ottdefnType{}\ottdefnTyEq{}\ottdefnTmEq{}\ottdefnUn{}\ottdefnProp{}\ottdefnTerm{}\ottdefnProve{}\ottdefnCompIntro{}\ottdefnCompElim{}}
 
 \newcommand{\ottdefnss}{
 \ottdefnsJtype

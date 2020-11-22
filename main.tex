@@ -570,9 +570,23 @@ of the author and do not necessarily reflect the views of the National Science F
 \nonterms{Comp}
 \nonterms{Ctx}
 
-\section{Typing rules}
+\section{Inference rules}
+
+\subsection{Valid contexts}
 
 \drules[ctx]{$\vdash \Gamma$ \textbf{ctx}}{context formation}{Empty,Type,Prop}
+
+\subsection{Valid types}
+
+\drules[ty]{$\Gamma \vdash A$ \textbf{type}}{type formation}{Elim,Unit,Bit,Qbit,Prop,Pi,Pair,Hoare}
+
+\subsection{Terms}
+
+\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,VectorI,PiI,PiE,PairI,FstE,SndE,AscriptionE}
+
+\subsection{Well-formed propositions}
+
+\drules[prop]{$\Gamma \vdash P : prop$}{checking propositions}{TopI,BotI,ConjI,DisjI,UnI}
 
 % \subsection{Trivial examples}
 

@@ -15,10 +15,10 @@ Typ, A, B, C :: Ty ::= {{ com Types }}
   | K                  ::   :: K
   | unit               ::   :: Unit
   | bit                ::   :: Bit
-  | qbit               ::   :: Qubit
-  | vector             ::   :: Vector
-  | prop               ::   :: Prop         {{ com The type of propositions }}
-  | mono               ::   :: MonoType     {{ com The type of small types }}
+  | qbit               ::   :: Qubit        {{ com Index to a logical qubit }}
+  | vector             ::   :: Vector       {{ com Quantum state vectors }}
+  | unitary            ::   :: Unitary      {{ com Type of unitaries }}
+  | prop               ::   :: Prop         {{ com Type of propositions }}
   | Pi x : A . B       ::   :: DepProd      {{ com Dependent Product }}
   | A -> B             ::   :: Arrow        {{ com Sugar for Pi type }}
   | A times B          ::   :: Pair         {{ com Pair }}
@@ -26,16 +26,6 @@ Typ, A, B, C :: Ty ::= {{ com Types }}
   | QST x : A ( requires { P } )
     ( ensures { Q } )  ::   :: QHoare        {{ com Sugar for Q. Hoare Type }}
   | A [ M / x ]        :: M :: Substitution
-
-MonoTyp, t {{ tex \tau }}, s {{ tex \sigma }} :: 'Mon' ::= {{ com Small Types (\textbf{mono}) }}
-  | unit              :: :: Unit
-  | bit               :: :: Bit
-  | qbit              :: :: Qubit           {{ com Reference/Index to a logical qubit }}
-  | vector            :: :: Vector          {{ com Type of quantum state vectors }}
-  | prop              :: :: Proposition     {{ com The type of propositions }}
-  | Pi x : t . s      :: :: Pi
-  | t times s         :: :: Pair
-  | { P } s : t { Q } :: :: Hoare
 
 Prop, P, Q, R :: '' ::= {{ com Propositions (\textbf{prop}) }}
   | top                   ::  :: Top          {{ com Complete state space, trivial }}
@@ -151,21 +141,17 @@ defn
 defn
   G |- A type :: :: Type :: ty_ {{ com $[[A]]$ is a type }} by
 
-    G |- K : mono
-    --------------- :: Elim
-    G |- K type
+    -------------- :: Unit
+    G |- unit type
 
-    -------------- :: Bit
+    ------------- :: Bit
     G |- bit type
+
+    -------------- :: Qbit
+    G |- qbit type
 
     -------------- :: Prop
     G |- prop type
-
-    -------------- :: Mono
-    G |- mono type
-
-    -------------- :: Unit
-    G |- unit type
 
     G |- A type
     G, x:A |- B type
@@ -177,6 +163,12 @@ defn
     ------------------- :: Pair
     G |- A times B type
 
+    G |- A type
+    G |- P : prop
+    G, x:A |- Q : prop
+    ------------------- :: Hoare
+    G |- {P}x:A{Q} type
+
 defn
   A = B :: :: TyEq :: tyeq_ {{ com $[[A]]$ and $[[B]]$ are equal as types }} by
 
@@ -184,10 +176,49 @@ defn
   G |- M = N : A :: :: TmEq :: tmeq_ {{ com $[[M]]$ and $[[N]]$ are equal as terms of type $[[A]]$ }} by
 
 defn
+  G |- U : unitary :: :: Un :: un_ by
+
+defn
   G |- P : prop :: :: Prop :: prop_ {{ com $[[P]]$ is a $[[prop]]$ }} by
+
+    -------------::TopI
+    G |- top:prop
+
+    -------------::BotI
+    G |- bot:prop
+
+    G|-P:prop
+    G|-Q:prop
+    ----------------::ConjI
+    G |- P /\ Q:prop
+
+    G|-P:prop
+    G|-Q:prop
+    ----------------::DisjI
+    G |- P \/ Q:prop
+
+    G |- U : unitary
+    G |- P : prop
+    ----------------::UnI
+    G |- U o P:prop
 
 defn
   G |- M : A :: :: Term :: tm_ {{ com term $[[M]]$ has type $[[A]]$ }} by
+
+    -------------::VarE
+    G, x:A |- x:A
+
+    ------------::UnitI
+    G |- ():unit
+
+    ----------::ZeroI
+    G |- 0:bit
+
+    ----------::OneI
+    G |- 1:bit
+
+    ---------------::VectorI
+    G |- psi:vector
 
     G, x:A |- M : B
     ---------------------- :: PiI
@@ -215,6 +246,10 @@ defn
     G |- K : A times B
     ------------------ :: SndE
     G |- snd K : B
+
+    % G |-
+    % --------------------::HoareI
+    % G |- do E: {P}x:A{Q}
 
     G |- A type
     G |- M : A

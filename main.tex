@@ -491,9 +491,13 @@ As the teleportation protocol is usually stated, we have two agents Alice and Bo
 
 \cref{lst:alice,lst:bob,lst:mtele} show the implementation of these parts in the form of separate modules (functions) along with their specifications as types. Alice's circuit requires that her second input qubit is entangled in the Bell state. This statement shows our first example of using Unruh's entangled ghost variable, $e$, in our specifications which is declared in the context right before the \textit{requires} construct along with other ghost variables. It further ensures that her two input qubits are both consumed in the process as they are asserted to be classical in the postcondition. Since Alice is dealing with entanglement, it is important to maintain the distribution over the all qubits involved including the ghost qubit $e$ and the newly created ghosts $e_x$ and $e_y$ because of her measurement operations.
 
-Bob's specification shows what correction is applied if his qubit is in an arbitrary state. Note that Bob uses the classical control construct if-then-else in this variant of the circuit. The specification for teleport is the same as before but the implementation is now much shorter.
+Bob's specification shows what correction is applied if his qubit is in an arbitrary state. Note that Bob uses the classical control construct if-then-else in this variant of the circuit. Also, note that to distinguish between the input and output of the qubit, we are using two different names, but both $b$ and $q$ are referring to the same qubit. The specification for teleport is the same as before but the implementation is now much shorter.
 
-We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea}.
+We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea}. The verification conditions generated for Alice are almost the same as those generated during the first part of our first teleportation example, except we do not have qubit $b$ in scope and instead are dealing with its ghost $e$.
+
+In Bob's case, we start out with his qubit $b$ in some arbitrary quantum state and perform corrections as specified by the classical conditionals. We do not need entangled ghosts here as Bob is only dealing with two classical bits and his own qubit.
+
+Finally, in the teleport code in \cref{lst:mtelea}, the only unusual step is at lines 16 and later, where we need to merge the existing conditions from the environment in which bob was called with the postcondition of bob. Simplification after the merge operation lets us recover the original message at line 27.
 
 \lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=14]{teleport2.qh}
 
@@ -514,7 +518,7 @@ We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea
 % \lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
 
 \subsubsection{Deutsch's algorithm}
-\cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone.
+Our final example in \cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone.
 % This example involves various propositions about classical bits that we did not describe, but it serves to show that if our predicate language is extended with standard classical logic (ie, predicates such as equality of classical bits, $=_c$ and implication, $=>$) we can say a lot more in the specification.
 
 \begin{figure}

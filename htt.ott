@@ -7,7 +7,7 @@ metavar subspace, S ::=
 metavar state, psi ::=
 {{ tex \psi }}
 
-metavar distribution, D ::=
+metavar amplitudes, alpha, beta ::=
 
 grammar
 
@@ -17,6 +17,7 @@ Typ, A, B, C :: Ty ::= {{ com Types }}
   | bit                ::   :: Bit
   | qbit               ::   :: Qubit        {{ com Index to a logical qubit }}
   | vector             ::   :: Vector       {{ com Quantum state vectors }}
+  | complex            ::   :: Complex      {{ com Complex scalars }}
   | unitary            ::   :: Unitary      {{ com Type of unitaries }}
   | prop               ::   :: Prop         {{ com Type of propositions }}
   | Pi x : A . B       ::   :: DepProd      {{ com Dependent Product }}
@@ -36,11 +37,10 @@ Prop, P, Q, R :: '' ::= {{ com Propositions (\textbf{prop}) }}
   | U o P                 ::  :: Unitary      {{ com Operator }}
   | x inq S               ::  :: InSubspace   {{ com x lies in subspace S }}
   | x =q psi              ::  :: EqState      {{ com x is equal to state $\psi$ }}
-  | distrib ( x , D )     :: S:: Distrib
   | uniform ( x )         ::  :: Uniform      {{ com x is uniformly distributed }}
-  | x1 ==q x2             ::  :: EqQuantum    {{ com quantum equality }}
+  % | x1 ==q x2             ::  :: EqQuantum    {{ com quantum equality }}
   | separable ( x )       ::  :: Separable    {{ com x is separable. x $\equiv_q$ u}}
-  | x1 ==cl x2            ::  :: EqClassical  {{ com classical equality }}
+  % | x1 ==cl x2            ::  :: EqClassical  {{ com classical equality }}
   | class ( x )           ::  :: Class        {{ com x is classical. x $\equiv_{cl}$ u}}
   | P [ M / x ]           :: M:: Substitution
 
@@ -50,6 +50,8 @@ Tm, K, L, M, N :: Tm ::= {{ com Terms }}
   | 0           ::  :: Zero           {{ com 0 value of type bit }}
   | 1           ::  :: One            {{ com 1 value of type bit }}
   | psi         ::  :: Psi            {{ com Metavariable for quantum state vector }}
+  | alpha       ::  :: Alpha          {{ com Metavariable for complex amplitude }}
+  | beta        ::  :: Beta           {{ com Metavariable for complex amplitude }}
   | \ x . M     ::  :: Lam            {{ com Abstraction }}
   | K N         ::  :: App            {{ com Application }}
   | ( M , N )   ::  :: Pair           {{ com Pair }}
@@ -117,6 +119,8 @@ terminals :: 'terminals_' ::=
   | exists                 ::   :: exists     {{ tex \exists }}
   | forall                 ::   :: forall     {{ tex \forall }}
   | |->                    ::   :: SMapsto    {{ tex \mapsto }}
+  | alpha                  ::   :: Alpha      {{ tex \alpha }}
+  | beta                   ::   :: Beta       {{ tex \beta }}
 
 
 defns

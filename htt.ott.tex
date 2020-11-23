@@ -31,7 +31,7 @@
  $ \ottmv{ghostvar} ,\, \ottmv{g} ,\, \ottmv{e} ,\, \ottmv{u} $ &  \\
  $ \ottmv{subspace} ,\, \ottmv{S} $ &  \\
  $ \psi ,\, \psi $ &  \\
- $ \ottmv{distribution} ,\, \ottmv{D} $ &  \\
+ $ \ottmv{amplitudes} ,\, \ottmv{alpha} ,\, \ottmv{beta} $ &  \\
 }}
 
 \newcommand{\ottTyp}{
@@ -41,6 +41,7 @@
 \ottprodline{|}{\ottkw{bit}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{qbit}}{}{}{}{\ottcom{Index to a logical qubit}}\ottprodnewline
 \ottprodline{|}{\ottkw{vector}}{}{}{}{\ottcom{Quantum state vectors}}\ottprodnewline
+\ottprodline{|}{\ottkw{complex}}{}{}{}{\ottcom{Complex scalars}}\ottprodnewline
 \ottprodline{|}{\ottkw{unitary}}{}{}{}{\ottcom{Type of unitaries}}\ottprodnewline
 \ottprodline{|}{\ottkw{prop}}{}{}{}{\ottcom{Type of propositions}}\ottprodnewline
 \ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{\ottcom{Dependent Product}}\ottprodnewline
@@ -59,11 +60,8 @@
 \ottprodline{|}{\ottnt{U} \, \cdot \, \ottnt{P}}{}{}{}{\ottcom{Operator}}\ottprodnewline
 \ottprodline{|}{\ottmv{x} \, \in_q \, \ottmv{S}}{}{}{}{\ottcom{x lies in subspace S}}\ottprodnewline
 \ottprodline{|}{\ottmv{x}  =_q  \psi}{}{}{}{\ottcom{x is equal to state $\psi$}}\ottprodnewline
-\ottprodline{|}{\ottkw{distrib} \, \ottsym{(}  \ottmv{x}  \ottsym{,}  \ottmv{D}  \ottsym{)}} {\textsf{S}}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{uniform} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is uniformly distributed}}\ottprodnewline
-\ottprodline{|}{\ottmv{x_{{\mathrm{1}}}}  \equiv_q  \ottmv{x_{{\mathrm{2}}}}}{}{}{}{\ottcom{quantum equality}}\ottprodnewline
 \ottprodline{|}{\ottkw{separable} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is separable. x $\equiv_q$ u}}\ottprodnewline
-\ottprodline{|}{\ottmv{x_{{\mathrm{1}}}}  \equiv_{cl}  \ottmv{x_{{\mathrm{2}}}}}{}{}{}{\ottcom{classical equality}}\ottprodnewline
 \ottprodline{|}{\ottkw{class} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is classical. x $\equiv_{cl}$ u}}}
 
 \newcommand{\ottTm}{
@@ -73,6 +71,8 @@
 \ottprodline{|}{\ottsym{0}}{}{}{}{\ottcom{0 value of type bit}}\ottprodnewline
 \ottprodline{|}{\ottsym{1}}{}{}{}{\ottcom{1 value of type bit}}\ottprodnewline
 \ottprodline{|}{\psi}{}{}{}{\ottcom{Metavariable for quantum state vector}}\ottprodnewline
+\ottprodline{|}{\ottmv{alpha}}{}{}{}{\ottcom{Metavariable for complex amplitude}}\ottprodnewline
+\ottprodline{|}{\ottmv{beta}}{}{}{}{\ottcom{Metavariable for complex amplitude}}\ottprodnewline
 \ottprodline{|}{\lambda  \ottmv{x}  \ottsym{.}  \ottnt{M}}{}{}{}{\ottcom{Abstraction}}\ottprodnewline
 \ottprodline{|}{\ottnt{K} \, \ottnt{N}}{}{}{}{\ottcom{Application}}\ottprodnewline
 \ottprodline{|}{\ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}}{}{}{}{\ottcom{Pair}}\ottprodnewline
@@ -396,17 +396,17 @@
 
 %% defn Prove
 
-\newcommand{\ottdefnProve}[1]{\begin{ottdefnblock}[#1]{$\ottmv{D}  \models  \ottnt{P}$}{\ottcom{Proof obligation $\ottnt{P}$}}
+\newcommand{\ottdefnProve}[1]{\begin{ottdefnblock}[#1]{$\ottkw{D} \, \models  \ottnt{P}$}{\ottcom{Proof obligation $\ottnt{P}$}}
 \end{ottdefnblock}}
 
 %% defn CompIntro
 
-\newcommand{\ottdefnCompIntro}[1]{\begin{ottdefnblock}[#1]{$\ottmv{D}  \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\ottmv{D}, \ottnt{P}, \ottnt{A}$ check that $\ottnt{E}$ returns a value of type $\ottnt{A}$ with postcond. $\ottnt{Q}$}}
+\newcommand{\ottdefnCompIntro}[1]{\begin{ottdefnblock}[#1]{$\ottkw{D} \, \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\ottkw{D}, \ottnt{P}, \ottnt{A}$ check that $\ottnt{E}$ returns a value of type $\ottnt{A}$ with postcond. $\ottnt{Q}$}}
 \end{ottdefnblock}}
 
 %% defn CompElim
 
-\newcommand{\ottdefnCompElim}[1]{\begin{ottdefnblock}[#1]{$\ottmv{D}  \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\ottmv{D}, \ottnt{P}, \ottnt{E}, \ottnt{A}$ as input, synthesize the strongest postcondition $\ottnt{Q}$}}
+\newcommand{\ottdefnCompElim}[1]{\begin{ottdefnblock}[#1]{$\ottkw{D} \, \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\ottkw{D}, \ottnt{P}, \ottnt{E}, \ottnt{A}$ as input, synthesize the strongest postcondition $\ottnt{Q}$}}
 \end{ottdefnblock}}
 
 

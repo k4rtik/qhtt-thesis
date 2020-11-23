@@ -31,7 +31,7 @@
 \lstloadlanguages{Haskell}
 \lstdefinelanguage{QHaskell}{
     language     = Haskell,
-    morekeywords = {bit, qbit, vector, unit, U, C, meas, apply, to, requires, ensures},
+    morekeywords = {bit, qbit, vector, complex, unit, U, C, meas, apply, to, requires, ensures},
 }
 
 \lstset{
@@ -460,7 +460,7 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
 
 \subsubsection{Quantum teleportation}
 \label{sec:teleport}
-Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum teleportation and the corresponding code is shown in \cref{lst:tele}.
+Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum teleportation and the corresponding code is shown in \cref{lst:tele}. This example demonstrates how we can bind ghost variables in the Hoare type: $\{\psi: \mathit{vector}\}$ states that $\psi$ is a ghost variable of \textit{vector} type. Recall that ghost variables can only be used in the logical propositions and are not part of the program. We place the context declaring the ghost variables right after the output type to signal that the ghost variables are only bound in the \textit{require} and \textit{ensures} constructors that follow next in the Hoare type. We see another predicate $\mathbf{class}(q)$ here that states that the given qubit $q$ is in a classical state which is what we expect during quantum teleportation protocol. Or there would be no way to tell from the specification whether the implementation just returned the input qubit as the output!
 
 \begin{figure}
     \centering
@@ -481,11 +481,17 @@ Our second example shows how we can compose circuits defined in QHTT together an
 
 \lstinputlisting[language=QHaskell,float,label=lst:telea,firstline=15,caption=Annotated quantum teleportation program]{teleport.qh}
 
-Verification steps for this program are shown in \cref{lst:telea}. At line 18, something interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either 0 or 1 based on the distribution of either outcomes. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded with the measurement operation) in the subsystem under consideration with a ghost variable. If the quantum variable was previously entangled, it is replaced with a entangled ghost ($e$) and if it was unentangled with an unentangled ghost ($u$). Further, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So above, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 22-24, $e_y$ is introduced corresponding to $y$. This helps us in the following two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\psi$ at the end.
+Verification steps for this program are shown in \cref{lst:telea}. At line 19, something interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either classical bits 0 or 1 based on the distribution of either outcomes. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded with the measurement operation) in the state space under consideration with a ghost variable. If the quantum variable was previously entangled, it is replaced with a entangled ghost ($e$) and if it was unentangled with an unentangled ghost ($u$). Further, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So at line 21, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 24-26, $e_y$ is introduced corresponding to $y$. This helps us in the next two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\psi$ at the end. Note that we use the comma symbol interchangeably with the conjunction symbol in the propositions.
+
+This version of teleportation may not seem very interesting because it is essentially equivalent to teleportation performed without measurement (using the principle of deferred measurements). Hence, we turn out a more realistic variant in our next example.
 
 \subsubsection{Modular teleportation with classical control}
 
-\cref{lst:alice,lst:bob,lst:mtele} show another implementation of teleportation which is modular and uses the classical if-then-else construct for Bob's part of the algorithm. As usual, we show the code first and then follow it with their annotated versions in \cref{lst:alicea,lst:boba,lst:mtelea} with verification steps to ease readability.
+As the teleportation protocol is usually stated, we have two agents Alice and Bob who share an entangled Bell pair at the beginning of the protocol. Alice wants to communicate a message encoded in a qubit to Bob. Alice performs a Bell measurement on her two qubits, the one that encodes the message and the other which is part of the entangled Bell pair. Then she sends the result of this measurement, two bits, to Bob. Bob receives those bits and performs correction steps on his qubit to obtain the message. We naturally can split the teleportation circuit into three parts: Bell state preparation, Alice's portion of the circuit and Bob's portion of the circuit.
+
+\cref{lst:alice,lst:bob,lst:mtele} show the implementation of these parts in the form of separate modules (functions) along with their specifications as types. Alice's circuit requires that her second input qubit is entangled in the Bell state and this shows our first example of using Unruh's entangled ghost variable, $e$, in our specifications which is declared in the context right before the \textit{requires} construct. It further ensures that her two input qubits are both consumed in the process as they are asserted to be classical in the postcondition. Bob's specification shows what correction is applied if his qubit is in an arbitrary state. Note that Bob uses the classical control construct if-then-else in this variant of the circuit. The specification for teleport is the same as before but the implementation is now much shorter.
+
+We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea}.
 
 \lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=12]{teleport2.qh}
 

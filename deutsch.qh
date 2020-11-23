@@ -9,8 +9,8 @@ deutsch : (f: bit -> bit) ->
           ((bit -> bit) -> (qbit⊗qbit) -> QST (qbit⊗qbit)) ->
           QST r: bit
               (requires {⊤})
-              (ensures  { (r =c 0 ⇒ f(0) == f(1))
-                        ∧ (r =c 1 ⇒ f(0) != f(1)) })
+              (ensures  {(r =c 0 ⇒ f(0) == f(1)) ∧
+                         (r =c 1 ⇒ f(0) != f(1)) })
 deutsch = \f.\U_f -> do
             -- ⊤
             a <- init 0
@@ -27,9 +27,10 @@ deutsch = \f.\U_f -> do
             -- ⇒ a =q |+⟩, b =q |-⟩ -- f(0) == f(1)
             --  ∨ a =q |-⟩, b =q |-⟩ -- f(0) != f(1)
             apply H to a
-            -- ⇒ a =q |0⟩, b =q |-⟩ -- f(0) == f(1)
-            --  ∨ a =q |1⟩, b =q |-⟩ -- f(0) != f(1)
+            --   a =q |0⟩, b =q |-⟩ -- f(0) == f(1)
+            -- ∨ a =q |1⟩, b =q |-⟩ -- f(0) != f(1)
             r <- meas a
-            -- ⇒ r =c 0, b =q |-⟩ -- f(0) == f(1)
-            --  ∨ r =c 1, b =q |-⟩ -- f(0) != f(1)
+            -- class(a) ∧
+            --   r =c 0, b =q |-⟩ -- f(0) == f(1)
+            -- ∨ r =c 1, b =q |-⟩ -- f(0) != f(1)
             return r

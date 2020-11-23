@@ -422,6 +422,23 @@ apply G to M : (g: U) -> qs: (qbit⊗...⊗qbit) -> QST unit
 
 \nonterms{Cmd}
 
+Apart from the quantum predicates that we saw above, we will also have access to the usual propositional logic connectives, that we summarize in \cref{table:proplogic}. Some of these connectives have the same symbol as the quantum predicates, but their meaning will always be clear from the context.
+
+\begin{table}
+\centering
+\begin{tabular}{ c c c }
+    \textbf{Connective} & \textbf{Formal name} & \textbf{Informal name} \\
+    $\bot$ & contradiction & false \\
+    $\top$ & true & true\\
+    $\wedge$ & conjunction & and\\
+    $\vee$ & disjunction & or\\
+    $\Rightarrow$ & implication & implies\\
+    % $\Leftrightarrow$ & bi-implication & iff
+\end{tabular}
+\caption{Propositional logic connectives}
+\label{table:proplogic}
+\end{table}
+
 \subsection{Typing Rules}
 
 TODO:

@@ -1,34 +1,35 @@
-U_f : (a, b) : (qbit⊗qbit) ->
+U_f : (f: bit -> bit) ->
+      (a, b) : (qbit⊗qbit) ->
       QST (c, d) : (qbit⊗qbit)
-          (∃f: bit -> bit)
+          {x: bit, y: bit}
           (requires {(a, b) =q |x,y⟩})
           (ensures  {(c, d) =q |x,y⊕f(x)⟩})
 
-deutsch : ((qbit⊗qbit) -> QST (qbit⊗qbit)) ->
+deutsch : (f: bit -> bit) ->
+          ((bit -> bit) -> (qbit⊗qbit) -> QST (qbit⊗qbit)) ->
           QST r: bit
-              (∃f: bit -> bit)
               (requires {⊤})
               (ensures  { (r =c 0 ⇒ f(0) == f(1))
                         ∧ (r =c 1 ⇒ f(0) != f(1)) })
-deutsch = \U_f -> do
-             -- ⊤
-             a <- init 0
-             -- a =q |0⟩
-             b <- init 1
-             -- a =q |0⟩, b =q |1⟩
-             apply H to a
-             -- (H on q) . (a =q |0⟩, b =q |1⟩)
-             -- ⇒ a =q |+⟩, b =q |1⟩
-             apply H to b
-             -- a =q |+⟩, b =q |-⟩
-             (a, b) <- U_f (a, b)
-             -- (U_f on (a, b)) . (a =q |+⟩, b =q |-⟩)
-             -- ⇒ a =q |+⟩, b =q |-⟩ -- f(0) == f(1)
-             --  ∨ a =q |-⟩, b =q |-⟩ -- f(0) != f(1)
-             apply H to a
-             -- ⇒ a =q |0⟩, b =q |-⟩ -- f(0) == f(1)
-             --  ∨ a =q |1⟩, b =q |-⟩ -- f(0) != f(1)
-             r <- meas a
-             -- ⇒ r =c 0, b =q |-⟩ -- f(0) == f(1)
-             --  ∨ r =c 1, b =q |-⟩ -- f(0) != f(1)
-             return r
+deutsch = \f.\U_f -> do
+            -- ⊤
+            a <- init 0
+            -- a =q |0⟩
+            b <- init 1
+            -- a =q |0⟩, b =q |1⟩
+            apply H to a
+            -- (H on q) . (a =q |0⟩, b =q |1⟩)
+            -- ⇒ a =q |+⟩, b =q |1⟩
+            apply H to b
+            -- a =q |+⟩, b =q |-⟩
+            (a, b) <- U_f f (a, b)
+            -- (U_f on (a, b)) . (a =q |+⟩, b =q |-⟩)
+            -- ⇒ a =q |+⟩, b =q |-⟩ -- f(0) == f(1)
+            --  ∨ a =q |-⟩, b =q |-⟩ -- f(0) != f(1)
+            apply H to a
+            -- ⇒ a =q |0⟩, b =q |-⟩ -- f(0) == f(1)
+            --  ∨ a =q |1⟩, b =q |-⟩ -- f(0) != f(1)
+            r <- meas a
+            -- ⇒ r =c 0, b =q |-⟩ -- f(0) == f(1)
+            --  ∨ r =c 1, b =q |-⟩ -- f(0) != f(1)
+            return r

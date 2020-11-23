@@ -31,7 +31,7 @@
 \lstloadlanguages{Haskell}
 \lstdefinelanguage{QHaskell}{
     language     = Haskell,
-    morekeywords = {bit, qbit, unit, U, C, meas, apply, to, requires, ensures},
+    morekeywords = {bit, qbit, vector, unit, U, C, meas, apply, to, requires, ensures},
 }
 
 \lstset{
@@ -348,7 +348,7 @@ Unruh further defines some syntactic sugar for predicates that include ghosts:
 	\item $\mathbf{separable}(X)$ which states that $X$ is separable that is not entangled with any other system. This predicate is defined using the notion of quantum equality which states that two variables are quantumly equal iff swapping them will not change the state. $\mathbf{separable}(X)$ is sugar for $X$ being quantumly equal to an unentangled ghost $u$
 \end{itemize}
 
-Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language which includes primitives for initialization, unitary application and measurement. We take inspiration from his logic and rules for these commands in our own language that we described next.
+Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language which includes primitives for initialization, unitary application and measurement. We take inspiration from his logic and inference rules while designing our own language that we describe next.
 
 \begin{mathpar}
     \inferrule[Unitary]
@@ -369,7 +369,7 @@ Unruh demonstrates the usefulness of these predicates over a simple imperative q
 \section{Quantum Hoare Type Theory}
 To design a Hoare Type Theory for quantum computation, we need to consider some assumptions about quantum state and its programming model.
 
-Each program is assumed to have access to a pool of countably infinite number of logical qubits that can be used on demand. With ``logical'' we mean a qubit with no errors; this may be realized using quantum error correction techniques. We define primitive quantum commands for qubit initialization, unitary application and measurement next.
+Each program is assumed to have access to a pool of countably infinite number of logical qubits that can be initialized on demand and are returned to the pool (discarded) on measurement. With ``logical'' we mean a qubit with no errors; this may be realized using quantum error correction techniques. We define primitive quantum commands for qubit initialization, unitary application and measurement next.
 
 \subsection{Primitive quantum commands}
 
@@ -384,19 +384,13 @@ We can initialize only one qubit at a time in either of the two computational ba
 
 Note that our initialization command is different from Unruh's work discussed in the previous section. The argument to our command is the initial classical value, while in Unruh's $init$ the argument is a qubit that gets initialized to $\ket{0}$.
 
-TODO:
-
-- a more general version could be
-
-init M : bitstr -> QST qbitstr
-
 \subsubsection{Measurement}
 
 \begin{lstlisting}[language=QHaskell]
 meas M : (q: qbit) -> QST (b: bit)
-                          (∃|ψ⟩)
-                          (requires {(q⊗V) =q |ψ⟩})
-                          (ensures {class(b) ∧ ∃e.(e⊗V) =q |ψ⟩})
+                          {ψ: vector, e: qbit}
+                          (requires {(q⊗V) =q ψ})
+                          (ensures {class(q) ∧ (e⊗V) =q ψ})
 \end{lstlisting}
 
 The measurement command, in effect, returns the qubit back to the pool after returning the result of measurement as a bit. We assume all measurements to be in the computational basis.
@@ -413,9 +407,9 @@ Since it modifies the state in place, it returns the trivial unit output. The pr
 
 \begin{lstlisting}[language=QHaskell]
 apply G to M : (g: U) -> qs: (qbit⊗...⊗qbit) -> QST unit
-                                                    (∃P)
+                                                    {P: prop}
                                                     (requires {P})
-                                                    (ensures {(apply g on qs) . P})
+                                                    (ensures {(g on qs) . P})
 \end{lstlisting}
 
 \subsection{Syntax}
@@ -436,7 +430,7 @@ TODO:
 
 \subsection{Examples}
 
-In this section, we show some simple examples annotated with their program specifications using their Quantum Hoare types. We provide some commentary on propositions specified for these programs.
+In this section, we show some simple examples along with their specifications as types. We also show verification steps at each point in the program.
 
 \subsubsection{Bell states}
 
@@ -458,9 +452,9 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
 
 \lstinputlisting[language=QHaskell,float,label=lst:bell,lastline=9,caption=Generating Bell state]{bell00.qh}
 
-\cref{lst:bell} shows a circuit that corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: the top, $\top$, predicate that is satisfied by any state space and the $X =_q \ket{\psi}$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\ket{\psi}$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
+\cref{lst:bell} shows a circuit that corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: the top predicate, $\top$, that is satisfied by any state space and the $X =_q \psi$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\psi$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
 
-\cref{lst:bella} shows how we can prove whether this program conforms to the given specification.
+\cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 10) allocates a new qubit, initialize it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. The strongest postcondition for unitary application simply involves applying the operator on the subspace specified by the precondition (on lines 9 and 13). Note that we use the $\Rightarrow$ symbol in these annotations for a simplification step, but it is not part of our predicate language.
 
 \lstinputlisting[language=QHaskell,float,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
 
@@ -505,14 +499,14 @@ Verification steps for this program are shown in \cref{lst:telea}. At line 18, s
 
 \lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=78]{teleport2.qh}
 
-\subsubsection{Fair coin toss}
+% \subsubsection{Fair coin toss}
 
-\cref{lst:toss} shows a program along with its verification steps which produces a uniformly random bit. In this program we see the use of an unentangled ghost variable, $u_x$, at line 11 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
+% \cref{lst:toss} shows a program along with its verification steps which produces a uniformly random bit. In this program we see the use of an unentangled ghost variable, $u_x$, at line 11 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
 
-\lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
+% \lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
 
 \subsubsection{Deutsch's algorithm}
-\cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone. The final consequence still requires some manual intervention and may not be fully inferrable by the system.
+\cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone. This example involves various propositions about classical bits that we did not describe, but it serves to show that if our predicate language is extended with standard classical logic (ie, predicates such as equality of classical bits, $=_c$ and implication, $=>$) we can say a lot more in the specification.
 
 \begin{figure}
     \centering
@@ -533,7 +527,7 @@ Verification steps for this program are shown in \cref{lst:telea}. At line 18, s
 
 \section{Discussion and related work}
 
-In \cref{sec:teleport}, when we presented code for quantum teleportation, it is not apparent from its type (or specification) whether the quantum variables q (input) and b (output) are different. We can improve the specification by requiring the Bell state, $\ket{\beta_{00}}$, to be part of the input, but this requires changing the implementation as well. Another solution could be to specify that q is discarded in the postcondition (equivalent to saying that it gets consumed). This latter solution, although not currently expressible in our system, could be better. Even better would be to have a way to specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
+In \cref{sec:teleport}, when we presented code for quantum teleportation, it was apparent from its type (or specification) that the quantum variables $q$ (input) and $b$ (output) are different because of the proposition $\mathbf{class}(q)$ which suggests that $q$ is discarded in the postcondition. It would be nicer if we could also specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
 
 TODO:
 

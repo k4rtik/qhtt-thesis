@@ -1,7 +1,7 @@
 teleport : q: qbit -> QST b: qbit
-                          (∃|ψ⟩)
-                          (requires {q =q |ψ⟩})
-                          (ensures  {b =q |ψ⟩})
+                          {ψ: vector}
+                          (requires {q =q ψ})
+                          (ensures  {class(q), b =q ψ})
 teleport = \q -> do
               (a, b) <- bell00 ()
               apply CX to (q, a)
@@ -13,17 +13,17 @@ teleport = \q -> do
               return b
 
 teleport : q: qbit -> QST b: qbit
-                          (∃|ψ⟩)
-                          (requires {q =q |ψ⟩})
-                          (ensures  {b =q |ψ⟩})
+                          {ψ: vector}
+                          (requires {q =q ψ})
+                          (ensures  {class(q), b =q ψ})
 teleport = \q -> do
-              -- q =q |ψ⟩
+              -- q =q ψ
               -- ⇒ q =q α|0⟩+β|1⟩
               (a, b) <- bell00 ()
-              -- q =q |ψ⟩, (a, b) = |β00⟩
+              -- q =q ψ, (a, b) = |β00⟩
               -- ⇒ (q, a, b) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|00⟩+|11⟩))
               apply CX to (q, a)
-              -- (CX on (q, a)) . (q =q |ψ⟩, (a, b) = |β00⟩)
+              -- (CX on (q, a)) . (q =q ψ, (a, b) = |β00⟩)
               -- ⇒ (q, a, b) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|10⟩+|01⟩))
               apply H to q
               -- (H on q) . ((q, a, b) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|10⟩+|01⟩)))
@@ -31,21 +31,21 @@ teleport = \q -> do
               -- ⇒ (q, a, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
               --                   + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
               x <- meas q
-              -- class(x) ∧
+              -- class(q) ∧
               -- (e_x, a, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
               --                 + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
               y <- meas a
-              -- class(x) ∧ class(y) ∧
+              -- class(q) ∧ class(a) ∧
               -- (e_x, e_y, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
               --                  + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
               apply CX to (y, b)
-              -- class(x) ∧ class(y) ∧
+              -- class(q) ∧ class(a) ∧
               -- (e_x, e_y, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|0⟩+β|1⟩)
               --                  + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|0⟩-β|1⟩))
               apply CZ to (x, b)
-              -- class(x) ∧ class(y) ∧
+              -- class(q) ∧ class(a) ∧
               -- (e_x, e_y, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|0⟩+β|1⟩)
               --                  + |10⟩(α|0⟩+β|1⟩) + |11⟩(α|0⟩+β|1⟩))
               -- ⇒ (e_x, e_y) =q 1/2(|00⟩+|01⟩+|10⟩+|11⟩), b =q α|0⟩+β|1⟩
               return b
-              -- b =q α|0⟩+β|1⟩ ⇒ b =q |ψ⟩
+              -- b =q α|0⟩+β|1⟩ ⇒ b =q ψ

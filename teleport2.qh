@@ -40,8 +40,10 @@ alice = \qa -> do
 
 bob : (x, y, b): (bit⊗bit⊗qbit) ->
       QST q: qbit
-          (requires {})
-          (ensures  {})
+          {α:complex, β:complex}
+          (requires {q =q α|0⟩+β|1⟩})
+          (ensures  { y =c 0 ⇒ q =q (α|0⟩+ (-1)^x β|1⟩)}
+                    ∧ y =c 1 ⇒ q =q (α|1⟩+ (-1)^x β|0⟩)})
 bob = \xyb -> do
           (x, y, b) = xyb
           if y then apply X to b else ()
@@ -50,8 +52,10 @@ bob = \xyb -> do
 
 bob : (x, y, b): (bit⊗bit⊗qbit) ->
       QST q: qbit
-          (requires {})
-          (ensures  {})
+          {α:complex, β:complex}
+          (requires {q =q α|0⟩+β|1⟩})
+          (ensures  { y =c 0 ⇒ q =q (α|0⟩+ (-1)^x β|1⟩)}
+                    ∧ y =c 1 ⇒ q =q (α|1⟩+ (-1)^x β|0⟩)})
 bob = \xyb -> do
           (x, y, b) = xyb
           -- (e_x, e_y, b) = ψ

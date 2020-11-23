@@ -230,9 +230,9 @@ TODO: consider rewriting in terms of the four postulates of state space, dynamic
 
 Quantum computation is usually described over a specific vector space called the \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space equipped with an inner product ($\mathbb{C}^n$). In this work, we will often use the term ``state space'' to refer to a finite dimensional Hilbert space.
 
-The basic unit of information in quantum computation is a qubit, that can be represented using a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can write an arbitrary qubit, $\ket{\psi}$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
+The basic unit of information in quantum computation is a qubit, that can be represented using a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can write an arbitrary qubit, $\psi$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
 \begin{mathpar}
- \ket{\psi} = \alpha\ket{0} + \beta\ket{1}
+ \psi = \alpha\ket{0} + \beta\ket{1}
 \end{mathpar}
 where
 \begin{mathpar}
@@ -467,9 +467,9 @@ Our second example shows how we can compose circuits defined in QHTT together an
     \begin{tikzpicture}
         \node[scale=1.0] {
             \begin{quantikz}
-                \lstick{$\ket{\psi}$}                & \ctrl{1} & \gate{H} & \meter{} & \cw        & \cwbend{2} \\
+                \lstick{$\psi$}                & \ctrl{1} & \gate{H} & \meter{} & \cw        & \cwbend{2} \\
                 \lstick[wires=2]{$\ket{\beta_{00}}$} & \targ{}  & \qw      & \meter{} & \cwbend{1} \\
-						       \qw      & \qw      & \qw      & \qw        & \gate{X}   & \gate{Z} & \qw \rstick{$\ket{\psi}$}\\
+						       \qw      & \qw      & \qw      & \qw        & \gate{X}   & \gate{Z} & \qw \rstick{$\psi$}\\
             \end{quantikz}
         };
     \end{tikzpicture}
@@ -481,7 +481,7 @@ Our second example shows how we can compose circuits defined in QHTT together an
 
 \lstinputlisting[language=QHaskell,float,label=lst:telea,firstline=15,caption=Annotated quantum teleportation program]{teleport.qh}
 
-Verification steps for this program are shown in \cref{lst:telea}. At line 18, something interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either 0 or 1 based on the distribution of either outcomes. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded with the measurement operation) in the subsystem under consideration with a ghost variable. If the quantum variable was previously entangled, it is replaced with a entangled ghost ($e$) and if it was unentangled with an unentangled ghost ($u$). Further, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So above, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 22-24, $e_y$ is introduced corresponding to $y$. This helps us in the following two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\ket{\psi}$ at the end.
+Verification steps for this program are shown in \cref{lst:telea}. At line 18, something interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either 0 or 1 based on the distribution of either outcomes. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded with the measurement operation) in the subsystem under consideration with a ghost variable. If the quantum variable was previously entangled, it is replaced with a entangled ghost ($e$) and if it was unentangled with an unentangled ghost ($u$). Further, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So above, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 22-24, $e_y$ is introduced corresponding to $y$. This helps us in the following two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\psi$ at the end.
 
 \subsubsection{Modular teleportation with classical control}
 
@@ -489,15 +489,15 @@ Verification steps for this program are shown in \cref{lst:telea}. At line 18, s
 
 \lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=12]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:bob,caption=Bob's portion of teleportation,firstline=41,lastline=49]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:bob,caption=Bob's portion of teleportation,firstline=41,lastline=51]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=68,lastline=76]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=72,lastline=80]{teleport2.qh}
 
 \lstinputlisting[language=QHaskell,float,label=lst:alicea,caption=Annotated code for alice,firstline=14,lastline=39]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:boba,caption=Annotated code for bob,firstline=51,lastline=66]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:boba,caption=Annotated code for bob,firstline=53,lastline=70]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=78]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=82]{teleport2.qh}
 
 % \subsubsection{Fair coin toss}
 
@@ -506,7 +506,8 @@ Verification steps for this program are shown in \cref{lst:telea}. At line 18, s
 % \lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
 
 \subsubsection{Deutsch's algorithm}
-\cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone. This example involves various propositions about classical bits that we did not describe, but it serves to show that if our predicate language is extended with standard classical logic (ie, predicates such as equality of classical bits, $=_c$ and implication, $=>$) we can say a lot more in the specification.
+\cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone.
+% This example involves various propositions about classical bits that we did not describe, but it serves to show that if our predicate language is extended with standard classical logic (ie, predicates such as equality of classical bits, $=_c$ and implication, $=>$) we can say a lot more in the specification.
 
 \begin{figure}
     \centering

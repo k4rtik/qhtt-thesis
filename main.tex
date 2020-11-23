@@ -226,6 +226,8 @@ In an alternate syntax inspired by the F* programming language (which takes a hy
 \subsection{Quantum Computation}
 It is well known that quantum computation can be described in terms of elementary linear algebra. We assume familiarity with basic notions such as vectors, matrices, vector spaces, inner products, bases, linear independence, etc.
 
+TODO: consider rewriting in terms of the four postulates of state space, dynamic evolution of closed systems, measurement and composite systems.
+
 Quantum computation is usually described over a specific vector space called the \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space equipped with an inner product ($\mathbb{C}^n$). In this work, we will often use the term ``state space'' to refer to a finite dimensional Hilbert space.
 
 The basic unit of information in quantum computation is a qubit, that can be represented using a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can write an arbitrary qubit, $\ket{\psi}$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
@@ -302,10 +304,6 @@ i & 0
 \label{table:gates}
 \end{table}
 
-TODO:
-
-- 4 laws? pure vs mixed states
-
 \subsection{Quantum Hoare logic with ghost variables}
 
 We will need a predicate logic analogous to Separation Logic~\cite{reynolds2002} for quantum computation so as to be able to reason about only the interesting portions of the quantum state while still ensuring correctness of non-local effects such as entanglement. Various Quantum Hoare Logics that have been proposed~\cite{floydhoare2012} (\textit{add more citations here}) currently do not support frame rules that provide Separation Logic its power. The closest approach is that taken by \cite{unruh2019} that allows predicates on quantum state similar to what we would like in our setting, such as whether certain qubits are in classical state, or in uniform superposition, entangled or separable. In this section, we provide an introduction to Unruh's Quantum Hoare logic with ghost variables that we will use in our predicate language.
@@ -321,21 +319,36 @@ Let us make precise some mathematical definitions that we will need in this sect
 \end{remark}
 
 \begin{definition}[Span of a subspace]
-	For any subspace $X$ in a Hilbert space $\mathcal{H}$, written ($X \subseteq \mathcal{H}$), $\mathit{span}(X)$ is the smallest closed subspace of $\mathcal{H}$ containing $X$. In other words, $\mathit{span}(X)$ is the set of linear combinations of vectors in $X$.
+	For any subspace $X$ in a Hilbert space $\mathcal{H}$, written ($X \subseteq \mathcal{H}$), $\mathit{span}\{X\}$ is the smallest closed subspace of $\mathcal{H}$ containing $X$. In other words, $\mathit{span}\{X\}$ is the set of linear combinations of vectors in $X$.
 \end{definition}
 
-TODO
-
-- define the meaning of subspace/projector-based predicates/propositions.
+A core idea behind various quantum logics that comes from Birkhoff and von Neumann from 1936 is that closed subspaces of a state space can be thought of as logical predicates. Unruh's quantum Hoare logic defines some useful syntactic sugar for many such subspaces that we will find useful and that we describe next:
 
 \begin{itemize}
 	\item $\top$ represents the complete state space, $\mathcal{H}$, under consideration.
 	\item $\bot$ represents the zero-dimension subspace of Hilbert space, $\{0\}$.
-	\item $X \wedge Y$ is taken to be the set intersection of the two subspaces: $X \cap Y$.
-	\item $X \vee Y$ is modeled as the sum (linear combination) of the subspaces $X$ and $Y$. In other words, it is the closed subspace of the union of the two subspaces: $\overline{\mathit{span}(X \cup Y)}$, where $\overline{X}$ denotes the closure of $X$.
+	\item $P \wedge Q$ is the set intersection of the two subspaces: $P \cap Q$.
+	\item $P \vee Q$ is the sum (linear combination) of the subspaces $P$ and $Q$. In other words, it is the closed subspace of the union of the two subspaces: $\overline{\mathit{span}(P \cup Q)}$, where $\overline{P}$ denotes the closure of $P$.
+	\item $U \cdot P$ corresponds to application of the operator $U$ to a given subspace $P$. It is sugar for the subspace $\{U \psi: \psi \in P\}$.
+	\item $X \in_q P$ lets us specify that the qubits referenced in the list of variables $X$ lie in the subspace P. In other words, if the $V$ is the set of all quantum variables, then this predicate corresponds to the complete quantum state being $P \otimes \mathcal{H}[V \backslash X]$ where the brackets specify the domain of qubits that we are referring to and the backslash is the set difference operator.
+	\item $X =_q \psi$ specifies that variables $X$ are in the specific state $\psi$. This is sugar for $X \in_q \mathit{span}\{\psi\}$.
 \end{itemize}
 
-\nonterms{Prop}
+The last predicate, as an example, lets us write $(a, b) =_q 1/\sqrt{2}(\ket{00}+\ket{11})$ to specify that quantum variables (or qubits) $a, b$ are in the first Bell state.
+
+Unruh's logic further utilizes ghost variables (also known as logical variables) that can only appear in the predicates to make it easy to state properties about local state when a variable corresponding to that state may not be in scope. For example, it becomes possible to state that a single qubit input to a program is entangled with another qubit, even though we may never see that qubit locally. This is quite useful, for example, when proving the quantum teleportation protocol that we will see later.
+
+Ghost variables in Unruh's set up are identified by their mnemonic names. He uses $g, G$ for a ghost variable and a list of ghost variables respectively, and similarly $e, E$ for entangled ghosts and $u, U$ for unentangled ghosts. For example, if we would like to use the qubit $b$ from the above qubit pair individually, we can state it being in the first Bell state as $(e, b) =_q 1/\sqrt{2}(\ket{00}+\ket{11})$, where $e$ is a fresh entangled ghost variable. Intuitively, a ghost variable can assume whatever state needed to make a given predicate true.
+
+Unruh further defines some syntactic sugar for predicates that include ghosts:
+
+\begin{itemize}
+	\item $\mathbf{uniform}(X)$ which states that $X$ is uniformly distributed. It is sugar for $(X, e) =_q \sum_i  \sqrt{\frac{1}{n}} (\ket{i} \otimes \ket{i})$ where $e$ is a fresh entangled ghost.
+	\item $\mathbf{class}(X)$ which states that $X$ holds a classical state. This is encoded using the notion of classical equality and stating that $X$ is classically equal to an unentangled ghost $u$. Intuitively, two variables are classically equal if and only if measuring them in computational basis always gives the same result.
+	\item $\mathbf{separable}(X)$ which states that $X$ is separable that is not entangled with any other system. This predicate is defined using the notion of quantum equality which states that two variables are quantumly equal iff swapping them will not change the state. $\mathbf{separable}(X)$ is sugar for $X$ being quantumly equal to an unentangled ghost $u$
+\end{itemize}
+
+Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language which includes primitives for initialization, unitary application and measurement. We take inspiration from his logic and rules for these commands in our own language that we described next.
 
 \begin{mathpar}
     \inferrule[Unitary]

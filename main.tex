@@ -81,7 +81,6 @@
 \def\titlerunning{Quantum Hoare Type Theory}
 \def\authorrunning{Kartik Singhal}
 
-
 \hypersetup{
     pdftitle={\titlerunning},
     pdfsubject={Computer Science},
@@ -117,9 +116,11 @@
 
 \lstlistoflistings
 
+\setlength{\parskip}{1em}
+
 \section{Introduction}
 
-Quantum computing is fast becoming a reality over the last couple of years with the advent of real machines as recent breakthroughs such as Google's recent demonstration of the so called ``quantum supremacy'' shows. With advances in hardware, there is similar acceleration in the development of software for quantum machines which in turn requires development of special-purpose programming languages. Several efforts in this direction both from academia and industry have recently led to a number of programming languages aimed at quantum computing such as Q\#, Quipper, Scaffold, and Silq.
+Quantum computation is fast becoming a reality over the last couple of years with the advent of real machines as recent breakthroughs such as Google's recent demonstration of the so called ``quantum supremacy'' shows. With advances in hardware, there is similar acceleration in the development of software for quantum machines which in turn requires development of special-purpose programming languages. Several efforts in this direction both from academia and industry have recently led to a number of programming languages aimed at quantum computing such as Q\#, Quipper, Scaffold, and Silq.
 
 There is also a sudden need to prepare and train the upcoming generation of quantum programmers who sometimes have little to no previous exposure to the fundamental concepts in quantum computation. If we were to put ourselves in the position of a beginner to quantum programming, we may start by learning basic concepts such as what is a qubit, what does it mean for a qubit to be a superposition of 0 and 1, and the most perplexing of all: entanglement. We may then try to write some simple programs in a suitable quantum programming language to aid our understanding. We may even be able to run some of these programs on simulators and even on real machines. But we will make mistakes while writing these programs and sometimes those mistakes may be apparent from the output, a lot of the times (as a beginner) they may be not. What can we do?
 
@@ -142,7 +143,7 @@ We limit our presentation to quantum programs that do not involve iteration. Thi
 Our investigation suggests that QHTT has the potential to be a unified system for programming, specifying, and reasoning about quantum programs.
 
 \section{Background}
-In this section, we provide background on the core ideas from existing literature that form the foundation for our work --- Hoare logic, Hoare Type Theory (HTT), quantum computing, and quantum Hoare logic defined with ghost variables.
+In this section, we provide background on the core ideas from existing literature that form the foundation for our work --- Hoare logic, Hoare Type Theory (HTT), quantum computation, and quantum Hoare logic defined with ghost variables.
 
 \subsection{Floyd-Hoare logic}
 In the late 1960's, Robert Floyd and Tony Hoare came up with a set of axioms and rules of inference that can be used to prove properties of computer programs. This approach is commonly just known as Hoare logic as Hoare was the first to apply it to text-based programs, while Floyd had applied it to flowcharts. Here we present the axioms and rules of Hoare logic in a natural deduction style.
@@ -227,7 +228,7 @@ It is well known that quantum computation can be described in terms of elementar
 
 Quantum computation is usually described over a specific vector space called the \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space equipped with an inner product ($\mathbb{C}^n$). In this work, we will often use the term ``state space'' to refer to a finite dimensional Hilbert space.
 
-The basic unit of information in quantum computing is a qubit, that can be represented using a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can write an arbitrary qubit, $\ket{\psi}$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
+The basic unit of information in quantum computation is a qubit, that can be represented using a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can write an arbitrary qubit, $\ket{\psi}$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
 \begin{mathpar}
  \ket{\psi} = \alpha\ket{0} + \beta\ket{1}
 \end{mathpar}

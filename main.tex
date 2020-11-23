@@ -489,21 +489,23 @@ This version of teleportation may not seem very interesting because it is essent
 
 As the teleportation protocol is usually stated, we have two agents Alice and Bob who share an entangled Bell pair at the beginning of the protocol. Alice wants to communicate a message encoded in a qubit to Bob. Alice performs a Bell measurement on her two qubits, the one that encodes the message and the other which is part of the entangled Bell pair. Then she sends the result of this measurement, two bits, to Bob. Bob receives those bits and performs correction steps on his qubit to obtain the message. We naturally can split the teleportation circuit into three parts: Bell state preparation, Alice's portion of the circuit and Bob's portion of the circuit.
 
-\cref{lst:alice,lst:bob,lst:mtele} show the implementation of these parts in the form of separate modules (functions) along with their specifications as types. Alice's circuit requires that her second input qubit is entangled in the Bell state and this shows our first example of using Unruh's entangled ghost variable, $e$, in our specifications which is declared in the context right before the \textit{requires} construct. It further ensures that her two input qubits are both consumed in the process as they are asserted to be classical in the postcondition. Bob's specification shows what correction is applied if his qubit is in an arbitrary state. Note that Bob uses the classical control construct if-then-else in this variant of the circuit. The specification for teleport is the same as before but the implementation is now much shorter.
+\cref{lst:alice,lst:bob,lst:mtele} show the implementation of these parts in the form of separate modules (functions) along with their specifications as types. Alice's circuit requires that her second input qubit is entangled in the Bell state. This statement shows our first example of using Unruh's entangled ghost variable, $e$, in our specifications which is declared in the context right before the \textit{requires} construct along with other ghost variables. It further ensures that her two input qubits are both consumed in the process as they are asserted to be classical in the postcondition. Since Alice is dealing with entanglement, it is important to maintain the distribution over the all qubits involved including the ghost qubit $e$ and the newly created ghosts $e_x$ and $e_y$ because of her measurement operations.
+
+Bob's specification shows what correction is applied if his qubit is in an arbitrary state. Note that Bob uses the classical control construct if-then-else in this variant of the circuit. The specification for teleport is the same as before but the implementation is now much shorter.
 
 We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea}.
 
-\lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=12]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=14]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:bob,caption=Bob's portion of teleportation,firstline=41,lastline=51]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:bob,caption=Bob's portion of teleportation,firstline=45,lastline=55]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=72,lastline=80]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=74,lastline=82]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:alicea,caption=Annotated code for alice,firstline=14,lastline=39]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:alicea,caption=Annotated code for alice,firstline=16,lastline=43]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:boba,caption=Annotated code for bob,firstline=53,lastline=70]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:boba,caption=Annotated code for bob,firstline=57,lastline=72]{teleport2.qh}
 
-\lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=82]{teleport2.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=84]{teleport2.qh}
 
 % \subsubsection{Fair coin toss}
 

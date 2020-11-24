@@ -20,7 +20,7 @@ Typ, A, B, C :: Ty ::= {{ com Types }}
   | complex            ::   :: Complex      {{ com Complex scalars }}
   | unitary            ::   :: Unitary      {{ com Type of unitaries }}
   | prop               ::   :: Prop         {{ com Type of propositions }}
-  | Pi x : A . B       ::   :: DepProd      {{ com Dependent Product }}
+  | Pi x : A . B       ::   :: DepProd      {{ com Dependent function }}
   | A -> B             ::   :: Arrow        {{ com Sugar for Pi type }}
   | A times B          ::   :: Pair         {{ com Pair }}
   | { P } x : A { Q }  ::   :: Hoare        {{ com Hoare Type }}

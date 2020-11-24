@@ -36,8 +36,7 @@
 
 \newcommand{\ottTyp}{
 \ottrulehead{\ottnt{Typ}  ,\ \ottnt{A}  ,\ \ottnt{B}  ,\ \ottnt{C}}{::=}{\ottcom{Types}}\ottprodnewline
-\ottfirstprodline{|}{\ottnt{K}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
+\ottfirstprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{bit}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{qbit}}{}{}{}{\ottcom{Index to a logical qubit}}\ottprodnewline
 \ottprodline{|}{\ottkw{vector}}{}{}{}{\ottcom{Quantum state vectors}}\ottprodnewline
@@ -377,6 +376,14 @@
 {\ottdrulename{tm\_AscriptionE}}{}%
 }}
 
+
+\newcommand{\ottdruletmXXDo}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{*}  \top  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{P}  \ottsym{>>}  \ottnt{Q}  \ottsym{\}}}%
+}{
+\Gamma  \vdash  \ottkw{do} \, \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{%
+{\ottdrulename{tm\_Do}}{}%
+}}
+
 \newcommand{\ottdefnTerm}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}$}{\ottcom{term $\ottnt{M}$ has type $\ottnt{A}$}}
 \ottusedrule{\ottdruletmXXVarE{}}
 \ottusedrule{\ottdruletmXXUnitI{}}
@@ -390,6 +397,7 @@
 \ottusedrule{\ottdruletmXXFstE{}}
 \ottusedrule{\ottdruletmXXSndE{}}
 \ottusedrule{\ottdruletmXXAscriptionE{}}
+\ottusedrule{\ottdruletmXXDo{}}
 \end{ottdefnblock}}
 
 %% defn Prove
@@ -397,19 +405,31 @@
 \newcommand{\ottdefnProve}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \models  \ottnt{P}$}{\ottcom{Proof obligation $\ottnt{P}$}}
 \end{ottdefnblock}}
 
-%% defn CompIntro
+%% defn Comp
+\newcommand{\ottdrulecompXXConseq}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}%
+\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{,}  \ottnt{Q}  \models  \ottnt{R}}%
+}{
+\Gamma  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{R}  \ottsym{\}}}{%
+{\ottdrulename{comp\_Conseq}}{}%
+}}
 
-\newcommand{\ottdefnCompIntro}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\Gamma, \ottnt{P}, \ottnt{A}$ check that $\ottnt{E}$ returns a value of type $\ottnt{A}$ with postcond. $\ottnt{Q}$}}
-\end{ottdefnblock}}
 
-%% defn CompElim
+\newcommand{\ottdrulecompXXReturn}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
+}{
+\Gamma  \vdash  \ottkw{return} \, \ottnt{M}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{P}  \wedge  \ottmv{x}  \ottsym{=}  \ottnt{M}  \ottsym{\}}}{%
+{\ottdrulename{comp\_Return}}{}%
+}}
 
-\newcommand{\ottdefnCompElim}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\Gamma, \ottnt{P}, \ottnt{E}, \ottnt{A}$ as input, synthesize the strongest postcondition $\ottnt{Q}$}}
+\newcommand{\ottdefnComp}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}$}{\ottcom{In context $\Gamma and with precondition \ottnt{P}, computation $\ottnt{E}$ returns a value of type $\ottnt{A}$ with postcondition $\ottnt{Q}$}}
+\ottusedrule{\ottdrulecompXXConseq{}}
+\ottusedrule{\ottdrulecompXXReturn{}}
 \end{ottdefnblock}}
 
 
 \newcommand{\ottdefnsJtype}{
-\ottdefnctx{}\ottdefnType{}\ottdefnTyEq{}\ottdefnTmEq{}\ottdefnUn{}\ottdefnProp{}\ottdefnTerm{}\ottdefnProve{}\ottdefnCompIntro{}\ottdefnCompElim{}}
+\ottdefnctx{}\ottdefnType{}\ottdefnTyEq{}\ottdefnTmEq{}\ottdefnUn{}\ottdefnProp{}\ottdefnTerm{}\ottdefnProve{}\ottdefnComp{}}
 
 \newcommand{\ottdefnss}{
 \ottdefnsJtype

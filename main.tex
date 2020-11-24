@@ -579,6 +579,8 @@ A limitation of our system is that we currently do not support propositions abou
 
 \lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
 
+We would like to mention that the typing rules presented in this document are not syntax directed as we forego distinguishing between introduction and elimination forms of terms while defining our syntax. The original presentation of HTT (as do many other type theories) keeps that distinction to be able to prove decidability of type checking and aid implementation. We leave this to future work along with an implementation.
+
 We discuss some related work next.
 
 \subsection{Verification of Quantum Programs}
@@ -646,11 +648,15 @@ of the author and do not necessarily reflect the views of the National Science F
 
 \subsection{Terms}
 
-\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,VectorI,PiI,PiE,PairI,FstE,SndE,ElimIntro,AscriptionE}
+\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,VectorI,PiI,PiE,PairI,FstE,SndE,ElimIntro,AscriptionE,Do}
 
 \subsection{Well-formed propositions}
 
 \drules[prop]{$\Gamma \vdash P : prop$}{valid propositions}{TopI,BotI,ConjI,DisjI,UnI}
+
+\subsection{Computation rules}
+
+\drules[comp]{$\Gamma \vdash E : \HoareT{P}{x:A}{Q}$}{valid computations}{Conseq,Return}
 
 TODO
 

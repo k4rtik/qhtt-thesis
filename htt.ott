@@ -12,7 +12,6 @@ metavar amplitudes, alpha, beta ::=
 grammar
 
 Typ, A, B, C :: Ty ::= {{ com Types }}
-  | K                  ::   :: K
   | unit               ::   :: Unit
   | bit                ::   :: Bit
   | qbit               ::   :: Qubit        {{ com Index to a logical qubit }}
@@ -43,6 +42,9 @@ Prop, P, Q, R :: '' ::= {{ com Propositions (\textbf{prop}) }}
   % | x1 ==cl x2            ::  :: EqClassical  {{ com classical equality }}
   | class ( x )           ::  :: Class        {{ com x is classical. x $\equiv_{cl}$ u}}
   | P [ M / x ]           :: M:: Substitution
+  | x = M                 :: M:: DecEq
+  | P * Q                 :: M:: Separation
+  | P >> Q                :: M:: Frame
 
 Tm, K, L, M, N :: Tm ::= {{ com Terms }}
   | x           ::  :: Var            {{ com Variable }}
@@ -260,11 +262,21 @@ defn
     -------------- :: AscriptionE
     G |- M:A : A
 
+    G |- E : {P*top}x:A{P >> Q}
+    --------------------------------::Do
+    G |- do E : {P} x:A {Q}
+
 defn
   G |= P :: :: Prove :: Pr_ {{ com Proof obligation $[[P]]$ }} by
 
 defn
-  G ; P |- E : x : A . Q :: :: CompIntro :: CompIn_ {{ com With $[[G]], [[P]], [[A]]$ check that $[[E]]$ returns a value of type $[[A]]$ with postcond. $[[Q]]$ }} by
+  G |- E : { P } x : A { Q } :: :: Comp :: comp_ {{ com In context $[[G]] and with precondition [[P]], computation $[[E]]$ returns a value of type $[[A]]$ with postcondition $[[Q]]$ }} by
 
-defn
-  G ; P |- E : x : A . Q :: :: CompElim :: CompEl_ {{ com With $[[G]], [[P]], [[E]], [[A]]$ as input, synthesize the strongest postcondition $[[Q]]$ }} by
+    G |- E : {P}x:A{Q}
+    G, x:A, Q |= R
+    --------------------::Conseq
+    G |- E : {P} x:A {R}
+
+    G |- M : A
+    ----------------------------------::Return
+    G |- return M : {P} x:A {P /\ x=M}

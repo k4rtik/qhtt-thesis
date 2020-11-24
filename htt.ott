@@ -235,7 +235,7 @@ defn
 
     G |- K : A
     A = B
-    ------------ :: Elim
+    ---------- :: ElimIntro
     G |- K : B
 
     G |- K : Pi x:A.B
@@ -261,14 +261,10 @@ defn
     G |- M:A : A
 
 defn
-  D |= P :: :: Prove :: Pr_ {{ com Proof obligation $[[P]]$ }} by
-
-    % G |- K : {x:A.P}
-    % ------------------ :: Refine
-    % D |= P[out K / x]
+  G |= P :: :: Prove :: Pr_ {{ com Proof obligation $[[P]]$ }} by
 
 defn
-  D ; P |- E : x : A . Q :: :: CompIntro :: CompIn_ {{ com With $[[D]], [[P]], [[A]]$ check that $[[E]]$ returns a value of type $[[A]]$ with postcond. $[[Q]]$ }} by
+  G ; P |- E : x : A . Q :: :: CompIntro :: CompIn_ {{ com With $[[G]], [[P]], [[A]]$ check that $[[E]]$ returns a value of type $[[A]]$ with postcond. $[[Q]]$ }} by
 
 defn
-  D ; P |- E : x : A . Q :: :: CompElim :: CompEl_ {{ com With $[[D]], [[P]], [[E]], [[A]]$ as input, synthesize the strongest postcondition $[[Q]]$ }} by
+  G ; P |- E : x : A . Q :: :: CompElim :: CompEl_ {{ com With $[[G]], [[P]], [[E]], [[A]]$ as input, synthesize the strongest postcondition $[[Q]]$ }} by

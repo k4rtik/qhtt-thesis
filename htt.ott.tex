@@ -335,12 +335,12 @@
 }}
 
 
-\newcommand{\ottdruletmXXElim}[1]{\ottdrule[#1]{%
+\newcommand{\ottdruletmXXElimIntro}[1]{\ottdrule[#1]{%
 \ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottnt{A}}%
 \ottpremise{\ottnt{A}  \ottsym{=}  \ottnt{B}}%
 }{
 \Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottnt{B}}{%
-{\ottdrulename{tm\_Elim}}{}%
+{\ottdrulename{tm\_ElimIntro}}{}%
 }}
 
 
@@ -385,7 +385,7 @@
 \ottusedrule{\ottdruletmXXVectorI{}}
 \ottusedrule{\ottdruletmXXPiI{}}
 \ottusedrule{\ottdruletmXXPairI{}}
-\ottusedrule{\ottdruletmXXElim{}}
+\ottusedrule{\ottdruletmXXElimIntro{}}
 \ottusedrule{\ottdruletmXXPiE{}}
 \ottusedrule{\ottdruletmXXFstE{}}
 \ottusedrule{\ottdruletmXXSndE{}}
@@ -394,17 +394,17 @@
 
 %% defn Prove
 
-\newcommand{\ottdefnProve}[1]{\begin{ottdefnblock}[#1]{$\ottkw{D} \, \models  \ottnt{P}$}{\ottcom{Proof obligation $\ottnt{P}$}}
+\newcommand{\ottdefnProve}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \models  \ottnt{P}$}{\ottcom{Proof obligation $\ottnt{P}$}}
 \end{ottdefnblock}}
 
 %% defn CompIntro
 
-\newcommand{\ottdefnCompIntro}[1]{\begin{ottdefnblock}[#1]{$\ottkw{D} \, \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\ottkw{D}, \ottnt{P}, \ottnt{A}$ check that $\ottnt{E}$ returns a value of type $\ottnt{A}$ with postcond. $\ottnt{Q}$}}
+\newcommand{\ottdefnCompIntro}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\Gamma, \ottnt{P}, \ottnt{A}$ check that $\ottnt{E}$ returns a value of type $\ottnt{A}$ with postcond. $\ottnt{Q}$}}
 \end{ottdefnblock}}
 
 %% defn CompElim
 
-\newcommand{\ottdefnCompElim}[1]{\begin{ottdefnblock}[#1]{$\ottkw{D} \, \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\ottkw{D}, \ottnt{P}, \ottnt{E}, \ottnt{A}$ as input, synthesize the strongest postcondition $\ottnt{Q}$}}
+\newcommand{\ottdefnCompElim}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \ottsym{;}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{Q}$}{\ottcom{With $\Gamma, \ottnt{P}, \ottnt{E}, \ottnt{A}$ as input, synthesize the strongest postcondition $\ottnt{Q}$}}
 \end{ottdefnblock}}
 
 

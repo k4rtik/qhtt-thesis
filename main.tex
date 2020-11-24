@@ -76,7 +76,6 @@
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 
-% \usepackage{blindtext}
 \usepackage{ottalt}
 \inputott{htt.ott.tex}
 
@@ -647,11 +646,11 @@ of the author and do not necessarily reflect the views of the National Science F
 
 \subsection{Terms}
 
-\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,VectorI,PiI,PiE,PairI,FstE,SndE,AscriptionE}
+\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,VectorI,PiI,PiE,PairI,FstE,SndE,ElimIntro,AscriptionE}
 
 \subsection{Well-formed propositions}
 
-\drules[prop]{$\Gamma \vdash P : prop$}{checking propositions}{TopI,BotI,ConjI,DisjI,UnI}
+\drules[prop]{$\Gamma \vdash P : prop$}{valid propositions}{TopI,BotI,ConjI,DisjI,UnI}
 
 TODO
 

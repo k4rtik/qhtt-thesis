@@ -31,7 +31,7 @@
 \lstloadlanguages{Haskell}
 \lstdefinelanguage{QHaskell}{
     language     = Haskell,
-    morekeywords = {bit, qbit, vector, complex, unit, U, C, meas, apply, to, requires, ensures},
+    morekeywords = {bit, qbit, vector, complex, unit, meas, apply, to, requires, ensures, unitary},
 }
 
 \lstset{
@@ -209,9 +209,9 @@ A type theory is a formal system of rewriting in which each term has a type, not
 
 Hoare Type Theory or HTT is a specific dependent type theory that introduces a type constructor called a ``Hoare type'' which both isolates effectful programs from the remaining functional core language and lets us specify their behavior. In its most basic form, a Hoare type is written as:
 \begin{mathpar}
-    \HoareT{P}{x:A}{Q}
+    \Delta.\HoareT{P}{x:A}{Q}
 \end{mathpar}
-where $P$ and $Q$ are pre- and postconditions and $x:A$ is the return value, thus incorporating the specification methodology of Hoare logic into types. Hoare types can also be seen as ``monads'' that are common in functional programming and are similarly used to isolate effects. The main difference is that such a ``Hoare monad'' is not only indexed by the the type of computation but also with the pre- and postconditions that must be satisfied by the given computation.
+where $P$ and $Q$ are pre- and postconditions and $x:A$ is the return value, thus incorporating the specification methodology of Hoare logic into types. An optional context, $\Delta$, for declaring \textit{ghost} variables may be optionally included in the Hoare type for specifying any logical variables that can only be used in the pre- and postconditions. Hoare types can also be seen as ``monads'' that are common in functional programming and are similarly used to isolate effects. The main difference is that such a ``Hoare monad'' is not only indexed by the the type of computation but also with the pre- and postconditions that must be satisfied by the given computation.
 
 How do we verify programs in HTT? Like we saw above in the example for Hoare logic, a user can provide arbitrary pre- and postconditions as the type for their program. In HTT, the process of verifying that the given triple is valid is performed during type checking. In order to do so, the type checking process in HTT is carefully divided into two phases: The first phase performs basic type checking and infers the strongest postconditions in the form of verification conditions at each step of the program. In the second phase, we need to verify that the verification conditions hold. The first phase is decidable but the second phase may not be, hence for the second phase, either the verification conditions are deferred to an automated theorem prover (such as Z3) or need to be validated manually (in an interactive theorem prover such as Coq).
 
@@ -348,23 +348,19 @@ Unruh further defines some syntactic sugar for predicates that include ghosts:
 	\item $\mathbf{separable}(X)$ which states that $X$ is separable that is not entangled with any other system. This predicate is defined using the notion of quantum equality which states that two variables are quantumly equal iff swapping them will not change the state. $\mathbf{separable}(X)$ is sugar for $X$ being quantumly equal to an unentangled ghost $u$
 \end{itemize}
 
-Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language which includes primitives for initialization, unitary application and measurement. We take inspiration from his logic and inference rules while designing our own language that we describe next.
+Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language which includes primitives for initialization, unitary application and measurement. We take inspiration from his logic and inference rules while designing our own language that we will describe in the next section.
 
+For reference, his rules for the unitary application and initialization commands are reproduced here:
 \begin{mathpar}
     \inferrule[Unitary]
     {}
-    {\HoareT{P}{\textbf{apply}\ U\ \textbf{to}\ x}{(U\ \textbf{on}\ x) \cdot P}}
-\end{mathpar}
-\begin{mathpar}
+    {\HoareT{P}{\textbf{apply}\ U\ \textbf{to}\ x}{(U\ \textbf{on}\ x) \cdot P}} \and
     \inferrule[Initialization]
     {}
     {\HoareT{P}{\textbf{init}\ x}{P[e \rightarrow x],\ x =_q \ket{0}}}
 \end{mathpar}
-\begin{mathpar}
-    \inferrule[Measure]
-    {}
-    {\HoareT{P}{\textbf{meas}\ q}{P[e \rightarrow x],\ x =_q \ket{0}}}
-\end{mathpar}
+
+The unitary application rule simply produces the strongest postcondition from the precondition $P$ by applying the given operator to the chosen qubit(s) in the subspace $P$. Unruh's initialization rule, substitutes $e$ for the existing quantum variable $x$ and then initializes it to $\ket{0}$. As we will see our unitary application rule is quite similar but our initialization command has a different semantics and hence a different rule.
 
 \section{Quantum Hoare Type Theory}
 To design a Hoare Type Theory for quantum computation, we need to consider some assumptions about quantum state and its programming model.
@@ -387,42 +383,60 @@ Note that our initialization command is different from Unruh's work discussed in
 \subsubsection{Measurement}
 
 \begin{lstlisting}[language=QHaskell]
-meas M : (q: qbit) -> QST (b: bit)
+meas M : (q: qbit) -> QST (x: bit)
                           {ψ: vector, e: qbit}
                           (requires {(q⊗V) =q ψ})
-                          (ensures {class(q) ∧ (e⊗V) =q ψ})
+                          (ensures {class(q) ∧ (e_x⊗V) =q ψ})
 \end{lstlisting}
 
-The measurement command, in effect, returns the qubit back to the pool after returning the result of measurement as a bit. We assume all measurements to be in the computational basis.
+We assume all measurements to be in the computational basis. The measurement command, in effect, returns the qubit back to the pool after returning the result of measurement as a bit. We maintain the distribution of the outcome by introducing a entangled ghost variable that replaces the measured qubit in the global state. This will become clear when we work through some examples later in this document.
 
 \subsubsection{Unitary application}
 It is helpful to think of our unitary application command in terms of two variants: one that takes a single-qubit gate and applies to a single qubit and another that takes a two-qubit gate and applies it to a pair of qubits.
 
 \begin{lstlisting}[language=QHaskell]
-apply_1 G_1 to M_1 : U_1 -> qbit -> QST unit
-apply_2 G_2 to M_2 : U_2 -> (qbit⊗qbit) -> QST unit
+apply_1 G_1 to M_1 : unitary -> qbit -> QST unit
+apply_2 G_2 to M_2 : unitary -> (qbit⊗qbit) -> QST unit
 \end{lstlisting}
 
-Since it modifies the state in place, it returns the trivial unit output. The pre- and postconditions on the apply command are similar for either of the above two cases:
+Since it modifies the state in place, it returns the trivial unit output. The pre- and postconditions on the apply command are similar for either of the above two cases, for convenience we only show the rule for two-qubit gate application:
 
 \begin{lstlisting}[language=QHaskell]
-apply G to M : (g: U) -> qs: (qbit⊗...⊗qbit) -> QST unit
-                                                    {P: prop}
-                                                    (requires {P})
-                                                    (ensures {(g on qs) . P})
+apply G to M : (g: unitary) ->
+               qs: (qbit⊗qbit) ->
+               QST unit
+                   {P: prop}
+                   (requires {P )
+                   (ensures {(g on qs) . P})
 \end{lstlisting}
+
+These primitive quantum commands and a specification language based on the predicates proposed in Unruh's work make the core of what is different in our Quantum Hoare Type Theory from the original formulation of HTT.
 
 \subsection{Syntax}
 
+Now, we are in a good position to talk about the raw syntax of QHTT. The following grammar shows the available base types and type constructors in the language:
+
 \nonterms{Typ}
+
+The base type $bit$ inhabits the values 0 and 1 but the type $qbit$ is just a reference to a logical qubit. The state is represented using the type $vector$ that can further require the type $complex$ to represent arbitrary quantum states. These last two types are only included for the specification language and are not to be used by the programming syntax. The type $unitary$ includes all the basic one and two qubit gates (such as the Pauli gates and CNOT) that we include in the language. The propositions formed using the specification language are given the $prop$ type. The $\Pi$ type is the dependent product constructor that is heavily used in the disguise of its sugared form of the arrow type. $\otimes$ is the pair type constructor. Lastly, we see the Hoare type and its sugared variant.
+
+Next we show the grammar for the terms of the language that include values for the base types and introduction and elimination forms for the type constructors:
 
 \nonterms{Tm}
 
-\nonterms{Unitary}
+We note that we do not provide a concrete syntax for specifying quantum state vectors that are only used in the propositions. The $do E$ term represents a suspended computation and is the introduction form for the Hoare type.
+
+We have already seen the primitive commands:
 
 \nonterms{Cmd}
 
-Apart from the quantum predicates that we saw above, we will also have access to the usual propositional logic connectives, that we summarize in \cref{table:proplogic}. Some of these connectives have the same symbol as the quantum predicates, but their meaning will always be clear from the context.
+We did not mention the classical control construct if-then-else before but its semantics involves measurement of the qubit represented by the term $M$ and then executing either $E_1$ or $E_2$ based on the outcome.
+
+The predicates of the specification language are taken from Unruh's work which we show below. Note that we sometimes use a comma instead of the $\wedge$ symbol to denote conjunction of propositions.
+
+\nonterms{Prop}
+
+Apart from the quantum predicates that we see above, we will also have access to the usual propositional logic connectives, that we summarize in \cref{table:proplogic}. Some of these connectives have the same symbol as the quantum predicates, but their meaning will always be clear from the context.
 
 \begin{table}
 \centering
@@ -439,11 +453,11 @@ Apart from the quantum predicates that we saw above, we will also have access to
 \label{table:proplogic}
 \end{table}
 
-\subsection{Typing Rules}
+Finally, we show the computations that represent the monadic unit and three kinds of bind operations:
 
-TODO:
+\nonterms{Comp}
 
-- proof rules at each step
+The complete grammar and typing rules are included in the appendix of this document for easy reference.
 
 \subsection{Examples}
 
@@ -471,7 +485,7 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
 
 \cref{lst:bell} shows a circuit that corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: the top predicate, $\top$, that is satisfied by any state space and the $X =_q \psi$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\psi$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
 
-\cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 10) allocates a new qubit, initialize it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. The strongest postcondition for unitary application simply involves applying the operator on the subspace specified by the precondition (on lines 9 and 13). Note that we use the $\Rightarrow$ symbol in these annotations for a simplification step, but it is not part of our predicate language.
+\cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 10) allocates a new qubit, initialize it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. The strongest postcondition for unitary application simply involves applying the operator on the subspace specified by the precondition (on lines 9 and 13). Note that we sometimes use the $\Rightarrow$ symbol in these annotations for a simplification step.
 
 \lstinputlisting[language=QHaskell,float,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
 
@@ -528,12 +542,6 @@ Finally, in the teleport code in \cref{lst:mtelea}, the only unusual step is at 
 
 \lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=84]{teleport2.qh}
 
-% \subsubsection{Fair coin toss}
-
-% \cref{lst:toss} shows a program along with its verification steps which produces a uniformly random bit. In this program we see the use of an unentangled ghost variable, $u_x$, at line 11 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$.
-
-% \lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
-
 \subsubsection{Deutsch's algorithm}
 Our final example in \cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone.
 % This example involves various propositions about classical bits that we did not describe, but it serves to show that if our predicate language is extended with standard classical logic (ie, predicates such as equality of classical bits, $=_c$ and implication, $=>$) we can say a lot more in the specification.
@@ -559,14 +567,20 @@ Our final example in \cref{lst:deutsch} demonstrates that our system can work in
 
 In \cref{sec:teleport}, when we presented code for quantum teleportation, it was apparent from its type (or specification) that the quantum variables $q$ (input) and $b$ (output) are different because of the proposition $\mathbf{class}(q)$ which suggests that $q$ is discarded in the postcondition. It would be nicer if we could also specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
 
-TODO:
+A limitation of our system is that we currently do not support propositions about the distribution of measurement outcomes. For example, \cref{lst:toss} shows a program along with its verification steps which produces a uniformly random bit. In this program we see the use of an unentangled ghost variable, $u_x$, at line 11 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$. But the proposition $\textbf{uniform}(b)$ in the postcondition of the program would be invalid as it is only defined for quantum variables and not bits.
 
-- compare with existing hoare logics
+\lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
+
+We discuss some related work next.
 
 \subsection{Verification of Quantum Programs}
 Previous work, such as Proto-Quipper~\cite{rios2017,rios2017} and QWire~\cite{qwire2017,qwirepractice2017,rand2018} utilize a linear type system and dependent types to enforce a small subset of semantic properties, such as the no-cloning restriction and whether a unitary gate is of the right dimension. These advances in quantum type systems, although helpful, still fall short in encoding and enforcing even more useful properties that one would like to be able to express for the purpose of verification.
 
 Our approach builds upon previous work in reasoning about quantum programs such as Quantum Weakest Preconditions~\cite{dhondt2006} and Quantum Hoare Logic~\cite{floydhoare2012} in the spirit of \cite{hoare1969} and \cite{dijkstra1976} but attempts to bring those reasoning techniques into the type system. The hope is that programmers will be able to encode some of the semantic properties that they expect of their programs as specifications in their code and type checking will ensure correctness of some of those properties. In the classical setting, Hoare Type Theory (HTT)~\cite{nanevski2008} accomplishes exactly this goal. Our attempt is to merge these ideas for the quantum realm.
+
+\subsection{Other quantum Hoare logics}
+
+TODO
 
 \section{Conclusion and perspectives}
 \label{sec:conclusion}
@@ -628,8 +642,6 @@ of the author and do not necessarily reflect the views of the National Science F
 
 \drules[prop]{$\Gamma \vdash P : prop$}{checking propositions}{TopI,BotI,ConjI,DisjI,UnI}
 
-% \subsection{Trivial examples}
-
-% \lstinputlisting[language=QHaskell,caption=Several simple examples from Q\# Quantum Katas]{qsharp.qh}
+TODO
 
 \end{document}

@@ -50,8 +50,8 @@ Tm, K, L, M, N :: Tm ::= {{ com Terms }}
   | 0           ::  :: Zero           {{ com 0 value of type bit }}
   | 1           ::  :: One            {{ com 1 value of type bit }}
   | psi         ::  :: Psi            {{ com Metavariable for quantum state vector }}
-  | alpha       ::  :: Alpha          {{ com Metavariable for complex amplitude }}
-  | beta        ::  :: Beta           {{ com Metavariable for complex amplitude }}
+  % | alpha       ::  :: Alpha          {{ com Metavariable for complex amplitude }}
+  % | beta        ::  :: Beta           {{ com Metavariable for complex amplitude }}
   | \ x . M     ::  :: Lam            {{ com Abstraction }}
   | K N         ::  :: App            {{ com Application }}
   | ( M , N )   ::  :: Pair           {{ com Pair }}

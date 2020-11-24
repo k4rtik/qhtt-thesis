@@ -17,5 +17,5 @@ cointoss = \x.do
               apply H to q
               -- q = 1/√2(|0⟩+|1⟩) ⇒ q = |+⟩
               x <- meas q
-              -- class(q), u_x = |+⟩
+              -- class(q), u_x = |+⟩, uniform(q)
               return x

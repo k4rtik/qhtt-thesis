@@ -198,7 +198,7 @@ Hoare Type Theory (HTT)~\parencite{nanevski2008} incorporates Hoare-style specif
 
 To achieve this, we replace the classical primitive commands from the original HTT with quantum-specific primitive commands and take inspiration from a novel approach by \textcite{unruh2019} and employ ghost variables for reasoning locally about quantum state in our quantum proposition logic. Further, the use of ghost variables enables an expressive language of propositions in which we can specify predicates about the equality, superposition and entanglement of qubits.
 
-Our approach takes inspiration from previous work in reasoning about quantum programs such as Quantum Weakest Preconditions~\parencite{dhondt2006} and Quantum Hoare Logic~\parencite{floydhoare2012} in the spirit of \textcite{hoare1969} and \textcite{dijkstra1976} but attempts to bring those reasoning techniques into a type system. The hope is that programmers will be able to encode some of the semantic properties that they expect of their programs as specifications in their code and type checking will ensure correctness of some of those properties. In the classical setting, Hoare Type Theory accomplishes exactly this goal. Our attempt is to merge these ideas for the quantum realm.
+Our approach takes inspiration from previous foundational work in reasoning about quantum programs such as \citetitle{dhondt2006}~\parencite{dhondt2006} and \citetitle{floydhoare2012}~\parencite{floydhoare2012} in the spirit of \textcite{hoare1969}, \textcite{dijkstra1976}, and \textcite{gries1981} but attempts to bring those reasoning techniques into a type system. The hope is that programmers will be able to encode some of the semantic properties that they expect of their programs as specifications in their code and type checking will ensure correctness of their implementation to those specifications. In the classical setting, Hoare Type Theory accomplishes exactly this goal. The work presented here is an attempt to merge these ideas together for the emerging landscape of quantum computing.
 
 We limit our presentation to quantum programs that do not involve iteration. This is not to suggest that iteration is not supported in the system, only that we are yet to study it.
 
@@ -216,7 +216,7 @@ As noted above, this technique involves the use of Hoare triples of the form:
 \end{mathpar}
 which can be interpreted as ``if the precondition $P$ is true before the execution of the program $c$, then the postcondition $Q$ will be true on its completion.''
 
-In the classical setting, the most important command is an assignment statement. Hoare logic states the following axiom for assignment TODO:
+In the classical setting, the most important command is an assignment statement. Hoare logic states the following axiom for assignment:
 \begin{mathpar}
     \inferrule[Axiom of Assignment]
     {}
@@ -266,6 +266,8 @@ This obviously seems correct. But how can we mechanically use the formal system 
 
 In Hoare Type Theory that we describe next and its quantum variant later, inferring the strongest postcondition for each statement will be the most important step during the process of type checking.
 
+TODO: about backward style reasoning.
+
 \subsection{Hoare Type Theory}
 
 A type theory is a formal system of term rewriting in which each term has a type, notated as $t:A$ for a term $t$ and a type $A$. A type theory that admits dependent types can be called a dependent type theory. Dependent type theories can be viewed as logical systems as popularized by the Curry-Howard correspondence (also known as the principle of propositions-as-types or of proofs-as-programs). Under this interpretation, logical quantifiers such as $\forall$ (universal) and $\exists$ (existential) correspond respectively to the dependent function ($\Pi$) and pair ($\Sigma$) types in type theory, for example. It turns out that with the expressive power that comes with dependent types, it becomes possible to encode behavioral specifications of programs as their types which can be viewed as theorems. Proving a theorem then corresponds to writing a program of that type and checking the proof translates to type checking.
@@ -276,13 +278,13 @@ Hoare Type Theory or HTT~\parencite{nanevski2008} is a specific dependent type t
 \end{mathpar}
 where $x:A$ is the return value and its type and $P$, $Q$ are pre- and postconditions respectively, thus incorporating the specification methodology of Hoare logic into types. An optional context, $\Delta$, for declaring \textit{ghost} variables may be included in the Hoare type for specifying logical variables that may only be used in the pre- and postconditions. Hoare types can also be seen as ``monads'' that are common in functional programming and are similarly used to isolate effects. The main difference is that such a ``Hoare monad'' is not only indexed by the the type of computation but also with the pre- and postconditions that must be satisfied by the given computation.
 
-How do we verify programs in HTT? A user may provide arbitrary pre- and postconditions as the type for their program. In HTT, the process of verifying that the given triple is valid is performed during type checking. There are axioms and typing rules in HTT that correspond to the axioms for primitive commands and inference rules such as those for consequence and composition in Hoare logic. Further, the type checking process is carefully divided into two phases. The first phase performs basic type checking and infers the strongest postconditions in the form of verification conditions at each step of the program. In the second phase, we need to verify that the verification conditions hold. The first phase is decidable but the second phase may not be, hence for the second phase, either the verification conditions are deferred to an automated theorem prover (such as Z3) or need to be validated manually using an interactive theorem prover (such as Coq).
+How do we verify programs in HTT? A user may provide arbitrary pre- and postconditions as the type for their program. In HTT, the process of verifying that the given triple is valid is performed during type checking. There are axioms and typing rules in HTT that correspond to the axioms for primitive commands and inference rules such as those for consequence and composition in Hoare logic. Further, the type checking process is carefully divided into two phases. The first phase performs basic type checking and infers the strongest postconditions in the form of verification conditions at each step of the program. In the second phase, we need to verify that the verification conditions hold. The first phase is decidable but the second phase may not be, hence for the second phase, either the verification conditions are deferred to an automated theorem prover (such as Z3~\parencite{z32008}) or need to be validated manually using an interactive theorem prover (such as Coq~\parencite{coq2020}).
 
 Let's consider the example we saw in the previous section written in a typical syntax for HTT:\medskip\\
 \indent\indent\lstinline[language=QHaskell]!x := 5 : {x = 1} r:unit {x > 0}!
 \medskip\\where $r$ is the variable that holds the result of the assignment statement. Since an assignment returns nothing, we see the type of output is $unit$ and the pre- and postconditions are same as before.
 
-In an alternate syntax inspired by the F* programming language (which takes a hybrid approach between automated and interactive theorem proving and is an evolution of HTT), that we will use in our presentation in this work, we can write the above triple as:\medskip\\
+In an alternate syntax inspired by the F* programming language~\parencite{fstar} (which takes a hybrid approach between automated and interactive theorem proving and is an evolution of HTT), that we will use in our presentation in this work, we can write the above triple as:\medskip\\
 \indent\indent\lstinline[language=QHaskell]!x := 5 : ST r:unit (requires {x = 1}) (ensures {x > 0})!
 \medskip\\which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify state (here assignment) and it is indexed by the result of the computation and its two pre- and postconditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we will christen our quantum state monad as $QST$. But let us first talk about quantum computation.
 
@@ -369,7 +371,7 @@ i & 0
 
 \subsection{Quantum Hoare logic with ghost variables}
 
-We will need a predicate logic analogous to Separation Logic~\parencite{reynolds2002} for quantum computation so as to be able to reason about only the interesting portions of the quantum state while still ensuring correctness of non-local effects such as entanglement. Various Quantum Hoare Logics that have been proposed~\parencite{floydhoare2012} (\textit{TODO add more citations here}) currently do not support frame rules that provide Separation Logic its power. The closest approach is that taken by \textcite{unruh2019} that allows predicates on quantum state similar to what we would like in our setting, such as whether certain qubits are in classical state, or in uniform superposition, entangled or separable. In this section, we provide an introduction to Unruh's Quantum Hoare logic with ghost variables that we will use in our predicate language.
+We will need a predicate logic analogous to Separation Logic~\parencite{reynolds2002} for quantum computation so as to be able to reason about only the interesting portions of the quantum state while still ensuring correctness of non-local effects such as entanglement. Various Quantum Hoare Logics that have been proposed~\parencite{floydhoare2012} (\textit{TODO: add more citations here}) currently do not support frame rules that provide Separation Logic its power. The closest approach is that taken by \textcite{unruh2019} that allows predicates on quantum state similar to what we would like in our setting, such as whether certain qubits are in classical state, or in uniform superposition, entangled or separable. In this section, we provide an introduction to Unruh's Quantum Hoare logic with ghost variables that we will use in our predicate language.
 
 Let us make precise some mathematical definitions that we will need in this section.
 
@@ -649,7 +651,7 @@ Previous work, such as Proto-Quipper~\parencite{rios2017} and QWire~\parencite{q
 
 \subsection{Other quantum Hoare logics}
 
-TODO
+TODO:
 
 \section{Conclusion and perspectives}
 \label{sec:conclusion}
@@ -716,6 +718,6 @@ of the author and do not necessarily reflect the views of the National Science F
 
 \drules[comp]{$\Gamma \vdash E : \HoareT{P}{x:A}{Q}$}{valid computations}{Conseq,Return}
 
-TODO
+TODO:
 
 \end{document}

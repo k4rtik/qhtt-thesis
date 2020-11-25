@@ -104,6 +104,42 @@
 }
 
 \usepackage[style=ext-authoryear-comp,dashed=false,maxbibnames=99,isbn=false]{biblatex}
+
+% From https://tex.stackexchange.com/a/27107
+\DeclareFieldFormat{citehyperref}{%
+  \DeclareFieldAlias{bibhyperref}{noformat}% Avoid nested links
+  \bibhyperref{#1}}
+
+\DeclareFieldFormat{textcitehyperref}{%
+  \DeclareFieldAlias{bibhyperref}{noformat}% Avoid nested links
+  \bibhyperref{%
+    #1%
+    \ifbool{cbx:parens}
+      {\bibcloseparen\global\boolfalse{cbx:parens}}
+      {}}}
+
+\savebibmacro{cite}
+\savebibmacro{textcite}
+
+\renewbibmacro*{cite}{%
+  \printtext[citehyperref]{%
+    \restorebibmacro{cite}%
+    \usebibmacro{cite}}}
+
+\renewbibmacro*{textcite}{%
+  \ifboolexpr{
+    ( not test {\iffieldundef{prenote}} and
+      test {\ifnumequal{\value{citecount}}{1}} )
+    or
+    ( not test {\iffieldundef{postnote}} and
+      test {\ifnumequal{\value{citecount}}{\value{citetotal}}} )
+  }
+    {\DeclareFieldAlias{textcitehyperref}{noformat}}
+    {}%
+  \printtext[textcitehyperref]{%
+    \restorebibmacro{textcite}%
+    \usebibmacro{textcite}}}
+
 \DeclareNameAlias{sortname}{given-family}
 \DeclareOuterCiteDelims{textcite}{}{}
 \DeclareInnerCiteDelims{textcite}{\bibopenbracket}{\bibclosebracket}

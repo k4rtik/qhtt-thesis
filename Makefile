@@ -3350,7 +3350,11 @@ endif
 	$(call get-graphics,$*) >> $*.d; \
 	$(call get-log-index,$*,$(addprefix $*.,aux aux.make)) >> $*.d; \
 	$(call get-bibs,$*.aux.make,$(addprefix $*.,bbl aux aux.make)) >> $*.d; \
-	$(call get-bcf-bibs,$*,$(addprefix $*.,bbl aux aux.make)) >> $*.d; \
+if [ -s $*.bcf ]; then \
+    grep datasource $*.bcf | sed -e 's/^[^>]*>//g' \
+        -e 's/<.*$$//g' -e '/\.bib$$/!s/$$/.bib/' \
+        -e 's!^!$(addprefix $*.,bbl aux aux.make): !' >> $*.d; \
+fi; \
 	$(EGREP) -q "# MISSING stem" $*.d && $(SLEEP) 1 && $(RM) $*.pdf; \
 	$(EGREP) -q "# MISSING format" $*.d && $(RM) $*.pdf; \
 	$(call move-if-exists,$*.$(build_target_extension),$*.$(build_target_extension).1st.make); \

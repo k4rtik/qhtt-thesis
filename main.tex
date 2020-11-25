@@ -82,12 +82,35 @@
 \def\titlerunning{Quantum Hoare Type Theory}
 \def\authorrunning{Kartik Singhal}
 
+\definecolor[named]{ACMBlue}{cmyk}{1,0.1,0,0.1}
+\definecolor[named]{ACMYellow}{cmyk}{0,0.16,1,0}
+\definecolor[named]{ACMOrange}{cmyk}{0,0.42,1,0.01}
+\definecolor[named]{ACMRed}{cmyk}{0,0.90,0.86,0}
+\definecolor[named]{ACMLightBlue}{cmyk}{0.49,0.01,0,0}
+\definecolor[named]{ACMGreen}{cmyk}{0.20,0,1,0.19}
+\definecolor[named]{ACMPurple}{cmyk}{0.55,1,0,0.15}
+\definecolor[named]{ACMDarkBlue}{cmyk}{1,0.58,0,0.21}
+
 \hypersetup{
+    colorlinks,
+    linkcolor=ACMPurple,
+    citecolor=ACMPurple,
+    urlcolor=ACMDarkBlue,
+    filecolor=ACMDarkBlue
     pdftitle={\titlerunning},
     pdfsubject={Computer Science},
     pdfauthor={\authorrunning},
     pdfkeywords={General programming languages, Quantum computation, Functional languages, Program specifications, Pre- and post-conditions, Type theory, Hoare logic}
 }
+
+\usepackage[style=ext-authoryear-comp,dashed=false,maxbibnames=99,isbn=false]{biblatex}
+\DeclareNameAlias{sortname}{given-family}
+\DeclareOuterCiteDelims{textcite}{}{}
+\DeclareInnerCiteDelims{textcite}{\bibopenbracket}{\bibclosebracket}
+\DeclareOuterCiteDelims{parencite}{\bibopenbracket}{\bibclosebracket}
+\DeclareInnerCiteDelims{parencite}{}{}
+\addbibresource{references.bib}
+
 
 \title{\titlerunning}
 
@@ -137,7 +160,7 @@ The most common approach to reason with pre- and postconditions in the classical
 
 Hoare Type Theory (HTT) incorporates Hoare-style specifications into types that can then be used to statically enforce desired properties about the program state. This is made possible with the use of dependent types that can depend on values (instead of just other types) and add immense expressive power to a programming language. In effect, we obtain a functional programming language in which imperative code is encapsulated within a computation type which is indexed by the type of the result of the computation, and its specification in the form of pre- and postconditions. We then obtain a system where the process of type checking a program becomes equivalent to verifying that the program meets the given specification. In this work, we consider the problem of reasoning about quantum programs in HTT and present our Quantum Hoare Type Theory (QHTT).
 
-To achieve this, we replace the classical primitive commands from the original HTT with quantum-specific primitive commands and take inspiration from a novel approach by Unruh \cite{unruh2019} and employ ghost variables for reasoning locally about quantum state in our quantum proposition logic. Further, the use of ghost variables enables an expressive language of propositions in which we can specify predicates about the equality, superposition and entanglement of qubits.
+To achieve this, we replace the classical primitive commands from the original HTT with quantum-specific primitive commands and take inspiration from a novel approach by \textcite{unruh2019} and employ ghost variables for reasoning locally about quantum state in our quantum proposition logic. Further, the use of ghost variables enables an expressive language of propositions in which we can specify predicates about the equality, superposition and entanglement of qubits.
 
 We limit our presentation to quantum programs that do not involve iteration. This is not to suggest that iteration is not supported in the system, only that we are yet to study it.
 
@@ -308,7 +331,7 @@ i & 0
 
 \subsection{Quantum Hoare logic with ghost variables}
 
-We will need a predicate logic analogous to Separation Logic~\cite{reynolds2002} for quantum computation so as to be able to reason about only the interesting portions of the quantum state while still ensuring correctness of non-local effects such as entanglement. Various Quantum Hoare Logics that have been proposed~\cite{floydhoare2012} (\textit{TODO add more citations here}) currently do not support frame rules that provide Separation Logic its power. The closest approach is that taken by \cite{unruh2019} that allows predicates on quantum state similar to what we would like in our setting, such as whether certain qubits are in classical state, or in uniform superposition, entangled or separable. In this section, we provide an introduction to Unruh's Quantum Hoare logic with ghost variables that we will use in our predicate language.
+We will need a predicate logic analogous to Separation Logic~\parencite{reynolds2002} for quantum computation so as to be able to reason about only the interesting portions of the quantum state while still ensuring correctness of non-local effects such as entanglement. Various Quantum Hoare Logics that have been proposed~\parencite{floydhoare2012} (\textit{TODO add more citations here}) currently do not support frame rules that provide Separation Logic its power. The closest approach is that taken by \textcite{unruh2019} that allows predicates on quantum state similar to what we would like in our setting, such as whether certain qubits are in classical state, or in uniform superposition, entangled or separable. In this section, we provide an introduction to Unruh's Quantum Hoare logic with ghost variables that we will use in our predicate language.
 
 Let us make precise some mathematical definitions that we will need in this section.
 
@@ -584,9 +607,9 @@ We would like to mention that the typing rules presented in this document are no
 We discuss some related work next.
 
 \subsection{Verification of Quantum Programs}
-Previous work, such as Proto-Quipper~\cite{rios2017,rios2017} and QWire~\cite{qwire2017,qwirepractice2017,rand2018} utilize a linear type system and dependent types to enforce a small subset of semantic properties, such as the no-cloning restriction and whether a unitary gate is of the right dimension. These advances in quantum type systems, although helpful, still fall short in encoding and enforcing even more useful properties that one would like to be able to express for the purpose of verification.
+Previous work, such as Proto-Quipper~\parencite{rios2017} and QWire~\parencite{qwire2017,qwirepractice2017,rand2018} utilize a linear type system and dependent types to enforce a small subset of semantic properties, such as the no-cloning restriction and whether a unitary gate is of the right dimension. These advances in quantum type systems, although helpful, still fall short in encoding and enforcing even more useful properties that one would like to be able to express for the purpose of verification.
 
-Our approach builds upon previous work in reasoning about quantum programs such as Quantum Weakest Preconditions~\cite{dhondt2006} and Quantum Hoare Logic~\cite{floydhoare2012} in the spirit of \cite{hoare1969} and \cite{dijkstra1976} but attempts to bring those reasoning techniques into the type system. The hope is that programmers will be able to encode some of the semantic properties that they expect of their programs as specifications in their code and type checking will ensure correctness of some of those properties. In the classical setting, Hoare Type Theory (HTT)~\cite{nanevski2008} accomplishes exactly this goal. Our attempt is to merge these ideas for the quantum realm.
+Our approach builds upon previous work in reasoning about quantum programs such as Quantum Weakest Preconditions~\parencite{dhondt2006} and Quantum Hoare Logic~\parencite{floydhoare2012} in the spirit of \textcite{hoare1969} and \textcite{dijkstra1976} but attempts to bring those reasoning techniques into the type system. The hope is that programmers will be able to encode some of the semantic properties that they expect of their programs as specifications in their code and type checking will ensure correctness of some of those properties. In the classical setting, Hoare Type Theory (HTT)~\parencite{nanevski2008} accomplishes exactly this goal. Our attempt is to merge these ideas for the quantum realm.
 
 \subsection{Other quantum Hoare logics}
 
@@ -594,21 +617,21 @@ TODO
 
 \section{Conclusion and perspectives}
 \label{sec:conclusion}
-In this paper, we described our work on Quantum Hoare Type Theory which is a dependently typed functional programming language with support for quantum computation. We used the novel quantum Hoare logic by Unruh~\cite{unruh2019} that helped us compactly specify properties about quantum state. We further demonstrated the usefulness of our approach using basic examples including bell state preparation and quantum teleportation.
+In this paper, we described our work on Quantum Hoare Type Theory which is a dependently typed functional programming language with support for quantum computation. We used the novel quantum Hoare logic by \textcite{unruh2019} that helped us compactly specify properties about quantum state. We further demonstrated the usefulness of our approach using basic examples including bell state preparation and quantum teleportation.
 
 With future work on code extraction, our approach can become a unified system for programming, specification, and reasoning about quantum computation.
 
 There are several other avenues to explore:
 
-\paragraph{Quantum Language} Our programming language currently does not support any iterative or recursive constructs. We would like to add those in future. Further, currently it is not possible to construct pure unitary operators directly in our language apart from those provided as constants. As \cite{qio} show, unitary operations form an algebraic monoidal structure and it will be really nice to be able construct arbitrary unitaries in the language which will greatly enhance its expressive power from current Clifford circuits to a universal language.
+\paragraph{Quantum Language} Our programming language currently does not support any iterative or recursive constructs. We would like to add those in future. Further, currently it is not possible to construct pure unitary operators directly in our language apart from those provided as constants. As \textcite{qio} show, unitary operations form an algebraic monoidal structure and it will be really nice to be able construct arbitrary unitaries in the language which will greatly enhance its expressive power from current Clifford circuits to a universal language.
 
-\paragraph{Mechanization} There are multiple implementations of HTT in Coq such as Ynot~\cite{ynot2008}. We would like to mechanize QHTT in Coq, F* or some such dependent type theory for higher assurance of the usefulness and soundness of QHTT. This will also enable us to extract verified circuits in a lower level quantum language such as OpenQASM~\cite{cross2017} for execution on real machines.
+\paragraph{Mechanization} There are multiple implementations of HTT in Coq such as Ynot~\parencite{ynot2008}. We would like to mechanize QHTT in Coq, F* or some such dependent type theory for higher assurance of the usefulness and soundness of QHTT. This will also enable us to extract verified circuits in a lower level quantum language such as OpenQASM~\parencite{cross2017} for execution on real machines.
 
-\paragraph{Linearity} Peter Selinger and collaborators have recently proposed a linear dependent typed version of Proto-Quipper (dubbed Proto-Quipper-D)~\cite{selinger2020,fu2020linear}. It is an interesting challenge to reconcile linearity in our theory based on their proposal.
+\paragraph{Linearity} Peter Selinger and collaborators have recently proposed a linear dependent typed version of Proto-Quipper (dubbed Proto-Quipper-D)~\parencite{selinger2020,fu2020linear}. It is an interesting challenge to reconcile linearity in our theory based on their proposal.
 
-\paragraph{Circuits as Arrows} Further, Proto-Quipper treats quantum circuits as first class citizens of the language. We would like to explore modifying our theory to treat Quantum Hoare types as arrows instead of as monads as was suggested by \cite{so-arrows}. It makes sense from the perspective of sequential composition as arrows can have an arbitrary number of input/outputs as opposed to monads.
+\paragraph{Circuits as Arrows} Further, Proto-Quipper treats quantum circuits as first class citizens of the language. We would like to explore modifying our theory to treat Quantum Hoare types as arrows instead of as monads as was suggested by \textcite{so-arrows}. It makes sense from the perspective of sequential composition as arrows can have an arbitrary number of input/outputs as opposed to monads.
 
-\paragraph{Behavioural Types} Another venue for exploration is to incorporate more precise types for qubits that can distinguish between qubits in pure classical state vs. those in superposition vs. those in entanglement~\cite{JorrandPerdrix2009} such as those inspired by the various quantum resource theories or the Heisenberg representation of quantum mechanics~\cite{rssl2019,rssl20}.
+\paragraph{Behavioural Types} Another venue for exploration is to incorporate more precise types for qubits that can distinguish between qubits in pure classical state vs. those in superposition vs. those in entanglement~\parencite{JorrandPerdrix2009} such as those inspired by the various quantum resource theories or the Heisenberg representation of quantum mechanics~\parencite{rssl2019,rssl20}.
 
 \paragraph{Classical Effects} Finally, it will be an interesting challenge to reconcile both classical and quantum effects together in a single theory of effects.
 
@@ -618,8 +641,7 @@ I thank John Reppy, Robert Rand and the anonymous reviewers of QPL 2020 for thei
 This material is based upon work supported by EPiQC, an NSF Expedition in Computing, under Grant No. 1730449. Any opinions, findings, and conclusions or recommendations expressed in this material are those
 of the author and do not necessarily reflect the views of the National Science Foundation.
 
-\bibliographystyle{eptcsalpha}
-\bibliography{references}
+\printbibliography[heading=bibintoc]
 
 \appendix
 

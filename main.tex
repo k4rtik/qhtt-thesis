@@ -284,7 +284,7 @@ In an alternate syntax inspired by the F* programming language (which takes a hy
 \indent\indent\lstinline[language=QHaskell]!x := 5 : ST r:unit (requires {x = 1}) (ensures {x > 0})!
 \medskip\\which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify state (here assignment) and it is indexed by the result of the computation and its two pre- and postconditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we will christen our quantum state monad as $QST$. But let us first talk about quantum computation.
 
-\subsection{Quantum Computation}
+\subsection{Quantum computation}
 It is well known that quantum computation can be described in terms of elementary linear algebra. We assume familiarity with basic notions such as vectors, matrices, vector spaces, inner products, bases, linear independence, etc.
 
 \textit{TODO: consider rewriting in terms of the four postulates of state space, dynamic evolution of closed systems, measurement and composite systems.}
@@ -636,13 +636,13 @@ In \cref{sec:teleport}, when we presented code for quantum teleportation, it was
 
 A limitation of our system is that we currently do not support propositions about the distribution of measurement outcomes. For example, \cref{lst:toss} shows a program along with its verification steps which produces a uniformly random bit. In this program we see the use of an unentangled ghost variable, $u_x$, at line 11 that records the outcome distribution of the measured qubit whose result is stored in the classical bit $x$. But the proposition $\textbf{uniform}(b)$ in the postcondition of the program would be invalid as it is only defined for quantum variables and not bits.
 
-\lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss]{cointoss.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss with an \textcolor{red}{invalid} postcondition]{cointoss.qh}
 
 We would like to mention that the typing rules presented in this document are not syntax directed as we forego distinguishing between introduction and elimination forms of terms while defining our syntax. The original presentation of HTT (as do many other type theories) keeps that distinction to be able to prove decidability of type checking and aid implementation. We leave this to future work along with an implementation.
 
 We discuss some related work next.
 
-\subsection{Verification of Quantum Programs}
+\subsection{Verification of quantum programs}
 Previous work, such as Proto-Quipper~\parencite{rios2017} and QWire~\parencite{qwire2017,qwirepractice2017,rand2018} utilize a linear type system and dependent types to enforce a small subset of semantic properties, such as the no-cloning restriction and whether a unitary gate is of the right dimension. These advances in quantum type systems, although helpful, still fall short in encoding and enforcing even more useful properties that one would like to be able to express for the purpose of verification.
 
 Our approach builds upon previous work in reasoning about quantum programs such as Quantum Weakest Preconditions~\parencite{dhondt2006} and Quantum Hoare Logic~\parencite{floydhoare2012} in the spirit of \textcite{hoare1969} and \textcite{dijkstra1976} but attempts to bring those reasoning techniques into the type system. The hope is that programmers will be able to encode some of the semantic properties that they expect of their programs as specifications in their code and type checking will ensure correctness of some of those properties. In the classical setting, Hoare Type Theory (HTT)~\parencite{nanevski2008} accomplishes exactly this goal. Our attempt is to merge these ideas for the quantum realm.

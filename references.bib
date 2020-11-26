@@ -1,3 +1,19 @@
+@inproceedings{abspr07,
+  author    = {Nanevski, Aleksandar
+and Ahmed, Amal
+and Morrisett, Greg
+and Birkedal, Lars},
+  editor    = {De Nicola, Rocco},
+  title     = {Abstract Predicates and Mutable ADTs in Hoare Type Theory},
+  booktitle = {Programming Languages and Systems},
+  year      = {2007},
+  publisher = {Springer},
+  address   = {Berlin, Heidelberg},
+  pages     = {189--204},
+  isbn      = {978-3-540-71316-6},
+  url       = {https://software.imdea.org/~aleks/htt/esop07.pdf}
+}
+
 @inproceedings{amy18,
   author    = {Amy, Matthew},
   title     = {Towards Large-scale Functional Verification of Universal Quantum Circuits},
@@ -33,39 +49,14 @@
   url    = {https://eprints.nottingham.ac.uk/11457/}
 }
 
-@inproceedings{fstar,
-  author = {Nikhil Swamy and
-            Catalin Hritcu and
-            Chantal Keller and
-            Aseem Rastogi and
-            Antoine Delignat-Lavaud and
-            Simon Forest and
-            Karthikeyan Bhargavan and
-            C\'{e}dric Fournet and
-            Pierre-Yves Strub and
-            Markulf Kohlweiss and
-            Jean-Karim Zinzindohou\'e and
-            Santiago {Zanella-B\'eguelin}},
-  title = {Dependent Types and Multi-Monadic Effects in {F*}},
-  booktitle = {Proc. POPL '16},
-  shortbooktitle = {POPL},
-  pages = {256-270},
-  publisher = {ACM},
-  isbn = {978-1-4503-3549-2},
-  month = jan,
-  year = {2016},
-  ee = {http://dx.doi.org/10.1145/2837614.2837655},
-  url = {https://www.fstar-lang.org/papers/mumon/},
-}
-
 @software{coq2020,
-  author       = {{The Coq Development Team}},
-  title        = {The Coq Proof Assistant, version 8.12.0},
-  month        = jul,
-  year         = 2020,
-  publisher    = {Zenodo},
-  version      = {8.12.0},
-  doi          = {10.5281/zenodo.4021912}
+  author    = {{The Coq Development Team}},
+  title     = {The Coq Proof Assistant, version 8.12.0},
+  month     = jul,
+  year      = 2020,
+  publisher = {Zenodo},
+  version   = {8.12.0},
+  doi       = {10.5281/zenodo.4021912}
 }
 
 @misc{cross2017,
@@ -102,12 +93,14 @@
 }
 
 @inproceedings{dm4free2017,
-  author        = {Ahman, Danel and Hri\c{t}cu, C\u{a}t\u{a}lin and Maillard, Kenji and Mart\'{\i}nez, Guido and Plotkin, Gordon and Protzenko, Jonathan and Rastogi, Aseem and Swamy, Nikhil},
-  title         = {Dijkstra Monads for Free},
+  author = {Ahman, Danel and Hri\c{t}cu, C\u{a}t\u{a}lin and Maillard, Kenji and Martinez, Guido and Plotkin, Gordon and Protzenko, Jonathan and Rastogi, Aseem and Swamy, Nikhil},
+  editor        = {Giuseppe Castagna and
+               Andrew D. Gordon},
+  pages         = {515--529},
+  publisher     = {{ACM}},
   year          = {2017},
-  publisher     = {ACM},
+  title         = {Dijkstra Monads for Free},
   address       = {New York, NY, USA},
-  url           = {https://arxiv.org/abs/1608.06499},
   doi           = {10.1145/3009837.3009878},
   booktitle     = {Proc. POPL '17},
   pages         = {515–529},
@@ -122,7 +115,6 @@
   year          = {2019},
   eprint        = {1908.05839},
   archiveprefix = {arXiv},
-  url           = {https://arxiv.org/abs/1908.05839},
   note          = {Submitted to ACM Computing Surveys}
 }
 
@@ -161,6 +153,31 @@
   issn    = {1571-0661},
   doi     = {10.1016/j.entcs.2008.04.018},
   author  = {Alexander S. Green and Thorsten Altenkirch}
+}
+
+@inproceedings{fstar,
+  author         = {Nikhil Swamy and
+            Catalin Hritcu and
+            Chantal Keller and
+            Aseem Rastogi and
+            Antoine Delignat-Lavaud and
+            Simon Forest and
+            Karthikeyan Bhargavan and
+            C\'{e}dric Fournet and
+            Pierre-Yves Strub and
+            Markulf Kohlweiss and
+            Jean-Karim Zinzindohou\'e and
+            Santiago {Zanella-B\'eguelin}},
+  title          = {Dependent Types and Multi-Monadic Effects in {F*}},
+  booktitle      = {Proc. POPL '16},
+  shortbooktitle = {POPL},
+  pages          = {256-270},
+  publisher      = {ACM},
+  isbn           = {978-1-4503-3549-2},
+  month          = jan,
+  year           = {2016},
+  ee             = {http://dx.doi.org/10.1145/2837614.2837655},
+  url            = {https://www.fstar-lang.org/papers/mumon/}
 }
 
 @inproceedings{fu2020linear,
@@ -298,7 +315,7 @@
   issn      = {0003486X},
   url       = {https://www.jstor.org/stable/1968621},
   doi       = {10.2307/1968621},
-  author    = {Birkhoff, Garrett and von Neumann, John},
+  author    = {Birkhoff, Garrett and {von Neumann}, John},
   journal   = {Annals of Mathematics},
   number    = {4},
   pages     = {823--843},
@@ -321,7 +338,7 @@
 }
 
 @misc{matuschak2019,
-  author = {Matuschak, Andy and Nielsen, Michael},
+  author = {Matuschak, Andy and Nielsen, Michael A.},
   title  = {Quantum computing for the very curious},
   year   = {2019},
   url    = {https://quantum.country/qcvc}
@@ -360,13 +377,13 @@
   volume    = {18},
   number    = {5-6},
   pages     = {865--911},
-  month     = sep,
+  nomonth   = sep,
   publisher = {Cambridge University Press},
   noaddress = {USA},
   issn      = {0956-7968},
   doi       = {10.1017/S0956796808006953},
   journal   = {J. Funct. Program.},
-  url       = {https://software.imdea.org/~aleks/papers/hoarelogic/jfpsep07.pdf}
+  url       = {https://software.imdea.org/~aleks/htt/jfpsep07.pdf}
 }
 
 @book{nielsen2010,
@@ -375,7 +392,7 @@
   year      = {2010},
   author    = {Nielsen, Michael A. and Chuang, Isaac L.},
   address   = {Cambridge, UK},
-  doi       = {10.1017/CBO9780511976667}
+  nodoi     = {10.1017/CBO9780511976667}
 }
 
 @phdthesis{paykin2018,
@@ -425,6 +442,17 @@
   publisher = {Schloss Dagstuhl--Leibniz-Zentrum fuer Informatik},
   doi       = {10.4230/OASIcs.PLATEAU.2018.4},
   isbn      = {978-3-95977-091-0}
+}
+
+@inproceedings{qhtt20,
+  author    = {Singhal, Kartik and Reppy, John},
+  booktitle = {Proc. QPL '20},
+  keywords  = {Formal Verification,Program Proof,Programming Languages,Quantum Computing,Type Systems,Type Theory},
+  month     = {5},
+  note      = {To appear},
+  title     = {Quantum Hoare Type Theory},
+  url       = {http://ks.cs.uchicago.edu/publication/qhtt/},
+  year      = {2020}
 }
 
 @incollection{qio,

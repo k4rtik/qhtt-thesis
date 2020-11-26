@@ -312,8 +312,6 @@ where
 \end{mathpar}
 and the two constants $\alpha, \beta$ are complex amplitudes that are normalized using the constraint $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured, the probability of the qubit being in the state 0 is $|\alpha|^2$ and that for the state 1 is $|\beta|^2$. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$. Computation is performed by the application of unitary quantum gates, such as the Hadamard (\textbf{H}) gate or the controlled-NOT (\textbf{CX}) gate, that can be represented as square matrices. Mathematically, a gate application is equivalent to multiplying the matrix representing the gate with the state vector of the qubit(s). \cref{table:gates} shows some commonly used gates along with their circuit notation and matrix representations.
 
-This basic unit of information is not the only reason why quantum computing is fundamentally different from classical computing---certain quantum mechanical phenomenon are highly counter-intuitive! One such phenomenon is \textit{quantum entanglement} which, at its most basic level, involves a correlation between two qubits such that when one is measured, the outcome obtained necessarily influences the measurement outcome of the other qubit (even if the two qubits are far apart). For example, a simple but well-known fully entangled quantum state over two qubits is the first Bell state which often is written as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$, where the first $0$ in $\ket{00}$ corresponds to the first qubit and the second $0$ with the second qubit and similarly for $\ket{11}$. In this state, the probability of obtaining either $00$ or $11$ for the pair of qubits on measurement is 1/2 each. That is, if we were to measure only the first qubit and obtain $0$, it is guaranteed that on measurement we will find the other qubit to also be in the state $0$.
-
 \begin{table}
 \centering
 \begin{tabular}{ c c c c }
@@ -368,6 +366,8 @@ i & 0
 \caption{Common unitary gates in quantum computation}
 \label{table:gates}
 \end{table}
+
+This basic unit of information is not the only reason why quantum computing is fundamentally different from classical computing---certain quantum mechanical phenomenon are highly counter-intuitive! One such phenomenon is \textit{quantum entanglement} which, at its most basic level, involves a correlation between two qubits such that when one is measured, the outcome obtained necessarily influences the measurement outcome of the other qubit (even if the two qubits are far apart). For example, a simple but well-known fully entangled quantum state over two qubits is the first Bell state which often is written as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$, where the first $0$ in $\ket{00}$ corresponds to the first qubit and the second $0$ with the second qubit and similarly for $\ket{11}$. In this state, the probability of obtaining either $00$ or $11$ for the pair of qubits on measurement is 1/2 each. That is, if we were to measure only the first qubit and obtain $0$, it is guaranteed that on measurement we will find the other qubit to also be in the state $0$.
 
 We refer the reader to the standard textbook by \textcite{nielsen2010} for more background. We also recommend the excellent series of essays by \textcite{matuschak2019} for a gentle introduction to build intuition.
 
@@ -509,22 +509,22 @@ We next show the predicates of the specification language from \textcite{unruh20
 
 \nonterms{Prop}
 
-Apart from the quantum predicates that we see above, we will also have access to the usual connectives from propositional logic, that we summarize in \cref{table:proplogic}. Some of these connectives have the same symbols as the quantum predicates, but their meaning will always be clear from the context.
-
 \begin{table}
-\centering
-\begin{tabular}{ c c c }
-    \textbf{Connective} & \textbf{Formal name} & \textbf{Informal name} \\
-    $\bot$ & contradiction & false \\
-    $\top$ & true & true\\
-    $\wedge$ & conjunction & and\\
-    $\vee$ & disjunction & or\\
-    $\Rightarrow$ & implication & implies\\
-    % $\Leftrightarrow$ & bi-implication & iff
-\end{tabular}
-\caption{Propositional logic connectives}
-\label{table:proplogic}
+    \centering
+    \begin{tabular}{ c c c }
+        \textbf{Connective} & \textbf{Formal name} & \textbf{Informal name} \\
+        $\bot$ & contradiction & false \\
+        $\top$ & true & true\\
+        $\wedge$ & conjunction & and\\
+        $\vee$ & disjunction & or\\
+        $\Rightarrow$ & implication & implies\\
+        % $\Leftrightarrow$ & bi-implication & iff
+    \end{tabular}
+    \caption{Propositional logic connectives}
+    \label{table:proplogic}
 \end{table}
+
+Apart from the quantum predicates that we see above, we will also have access to the usual connectives from propositional logic, that we summarize in \cref{table:proplogic}. Some of these connectives have the same symbols as the quantum predicates, but their meaning will always be clear from the context.
 
 Finally, we show the computations that represent the monadic unit and three kinds of bind operations:
 
@@ -540,7 +540,7 @@ In this section, we show some simple examples along with their specifications as
 
 Our simplest example involves creation of a Bell (or EPR) state which is one of the four maximally entangled quantum states of two qubits. Specifically, we will create a circuit (\cref{fig:bell00}) to produce the first Bell state which we will write in the mnemonic notation as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$.
 
-\begin{figure}[t]
+\begin{figure}[b]
     \centering
     \begin{tikzpicture}
         \node[scale=1.0] {
@@ -554,18 +554,18 @@ Our simplest example involves creation of a Bell (or EPR) state which is one of 
     \label{fig:bell00}
 \end{figure}
 
-\lstinputlisting[language=QHaskell,float=b,label=lst:bell,lastline=9,caption=Generating Bell state]{bell00.qh}
+\lstinputlisting[language=QHaskell,float=t,label=lst:bell,lastline=9,caption=Generating Bell state]{bell00.qh}
 
 \cref{lst:bell} shows a circuit that corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: the top predicate, $\top$, that is satisfied by any state space and the $X =_q \psi$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\psi$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
 
-\cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 10) allocates a new qubit, initialize it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. The strongest postcondition for unitary application simply involves applying the operator on the subspace specified by the precondition (on lines 9 and 13). Note that we sometimes use the $\Rightarrow$ symbol in these annotations for a simplification step.
-
 \lstinputlisting[language=QHaskell,float,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
+
+\cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 10) allocates a new qubit, initialize it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. The strongest postcondition for unitary application simply involves applying the operator on the subspace specified by the precondition (on lines 9 and 13). Note that we sometimes use the $\Rightarrow$ symbol in these annotations for a simplification step.
 
 \subsubsection{Quantum teleportation}
 \label{sec:teleport}
 
-\begin{figure}[b]
+\begin{figure}
     \centering
     \begin{tikzpicture}
         \node[scale=1.0] {
@@ -594,17 +594,15 @@ This version of teleportation may not seem very interesting because it is essent
 
 As the teleportation protocol is usually stated, we have two agents Alice and Bob who share an entangled Bell pair at the beginning of the protocol. Alice wants to communicate a message encoded in a qubit to Bob. Alice performs a Bell measurement on her two qubits, the one that encodes the message and the other which is part of the entangled Bell pair. Then she sends the result of this measurement, two bits, to Bob. Bob receives those bits and performs correction steps on his qubit to obtain the message. We naturally can split the teleportation circuit into three parts: Bell state preparation, Alice's portion of the circuit and Bob's portion of the circuit.
 
-\cref{lst:alice,lst:bob,lst:mtele} show the implementation of these parts in the form of separate modules (functions) along with their specifications as types. Alice's circuit requires that her second input qubit is entangled in the Bell state. This statement shows our first example of using Unruh's entangled ghost variable, $e$, in our specifications which is declared in the context right before the \textit{requires} construct along with other ghost variables. It further ensures that her two input qubits are both consumed in the process as they are asserted to be classical in the postcondition. Since Alice is dealing with entanglement, it is important to maintain the distribution over the all qubits involved including the ghost qubit $e$ and the newly created ghosts $e_x$ and $e_y$ because of her measurement operations.
-
 \lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=14]{teleport2.qh}
 
 \lstinputlisting[language=QHaskell,float,label=lst:bob,caption=Bob's portion of teleportation,firstline=45,lastline=55]{teleport2.qh}
 
 \lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=74,lastline=82]{teleport2.qh}
 
-Bob's specification shows what correction is applied if his qubit is in an arbitrary state. Note that Bob uses the classical control construct if-then-else in this variant of the circuit. Also, note that to distinguish between the input and output of the qubit, we are using two different names, but both $b$ and $q$ are referring to the same qubit. The specification for teleport is the same as before but the implementation is now much shorter.
+\cref{lst:alice,lst:bob,lst:mtele} show the implementation of these parts in the form of separate modules (functions) along with their specifications as types. Alice's circuit requires that her second input qubit is entangled in the Bell state. This statement shows our first example of using Unruh's entangled ghost variable, $e$, in our specifications which is declared in the context right before the \textit{requires} construct along with other ghost variables. It further ensures that her two input qubits are both consumed in the process as they are asserted to be classical in the postcondition. Since Alice is dealing with entanglement, it is important to maintain the distribution over the all qubits involved including the ghost qubit $e$ and the newly created ghosts $e_x$ and $e_y$ because of her measurement operations.
 
-We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea}. The verification conditions generated for Alice are almost the same as those generated during the first part of our first teleportation example, except we do not have qubit $b$ in scope and instead are dealing with its ghost $e$.
+Bob's specification shows what correction is applied if his qubit is in an arbitrary state. Note that Bob uses the classical control construct if-then-else in this variant of the circuit. Also, note that to distinguish between the input and output of the qubit, we are using two different names, but both $b$ and $q$ are referring to the same qubit. The specification for teleport is the same as before but the implementation is now much shorter.
 
 \lstinputlisting[language=QHaskell,float,label=lst:alicea,caption=Annotated code for alice,firstline=16,lastline=43]{teleport2.qh}
 
@@ -612,15 +610,18 @@ We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea
 
 \lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=84]{teleport2.qh}
 
+We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea}. The verification conditions generated for Alice are almost the same as those generated during the first part of our first teleportation example, except we do not have qubit $b$ in scope and instead are dealing with its ghost $e$.
+
 In Bob's case, we start out with his qubit $b$ in some arbitrary quantum state and perform corrections as specified by the classical conditionals. We do not need entangled ghosts here as Bob is only dealing with two classical bits and his own qubit.
 
 Finally, in the teleport code in \cref{lst:mtelea}, the only unusual step is at lines 16 and later, where we need to merge the existing conditions from the environment in which bob was called with the postcondition of bob. Simplification after the merge operation lets us recover the original message at line 27.
 
 \subsubsection{Deutsch's algorithm}
+\lstinputlisting[language=QHaskell,float,label=lst:deutsch,caption=Deutsch's algorithm]{deutsch.qh}
 Our final example in \cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a blackbox in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the blackbox alone.
 % This example involves various propositions about classical bits that we did not describe, but it serves to show that if our predicate language is extended with standard classical logic (ie, predicates such as equality of classical bits, $=_c$ and implication, $=>$) we can say a lot more in the specification.
 
-\begin{figure}[b]
+\begin{figure}
     \centering
     \begin{tikzpicture}
         \node[scale=1.0] {
@@ -634,8 +635,6 @@ Our final example in \cref{lst:deutsch} demonstrates that our system can work in
     \caption{Quantum circuit for Deutsch's algorithm}
     \label{fig:deutsch}
 \end{figure}
-
-\lstinputlisting[language=QHaskell,float,label=lst:deutsch,caption=Deutsch's algorithm]{deutsch.qh}
 
 \section{Discussion}
 

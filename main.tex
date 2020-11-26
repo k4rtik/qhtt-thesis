@@ -266,7 +266,7 @@ This obviously seems correct. But how can we mechanically use the formal system 
 
 In Hoare Type Theory that we describe next and its quantum variant later, inferring the strongest postcondition for each statement will be the most important step during the process of type checking.
 
-TODO: about backward style reasoning.
+We note that the style of reasoning using strongest postconditions that we described above is also called forward reasoning style. There also exists a backward reasoning approach that requires computing weakest preconditions and using the second rule of consequence but we prefer the former style in this work.
 
 \subsection{Hoare Type Theory}
 
@@ -291,7 +291,7 @@ In an alternate syntax inspired by the F* programming language~\parencite{fstar}
 \subsection{Quantum computation}
 It is well known that quantum computation can be described in terms of elementary linear algebra. We assume familiarity with basic notions such as vectors, matrices, vector spaces, inner products, bases, linear independence, etc.
 
-\textit{TODO: consider rewriting in terms of the four postulates of state space, dynamic evolution of closed systems, measurement and composite systems.}
+% \textit{TODO: consider rewriting in terms of the four postulates of state space, dynamic evolution of closed systems, measurement and composite systems.}
 
 Quantum computation is usually described over a specific vector space called the \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space equipped with an inner product ($\mathbb{C}^n$). In this work, we will often use the term ``state space'' to refer to a finite dimensional Hilbert space.
 

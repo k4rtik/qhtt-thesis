@@ -389,7 +389,7 @@ Let us make precise some mathematical definitions that we will need in this sect
 	For any subspace $P$ in a Hilbert space $\mathcal{H}$, written ($P \subseteq \mathcal{H}$), $\mathit{span}\{P\}$ is the smallest closed subspace of $\mathcal{H}$ containing $P$. In other words, $\mathit{span}\{P\}$ is the set of linear combinations of vectors in $P$.
 \end{definition}
 
-A core idea behind various quantum logics that comes from \textcite{logicqm36} is that closed subspaces of a state space can be thought of as logical predicates. Unruh's quantum Hoare logic defines some useful syntactic sugar for many such subspaces that we will find useful and that we describe next:
+A core idea behind various quantum logics that comes from \textcite{logicqm36} is that closed subspaces of a state space can be thought of as logical propositions. Unruh's quantum Hoare logic defines some useful syntactic sugar for many such subspaces that we will find useful and that we describe next:
 
 \begin{itemize}
 	\item $\top$ represents the complete state space, $\mathcal{H}$, under consideration.
@@ -403,9 +403,9 @@ A core idea behind various quantum logics that comes from \textcite{logicqm36} i
 
 The last predicate, for example, lets us write $(a, b) =_q (\ket{00}+\ket{11})/\sqrt{2}$ to specify that quantum variables (or qubits) $a, b$ are in the first Bell state.
 
-Unruh's logic further utilizes ghost variables (also known as logical variables) that can only appear in the predicates to make it easy to state properties about local state when a variable corresponding to that state may not be in scope. For example, it becomes possible to state that a single qubit input to a program is entangled with another qubit, even though we may never see that qubit locally. This is quite useful, for example, when proving the quantum teleportation protocol that we will see later.
+Unruh's logic further utilizes ghost variables (also known as logical variables) that can only appear in propositions to make it easy to state properties about local state when a variable corresponding to that state may not be in scope. For example, it becomes possible to state that a single qubit input to a program is entangled with another qubit, even though we may never see that qubit locally. This is quite useful, for example, when proving the quantum teleportation protocol that we will see later.
 
-Ghost variables in Unruh's set up are identified by their mnemonic names. He uses $g, G$ for a ghost variable and a list of ghost variables respectively, and similarly $e, E$ for entangled ghosts and $u, U$ for unentangled ghosts. For example, if we would like to use the qubit $b$ from the above qubit pair individually, we can state it being in the first Bell state as $(e, b) =_q (\ket{00}+\ket{11})/\sqrt{2}$, where $e$ is a fresh entangled ghost variable. Intuitively, a ghost variable can assume whatever state needed to make a given predicate true.
+Ghost variables in Unruh's set up are identified by their mnemonic names. He uses $g, G$ for a ghost variable and a list of ghost variables respectively, and similarly $e, E$ for entangled ghosts and $u, U$ for unentangled ghosts. For example, if we would like to use the qubit $b$ from the above qubit pair individually, we can state it being in the first Bell state as $(e, b) =_q (\ket{00}+\ket{11})/\sqrt{2}$, where $e$ is a fresh entangled ghost variable. Intuitively, a ghost variable can assume whatever state needed to make a given proposition true.
 
 Unruh further defines some syntactic sugar for predicates that include ghosts:
 

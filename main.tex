@@ -198,14 +198,14 @@ Hoare Type Theory (HTT)~\parencite{nanevski2008} incorporates Hoare-style specif
 
 To achieve this, we replace the classical primitive commands from the original HTT with quantum-specific primitive commands and take inspiration from a novel approach by \textcite{unruh2019} and employ ghost variables for reasoning locally about the quantum state in our quantum proposition logic. Further, the use of ghost variables enables an expressive language of propositions in which we can specify predicates about the equality, superposition, and entanglement of qubits.
 
-Our approach takes inspiration from previous foundational work in reasoning about quantum programs such as \citetitle{dhondt2006}~\parencite{dhondt2006} and \citetitle{floydhoare2012}~\parencite{floydhoare2012} in the spirit of \textcite{hoare1969}, \textcite{dijkstra1976}, and \textcite{gries1981} but attempts to bring those reasoning techniques into a type system. The hope is that programmers will be able to encode some of the semantic properties that they expect of their programs as specifications in their code and type checking will ensure the correctness of their implementation to those specifications. In the classical setting, Hoare Type Theory accomplishes exactly this goal. The work presented here is an attempt to merge these ideas for the emerging landscape of quantum computing.
+Our approach takes inspiration from previous foundational work in reasoning about quantum programs such as \citetitle{dhondt2006}~\parencite{dhondt2006} and \citetitle{floydhoare2012}~\parencite{floydhoare2012} in the spirit of \textcite{hoare1969}, \textcite{dijkstra1976}, and \textcite{gries1981} but attempts to bring those reasoning techniques into a type system. The hope is that programmers will be able to encode some semantic properties that they expect of their programs as specifications in their code and type checking will ensure the correctness of their implementation to those specifications. In the classical setting, Hoare Type Theory accomplishes exactly this goal. The work presented here is an attempt to merge these ideas for the emerging landscape of quantum computing.
 
 We limit our presentation to quantum programs that do not involve iteration. This is not to suggest that iteration is not supported in the system, only that we are yet to study it.
 
 Our investigation suggests that QHTT has the potential to be a unified system for programming, specifying, and reasoning about quantum programs.
 
 \section{Background}
-In this section, we provide background on the core ideas from the existing literature that form the foundation for our work --- Hoare logic, Hoare Type Theory (HTT), quantum computation, and quantum Hoare logic with ghost variables.
+In this section, we provide background on the core ideas from the existing literature that form the foundation for our work---Hoare logic, Hoare Type Theory (HTT), quantum computation, and quantum Hoare logic with ghost variables.
 
 \subsection{Floyd-Hoare logic}
 In the late 1960s, Robert Floyd and Tony Hoare came up with a set of axioms and rules of inference that can be used to prove properties of computer programs. This approach is commonly just known as Hoare logic as Hoare was the first to apply it to text-based programs~\parencite{hoare1969}, while Floyd had applied it to flowcharts~\parencite{floyd67}. Here we present the axioms and rules of Hoare logic in a natural deduction style.
@@ -619,7 +619,7 @@ Finally, in the teleport code in \cref{lst:mtelea}, the only unusual step is at 
 
 \subsubsection{Deutsch's algorithm}
 \lstinputlisting[language=QHaskell,float,label=lst:deutsch,caption=Deutsch's algorithm]{deutsch.qh}
-Our final example in \cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it --- it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a black box in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the black box alone.
+Our final example in \cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it---it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a black box in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the black box alone.
 % This example involves various propositions about classical bits that we did not describe, but it serves to show that if our predicate language is extended with standard classical logic (ie, predicates such as equality of classical bits, $=_c$ and implication, $=>$) we can say a lot more in the specification.
 
 \begin{figure}
@@ -678,11 +678,11 @@ With future work on code extraction, our approach can become a unified system fo
 
 \paragraph{Circuits as Arrows} Further, Proto-Quipper treats quantum circuits as first-class citizens of the language. We would like to explore modifying our theory to treat Quantum Hoare types as arrows instead of as monads as was suggested by \textcite{so-arrows}. It makes sense from the perspective of sequential composition as arrows can have an arbitrary number of inputs/outputs as opposed to monads.
 
-\paragraph{Behavioural Types} Another avenue for exploration is to incorporate more precise types for qubits that can distinguish between qubits in the pure classical state vs. those in superposition vs. those in entanglement~\parencite{JorrandPerdrix2009} such as those inspired by the various quantum resource theories or the Heisenberg representation of quantum mechanics~\parencite{rssl2019,rssl20}.
+\paragraph{Behavioral Types} Another avenue for exploration is to incorporate more precise types for qubits that can distinguish between qubits in the pure classical state vs. those in superposition vs. those in entanglement~\parencite{JorrandPerdrix2009} such as those inspired by the various quantum resource theories or the Heisenberg representation of quantum mechanics~\parencite{rssl2019,rssl20}.
 
 \paragraph{Classical Effects} Finally, it will be an interesting challenge to reconcile both classical and quantum effects together in a single theory of effects. We see promise in exploring this direction using the F* programming language, where there is already existing work that lets one define additional effects relatively easily~\parencite{dm4free2017}.
 
-\section*{Acknowledgements}
+\section*{Acknowledgments}
 I would like to thank John Reppy and Robert Rand for their guidance in this work. I also would like to thank the anonymous reviewers and the larger QPL 2020 community for their feedback on an earlier presentation of this work~\parencite{qhtt20}.
 
 This material is based upon work supported by EPiQC\footnote{\url{https://epiqc.cs.uchicago.edu}}, an NSF Expedition in Computing, under Grant No. 1730449. Any opinions, findings, and conclusions or recommendations expressed in this material are those

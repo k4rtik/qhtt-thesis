@@ -298,3 +298,4 @@ TSWLatexianTemp*
 *.run.cookie
 *.auxbbl.make.temp
 *.lot.make
+.vscode

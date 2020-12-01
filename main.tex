@@ -234,7 +234,8 @@ In the classical setting, the most important command is an assignment statement.
 \end{mathpar}
 where $x$ is an assignable (variable) and $e$ is an expression. The meaning of this fact is that the precondition is obtained from the postcondition $P$ by substituting $e$ for all free occurrences of $x$ in $P$.
 
-Furthermore, there are rules of inference that are required to derive new theorems from one or more axioms or theorems already proved. We first look at the two ``rules of consequence'':
+Furthermore, there are rules of inference that are required to derive new theorems from one or more axioms or theorems already proved. We first look at the two ``rules of consequence''. In the following notation, propositions above the line are called \textit{premises} and the proposition below the line is called the \textit{conclusion.}
+
 \begin{mathpar}
     \inferrule[Weakening the postcondition]
     {\HoareT{P}{c}{Q} \\ Q \Rightarrow R}
@@ -692,7 +693,7 @@ With future work on code extraction, our approach can become a unified system fo
 \paragraph{Classical Effects} Finally, it will be an interesting challenge to reconcile both classical and quantum effects together in a single theory of effects. We see promise in exploring this direction using the F* programming language, where there is already existing work that lets one define additional effects relatively easily~\parencite{dm4free2017}.
 
 \section*{Acknowledgments}
-I would like to thank John Reppy and Robert Rand for their guidance in this work. I would also like to thank the anonymous reviewers of QPL '20 and the larger QPL community for their feedback on an earlier presentation of this work~\parencite{qhtt20}. Casey Duckering, Sophia Lin, and Jocelyn Wilcox read the manuscript and provided helpful feedback.
+I would like to thank John Reppy and Robert Rand for their guidance in this work. I would also like to thank the anonymous reviewers of QPL '20 and the larger QPL community for their feedback on an earlier presentation of this work~\parencite{qhtt20}. Casey Duckering, Anne Farrell, Sophia Lin, and Jocelyn Wilcox read the manuscript and provided helpful feedback.
 
 This material is based upon work supported by EPiQC\footnote{\url{https://epiqc.cs.uchicago.edu}}, an NSF Expedition in Computing, under Grant No. 1730449. Any opinions, findings, and conclusions or recommendations expressed in this material are those
 of the author and do not necessarily reflect the views of the National Science Foundation.

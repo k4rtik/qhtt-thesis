@@ -319,7 +319,7 @@ where
 1
 \end{bmatrix}
 \end{mathpar}
-and the two constants $\alpha, \beta$ are complex amplitudes that obey the constraint $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured, the probability of the qubit being in state 0 is $|\alpha|^2$ and that for state 1 is $|\beta|^2$. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$. Computation is performed by the application of unitary quantum gates, such as the Hadamard (\textbf{H}) gate or the controlled-NOT (\textbf{CX}) gate, that can be represented as square matrices. Mathematically, a gate application is equivalent to multiplying the matrix representing the gate with the state vector of the qubit(s). \cref{table:gates} shows some commonly used gates along with their circuit notation and matrix representations.
+and the two constants $\alpha, \beta$ are complex amplitudes that obey the \textit{normalization constraint}, $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured, the probability of the qubit being in state 0 is $|\alpha|^2$ and that for state 1 is $|\beta|^2$. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$. Computation is performed by the application of unitary quantum gates, such as the Hadamard (\textbf{H}) gate or the controlled-NOT (\textbf{CX}) gate, that can be represented as square matrices. Mathematically, a gate application is equivalent to multiplying the matrix representing the gate with the state vector of the qubit(s). \cref{table:gates} shows some commonly used gates along with their circuit notation and matrix representations.
 
 \begin{table}
 \centering
@@ -410,7 +410,7 @@ A core idea behind various quantum logics that comes from \textcite{logicqm36} i
 	\item $X =_q \psi$ specifies that variables $X$ are in the specific state $\psi$. This is a sugar for $X \in_q \mathit{span}\{\psi\}$.
 \end{itemize}
 
-The last predicate, for example, lets us write $(a, b) =_q (\ket{00}+\ket{11})/\sqrt{2}$ to specify that quantum variables (or qubits) $a, b$ are in the first Bell state.
+The last predicate, for example, lets us write $(a, b) =_q (\ket{00}+\ket{11})/\sqrt{2}$ to specify that quantum variables (or qubits) $a, b$ are in the first Bell state. It is easy to see that the span of the given state vector, $\mathit{span}\{(\ket{00}+\ket{11})/\sqrt{2}\}$, only includes the set of all of its scalar multiples. Since state vectors need to obey the normalization constraint on their amplitudes, the scalar multiple can only be a complex number of the form $e^{i\theta}$ whose absolute value is always 1. This scalar, called the \textit{global phase factor}, can be ignored in most cases as it does not impact the computation.
 
 Unruh's logic further utilizes ghost variables (also known as logical variables) that can only appear in propositions to make it easy to state properties about the local state when a variable corresponding to that state may not be in scope. For example, it becomes possible to state that a single qubit input to a program is entangled with another qubit, even though we may never see that qubit locally. This is quite useful when proving the quantum teleportation protocol that we will see later.
 

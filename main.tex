@@ -398,13 +398,13 @@ Let us make precise some mathematical definitions that we will need in this sect
 	For any subspace $P$ in a Hilbert space $\mathcal{H}$, written ($P \subseteq \mathcal{H}$), $\mathit{span}\{P\}$ is the smallest closed subspace of $\mathcal{H}$ containing $P$. In other words, $\mathit{span}\{P\}$ is the set of linear combinations of vectors in $P$.
 \end{definition}
 
-A core idea behind various quantum logics that comes from \textcite{logicqm36} is that closed subspaces of a state space can be thought of as logical propositions. Unruh's quantum Hoare logic defines some useful syntactic sugar for many such subspaces that we will find useful and that we describe next:
+A core idea behind various quantum logics that comes from \textcite{logicqm36} is that closed subspaces of a state space can be thought of as logical propositions with the inclusion relationship between them forming a partial order. With this ordering in place, if $P$ is a subspace of $Q$, then we can say that $P$ implies $Q$, written as $P \subset Q$. Unruh's quantum Hoare logic defines syntactic sugar for propositions and predicates on subspaces that we will find useful and that we describe next:
 
 \begin{itemize}
-	\item $\top$ represents the complete state space, $\mathcal{H}$, under consideration.
-	\item $\bot$ represents the zero-dimension subspace of Hilbert space, $\{0\}$.
-	\item $P \wedge Q$ is the set intersection of the two subspaces: $P \cap Q$.
-	\item $P \vee Q$ is the sum (linear combination) of the subspaces $P$ and $Q$. In other words, it is the span of the union of the two subspaces: $\mathit{span}\{P \cup Q\}$.
+	\item $\top$ is the proposition corresponding to the complete state space, $\mathcal{H}$, under consideration. It is logically equivalent to the always true proposition.
+	\item $\bot$ is the proposition corresponding to the zero-dimension subspace, $\{0\}$, and is logically equivalent to the absurd proposition.
+	\item $P \wedge Q$ is the set intersection of the two subspaces: $P \cap Q$. This is equivalent to the logical \textit{and} connective.
+	\item $P \vee Q$ is the sum (linear combination) of the subspaces $P$ and $Q$. In other words, it is the span of the union of the two subspaces: $\mathit{span}\{P \cup Q\}$. This is equivalent to the logical \textit{or} connective.
 	\item $U \cdot P$ corresponds to the application of the operator $U$ to a given subspace $P$. It is sugar for the subspace $\{U \psi: \psi \in P\}$.
 	\item\label{itm:partnot} $X \in_q P$ lets us specify that the qubits referenced in the list of variables $X$ lie in the subspace P. In other words, if $V$ is the set of all quantum variables, then this predicate corresponds to the complete quantum state being $P \otimes \mathcal{H}[V \backslash X]$ where the brackets specify the domain of qubits that we are referring to and the backslash is the set difference operator.
 	\item $X =_q \psi$ specifies that variables $X$ are in the specific state $\psi$. This is a sugar for $X \in_q \mathit{span}\{\psi\}$.

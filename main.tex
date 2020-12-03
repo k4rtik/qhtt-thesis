@@ -537,7 +537,13 @@ We next show the predicates of the specification language from \textcite{unruh20
     \label{table:proplogic}
 \end{table}
 
-Apart from the quantum predicates that we see above, we will also have access to the usual connectives from propositional logic, that we summarize in \cref{table:proplogic}. Some of these connectives have the same symbols as the quantum predicates, but their meaning will always be clear from the context.
+Apart from the quantum predicates that we see above, we will also have access to the usual connectives from propositional logic, that we summarize in \cref{table:proplogic}. Some of these connectives have the same symbols as the quantum predicates, but their meaning will always be clear from the context. Additionally, we will use $x =_c v$ to denote that a classical bit $x$ is equal to a value $v$.
+
+Throughout the type-checking process, we will need to maintain some environment information in the form of contexts that will track variable bindings and propositions available at a point in the program:
+
+\nonterms{Ctx}
+
+These contexts will be especially relevant when calling a quantum function as the function may require binding of the ghost variables in its specification from the environment that it is called in. Similarly, a \textit{merge} of environments may be needed when a function call returns to determine the most precise propositions at the place of return.
 
 Finally, we show the computations that represent the monadic unit and three kinds of bind operations:
 
@@ -553,7 +559,7 @@ In this section, we show some simple examples along with their specifications as
 
 Our simplest example involves the creation of a Bell (or EPR) state which is one of the four maximally entangled quantum states of two qubits. Specifically, we will create a circuit (\cref{fig:bell00}) to produce the first Bell state which we will write in the mnemonic notation as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$.
 
-\begin{figure}[b]
+\begin{figure}[t]
     \centering
     \begin{tikzpicture}
         \node[scale=1.0] {
@@ -634,7 +640,7 @@ Finally, in the teleport code in \cref{lst:mtelea}, the only unusual step is at 
 Our final example in \cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it---it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a black box in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the black box alone.
 % This example involves various propositions about classical bits that we did not describe, but it serves to show that if our predicate language is extended with standard classical logic (ie, predicates such as equality of classical bits, $=_c$ and implication, $=>$) we can say a lot more in the specification.
 
-\begin{figure}
+\begin{figure}[b]
     \centering
     \begin{tikzpicture}
         \node[scale=1.0] {

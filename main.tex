@@ -577,7 +577,7 @@ Our simplest example involves the creation of a Bell (or EPR) state which is one
 
 \cref{lst:bell} shows a circuit that corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: the top predicate, $\top$, that is satisfied by any state space and the $X =_q \psi$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\psi$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
 
-\lstinputlisting[language=QHaskell,float=h,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
+\lstinputlisting[language=QHaskell,float=t,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
 
 \cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 10) allocates a new qubit, initializes it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. The strongest postcondition for a unitary application simply involves applying the operator on the subspace specified by the precondition (on lines 9 and 13). Note that we use the $\Leftrightarrow$ symbol in these annotations for a simplification step.
 
@@ -633,7 +633,7 @@ We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea
 
 In Bob's case, we start with his qubit $b$ in some arbitrary quantum state and perform corrections as specified by the classical conditionals. We do not need entangled ghosts here as Bob is only dealing with two classical bits and his own qubit.
 
-Finally, in the teleport code in \cref{lst:mtelea}, the only unusual step is at lines 16 and later, where we need to merge the existing conditions from the environment in which bob was called with the postcondition of bob. Simplification after the merge operation lets us recover the original message at line 27.
+Finally, in the teleport code in \cref{lst:mtelea}, while calling the function \texttt{alice} at line 11, the entangled ghost, $e$, in her type is bound to the corresponding qubit $b$ in the calling environment and we obtain the same propositions as before on return from the function. A similar environment merge is needed at line 15, where function \texttt{bob} is called. We have annotated this merge in more detail in lines 16--22 for clarity. Here relating the existing ghosts $e_x$ and $e_y$ in the return environment with the classical bits $x$ and $y$ in the postcondition for Bob, we obtain the correct propositions. Simplification after the merge operation lets us recover the original message at line 27.
 
 \subsubsection{Deutsch's algorithm}
 \lstinputlisting[language=QHaskell,float,label=lst:deutsch,caption=Deutsch's algorithm]{deutsch.qh}
@@ -661,7 +661,7 @@ In \cref{sec:teleport}, when we presented the code for quantum teleportation, it
 
 A limitation of our system is that we currently do not support propositions about the distribution of measurement outcomes. For example, \cref{lst:toss} shows a program (along with its verification steps) which produces a uniformly random bit. At line 10, we can infer a weaker proposition on $q$, $\textbf{uniform}(q)$, knowing its exact state. But the proposition $\textbf{uniform}(b)$ in the postcondition of the program would be invalid as it is only defined for quantum variables and not classical bits.
 
-\lstinputlisting[language=QHaskell,float=h,label=lst:toss,firstline=10,caption=Fair coin toss with an \textcolor{red}{invalid} postcondition]{cointoss.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss with an \textcolor{red}{invalid} postcondition]{cointoss.qh}
 
 We would like to mention that the type system presented in this document is not bidirectional~\parencite{dunfield2019bidirectional} as we forego distinguishing between the introduction and elimination forms of terms while defining our syntax for simplicity. The original presentations of HTT~\parencite{nanevski2008,abspr07} (as do many other type theories) keep that distinction to be able to prove the decidability of type checking and provide a syntax-directed type system to aid implementation. We leave this for future work along with an implementation.
 

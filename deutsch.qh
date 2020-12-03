@@ -9,8 +9,8 @@ deutsch : (f: bit -> bit) ->
           ((bit -> bit) -> (qbit⊗qbit) -> QST (qbit⊗qbit)) ->
           QST r: bit
               (requires {⊤})
-              (ensures  {(r =c 0 ⇒ f(0) == f(1)) ∧
-                         (r =c 1 ⇒ f(0) != f(1)) })
+              (ensures  {(r =c 0 => f(0) == f(1)) ∧
+                         (r =c 1 => f(0) != f(1)) })
 deutsch = \f.\U_f -> do
             -- ⊤
             a <- init 0

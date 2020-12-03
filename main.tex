@@ -559,7 +559,7 @@ In this section, we show some simple examples along with their specifications as
 
 Our simplest example involves the creation of a Bell (or EPR) state which is one of the four maximally entangled quantum states of two qubits. Specifically, we will create a circuit (\cref{fig:bell00}) to produce the first Bell state which we will write in the mnemonic notation as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$.
 
-\begin{figure}[t]
+\begin{figure}
     \centering
     \begin{tikzpicture}
         \node[scale=1.0] {
@@ -573,11 +573,11 @@ Our simplest example involves the creation of a Bell (or EPR) state which is one
     \label{fig:bell00}
 \end{figure}
 
-\lstinputlisting[language=QHaskell,float=t,label=lst:bell,lastline=9,caption=Generating the first Bell state]{bell00.qh}
+\lstinputlisting[language=QHaskell,float,label=lst:bell,lastline=9,caption=Generating the first Bell state]{bell00.qh}
 
 \cref{lst:bell} shows a circuit that corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: the top predicate, $\top$, that is satisfied by any state space and the $X =_q \psi$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\psi$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
 
-\lstinputlisting[language=QHaskell,float,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
+\lstinputlisting[language=QHaskell,float=h,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
 
 \cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 10) allocates a new qubit, initializes it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. The strongest postcondition for a unitary application simply involves applying the operator on the subspace specified by the precondition (on lines 9 and 13). Note that we use the $\Leftrightarrow$ symbol in these annotations for a simplification step.
 
@@ -640,7 +640,7 @@ Finally, in the teleport code in \cref{lst:mtelea}, the only unusual step is at 
 Our final example in \cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it---it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a black box in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the black box alone.
 % This example involves various propositions about classical bits that we did not describe, but it serves to show that if our predicate language is extended with standard classical logic (ie, predicates such as equality of classical bits, $=_c$ and implication, $=>$) we can say a lot more in the specification.
 
-\begin{figure}[b]
+\begin{figure}
     \centering
     \begin{tikzpicture}
         \node[scale=1.0] {

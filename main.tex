@@ -408,6 +408,8 @@ A core idea behind various quantum logics that comes from \textcite{logicqm36} i
 	\item $P \vee Q$ is the sum (linear combination) of the subspaces $P$ and $Q$. In other words, it is the span of the union of the two subspaces: $\mathit{span}\{P \cup Q\}$. This is equivalent to the logical \textit{or} connective.
 	\item $U \cdot P$ corresponds to the application of the operator $U$ to a given subspace $P$. It is sugar for the subspace $\{U \psi: \psi \in P\}$.
 	\item\label{itm:partnot} $X \in_q P$ lets us specify that the qubits referenced in the list of variables $X$ lie in the subspace P. In other words, if $V$ is the set of all quantum variables, then this predicate corresponds to the complete quantum state being $P \otimes \mathcal{H}[V \backslash X]$ where the brackets specify the domain of qubits that we are referring to and the backslash is the set difference operator.
+	\item $X \equiv_q Y$, called the quantum equality between two disjoint lists of variables $X$ and $Y$ (of the same dimension), states that $X$ and $Y$ are quantumly equal if and only if swapping them in the complete quantum state will not change the state.
+	\item $X \equiv_{cl} Y$, called the classical equality between two disjoint lists of variables $X$ and $Y$ (of the same dimension), states that $X$ and $Y$ are classically equal if and only if measuring them in the computational basis will give the same outcome.
 	\item $X =_q \psi$ specifies that variables $X$ are in the specific state $\psi$. This is a sugar for $X \in_q \mathit{span}\{\psi\}$.
 \end{itemize}
 
@@ -421,8 +423,8 @@ Unruh further defines some syntactic sugar for predicates that include ghosts:
 
 \begin{itemize}
 	\item $\mathbf{uniform}(X)$ which states that $X$ is uniformly distributed. It is sugar for $(X, e) =_q \sum_i  \sqrt{\frac{1}{n}} (\ket{i} \otimes \ket{i})$ where $e$ is a fresh entangled ghost. Note that it is not possible to express this without using ghosts. As a counterexample, consider a single qubit in $\mathbb{C}^2$ in a uniform superposition of its basis states. The only subspace that includes both $\ket{0}$ and $\ket{1}$ is $\top$.
-	\item $\mathbf{class}(X)$ which states that $X$ holds a classical state. This is encoded using the notion of classical equality and stating that $X$ is classically equal to an unentangled ghost $u$. Intuitively, two variables are classically equal if and only if measuring them in the computational basis always gives the same result.
-	\item $\mathbf{separable}(X)$ which states that $X$ is separable, that is, not entangled with any other system. This predicate is defined using the notion of quantum equality which states that two variables are quantumly equal if and only if swapping them will not change the state. $\mathbf{separable}(X)$ is sugar for $X$ being quantumly equal to an unentangled ghost $u$.
+	\item $\mathbf{separable}(X)$ which states that $X$ is separable, that is, not entangled with any other system. This is sugar for $X \equiv_q u$ where is $u$ is a fresh unentangled ghost.
+	\item $\mathbf{class}(X)$ which states that $X$ holds a classical state. This is sugar for $X \equiv_{cl} u$ where $u$ is a fresh unentangled ghost.
 \end{itemize}
 
 Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language which includes primitives for initialization, unitary application, and measurement. We take inspiration from his logic and inference rules while designing the specification language of QHTT that we will describe in the next section.
@@ -513,7 +515,7 @@ We have already seen the primitive commands:
 
 \nonterms{Cmd}
 
-We did not mention the classical control construct if-then-else earlier. It branches to $E_1$ or $E_2$ based on the truth value (1) of the bit $M$.
+We did not mention the classical control construct if-then-else earlier. It branches to $E_1$ or $E_2$ based on the truth value of the bit $M$.
 
 We next show the predicates of the specification language from \textcite{unruh2019}. Note that we sometimes use a comma instead of the $\wedge$ symbol to denote the conjunction of propositions.
 
@@ -590,7 +592,7 @@ Our simplest example involves the creation of a Bell (or EPR) state which is one
     \label{fig:teleport}
 \end{figure}
 
-Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum teleportation and the corresponding code is shown in \cref{lst:tele}. This example demonstrates how we can bind ghost variables in the Hoare type: $\{\psi: \mathit{vector}\}$ states that $\psi$ is a ghost variable of \textit{vector} type. Recall that ghost variables can only be used in logical propositions and are not part of the program. We place the context declaring the ghost variables right after the output type to signal that the ghost variables are only bound in the \textit{requires} and \textit{ensures} constructors that follow next in the Hoare type. We see another predicate $\mathbf{class}(q)$ here that states that the given qubit $q$ is in a classical state, which is what we expect during the quantum teleportation protocol. Or there would be no way to tell from the specification whether the implementation just returned the input qubit as the output!
+Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum teleportation and the corresponding code is shown in \cref{lst:tele}. This example demonstrates how we can bind ghost variables in the Hoare type: $\{\psi: \mathit{vector}\}$ states that $\psi$ is a ghost variable of \textit{vector} type. Recall that ghost variables can only be used in logical propositions and are not part of the program. We place the context declaring the ghost variables right after the output type to signal that the ghost variables are only bound in the \textit{requires} and \textit{ensures} constructors that follow next in the Hoare type. We see another predicate $\mathbf{class}(q)$ here that states that the given qubit $q$ is in a classical state, which is what we expect during the quantum teleportation protocol. Or there would be no way to tell from the specification whether the implementation just returned the input qubit as the output.
 
 \lstinputlisting[language=QHaskell,float,label=lst:tele,lastline=13,caption=Quantum teleportation]{teleport.qh}
 

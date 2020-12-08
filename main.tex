@@ -455,7 +455,7 @@ Here we show our primitive quantum commands that are inspired by similar primiti
 \begin{lstlisting}[language=QHaskell]
 init M : (b: bit) -> QST (q: qbit)
                          (requires {⊤})
-                         (ensures  {q =q |b⟩}
+                         (ensures  {q =q |b⟩})
 \end{lstlisting}
 
 We can initialize one qubit at a time in either of the two computational basis states, $\ket{0}$ or $\ket{1}$. For example, the initialization command \lstinline[language=QHaskell]{x <- init 0} allocates a fresh qubit from the global pool, initializes it to $\ket{0}$ and returns a reference to the qubit and binds it to $x$.

@@ -2051,13 +2051,15 @@ endef
 # Outputs bcf bibs to stdout. Arg 1 is the bcf file stem, arg 2 is the
 # list of targets for each dependency found.
 define get-bcf-bibs
-$(call test-non-empty,$1.bcf) && $(SED) \
+if $(call test-non-empty,$1); then \
+  $(SED) \
 -e '/datasource/!d' \
 -e 's/^[^>]*>//g' \
 -e 's/<.*$$//g' \
 -e '/\.bib$$/!s/$$/.bib/' \
 -e 's!^!$2: !' \
-'$1' | $(SORT) | $(UNIQ)
+'$1' | $(SORT) | $(UNIQ); \
+fi
 endef
 
 # Makes a an aux file that only has stuff relevant to the target in it
@@ -3350,11 +3352,7 @@ endif
 	$(call get-graphics,$*) >> $*.d; \
 	$(call get-log-index,$*,$(addprefix $*.,aux aux.make)) >> $*.d; \
 	$(call get-bibs,$*.aux.make,$(addprefix $*.,bbl aux aux.make)) >> $*.d; \
-if [ -s $*.bcf ]; then \
-    grep datasource $*.bcf | sed -e 's/^[^>]*>//g' \
-        -e 's/<.*$$//g' -e '/\.bib$$/!s/$$/.bib/' \
-        -e 's!^!$(addprefix $*.,bbl aux aux.make): !' >> $*.d; \
-fi; \
+	$(call get-bcf-bibs,$*.bcf,$(addprefix $*.,bbl aux aux.make)) >> $*.d; \
 	$(EGREP) -q "# MISSING stem" $*.d && $(SLEEP) 1 && $(RM) $*.pdf; \
 	$(EGREP) -q "# MISSING format" $*.d && $(RM) $*.pdf; \
 	$(call move-if-exists,$*.$(build_target_extension),$*.$(build_target_extension).1st.make); \

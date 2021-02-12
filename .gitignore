@@ -299,3 +299,4 @@ TSWLatexianTemp*
 *.auxbbl.make.temp
 *.lot.make
 .vscode
+main.xmpdata

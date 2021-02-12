@@ -1,5 +1,14 @@
 \pdfoutput=1
+\def\titlerunning{Quantum Hoare Type Theory}
+\def\authorrunning{Kartik Singhal}
+\begin{filecontents*}{\jobname.xmpdata}
+\Title{\titlerunning}
+\Author{\authorrunning}
+\Keywords{General programming languages \sep Quantum computation \sep Functional languages \sep Program specifications \sep Pre- and post-conditions \sep Type theory \sep Hoare logic}
+\Subject{Computer Science}
+\end{filecontents*}
 \documentclass[adraft,creativecommons]{eptcs}
+\usepackage[a-1b]{pdfx}
 \usepackage[utf8]{inputenc}
 
 \usepackage{underscore}
@@ -81,9 +90,6 @@
 \usepackage{ottalt}
 \inputott{htt.ott.tex}
 
-\def\titlerunning{Quantum Hoare Type Theory}
-\def\authorrunning{Kartik Singhal}
-
 \definecolor[named]{ACMBlue}{cmyk}{1,0.1,0,0.1}
 \definecolor[named]{ACMYellow}{cmyk}{0,0.16,1,0}
 \definecolor[named]{ACMOrange}{cmyk}{0,0.42,1,0.01}
@@ -100,10 +106,6 @@
     citecolor=ACMPurple,
     urlcolor=ACMDarkBlue,
     filecolor=ACMDarkBlue,
-    pdftitle={\titlerunning},
-    pdfsubject={Computer Science},
-    pdfauthor={\authorrunning},
-    pdfkeywords={General programming languages, Quantum computation, Functional languages, Program specifications, Pre- and post-conditions, Type theory, Hoare logic}
 }
 
 % ACM CCS 2012 Concepts

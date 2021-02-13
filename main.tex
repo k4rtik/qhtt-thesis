@@ -109,7 +109,7 @@
 % •Theory of computation~Semantics and reasoning~Program reasoning~Program specifications
 % •Software and its engineering~Software notations and tools~General programming languages~Language types~Functional languages
 
-\usepackage[style=ext-authoryear-comp,dashed=false,maxbibnames=99,isbn=false]{biblatex}
+\usepackage[style=ext-authoryear-comp,dashed=false,maxbibnames=99,isbn=false,backref=true]{biblatex}
 
 % From https://tex.stackexchange.com/a/27107
 \DeclareFieldFormat{citehyperref}{%
@@ -210,7 +210,7 @@ We limit our presentation to quantum programs that do not involve iteration. Thi
 Our investigation suggests that QHTT has the potential to be a unified system for programming, specifying, and reasoning about quantum programs.
 
 \section{Background}
-In this section, we provide background on the core ideas from the existing literature that form the foundation for our work---Hoare logic, Hoare Type Theory (HTT), quantum computation, and quantum Hoare logic with ghost variables.
+In this section, we provide background on the core ideas from the existing literature that form the foundation for our work---Hoare logic, Hoare Type Theory, quantum computation, and quantum Hoare logic with ghost variables.
 
 \subsection{Floyd-Hoare logic}
 In the late 1960s, Robert Floyd and Tony Hoare came up with a set of axioms and rules of inference that can be used to prove properties of computer programs. This approach is commonly just known as Hoare logic since Hoare was the first to apply it to text-based programs~\parencite{hoare1969}, while Floyd had applied it to flowcharts~\parencite{floyd67}. Here we present the axioms and rules of Hoare logic in a natural deduction style.

@@ -271,7 +271,7 @@ This obviously seems correct. But how can we mechanically use the formal system 
 
 In Hoare Type Theory that we describe next and its quantum variant later, inferring the strongest postcondition for each statement will be the most important step during the process of type checking.
 
-We note that the style of reasoning using the strongest postconditions that we described above is also called the forward reasoning style. There is a dual theory of \textit{weakest preconditions} that are computed backwards starting from a postcondition. We prefer the forward style in this work as it is easier to compute strongest postconditions automatically using symbolic execution.
+We note that the style of reasoning using the strongest postconditions that we described above is also called the forward reasoning style. There is a dual theory of \textit{weakest preconditions} that are computed backwards starting from a postcondition. We prefer the forward style in this work as it is easier to compute the strongest postconditions automatically using symbolic execution.
 
 \subsection{Hoare Type Theory}
 
@@ -295,8 +295,6 @@ In an alternative syntax inspired by the F* programming language~\parencite{fsta
 
 \subsection{Quantum computation}
 It is well known that quantum computation can be described in terms of elementary linear algebra. We assume familiarity with basic notions such as vectors, matrices, vector spaces, inner products, bases, linear independence, etc.
-
-% \textit{TODO: consider rewriting in terms of the four postulates of state space, dynamic evolution of closed systems, measurement and composite systems.}
 
 Quantum computation is usually described over a specific vector space called the \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space equipped with an inner product ($\mathbb{C}^n$). In this work, we will often use the term ``state space'' to refer to a finite-dimensional Hilbert space.
 
@@ -372,7 +370,7 @@ i & 0
 \label{table:gates}
 \end{table}
 
-This basic unit of information is not the only reason why quantum computing is fundamentally different from classical computing---certain quantum mechanical phenomena are highly counter-intuitive! One such phenomenon is \textit{quantum entanglement}, which, at its most basic level, involves a correlation between two qubits such that when one is measured, the outcome obtained necessarily influences the measurement outcome of the other qubit (even if the two qubits are far apart). For example, a simple but well-known fully entangled quantum state over two qubits is the first Bell state, which is often written as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$, where the first $0$ in $\ket{00}$ corresponds to the first qubit and the second $0$ to the second qubit and similarly for $\ket{11}$. In this state, the probability of obtaining either $00$ or $11$ for the pair of qubits on a measurement is 1/2 each. That is, if we were to measure only the first qubit and obtain $0$, it is guaranteed that on measurement we will find the other qubit to also be in the state $0$. When a qubit is not entangled, it can be said to be in a \textit{separable} state.
+This basic unit of information is not the only reason why quantum computing is fundamentally different from classical computing---certain quantum mechanical phenomena are highly counterintuitive! One such phenomenon is \textit{quantum entanglement}, which, at its most basic level, involves a correlation between two qubits such that when one is measured, the outcome obtained necessarily influences the measurement outcome of the other qubit (even if the two qubits are far apart). For example, a simple but well-known fully entangled quantum state over two qubits is the first Bell state, which is often written as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$, where the first $0$ in $\ket{00}$ corresponds to the first qubit and the second $0$ to the second qubit and similarly for $\ket{11}$. In this state, the probability of obtaining either $00$ or $11$ for the pair of qubits on a measurement is 1/2 each. That is, if we were to measure only the first qubit and obtain $0$, it is guaranteed that on measurement we will find the other qubit to also be in the state $0$. When a qubit is not entangled, it can be said to be in a \textit{separable} state.
 
 We refer the reader to the standard textbook by \textcite{nielsen2010} for more background. We also recommend the excellent series of essays by \textcite{matuschak2019} for a gentle introduction and to build intuition.
 
@@ -478,7 +476,7 @@ apply_1 G_1 to M_1 : unitary -> qbit -> QST unit
 apply_2 G_2 to M_2 : unitary -> (qbit⊗qbit) -> QST unit
 \end{lstlisting}
 
-Since it modifies the state in place, the unitary application command returns the trivial unit output. The pre- and postconditions on the apply command are similar for either of the above two cases, for convenience we only show the rule for two-qubit gate application:
+Since it modifies the state in place, the unitary application command returns the trivial unit output. The pre- and postconditions for this command are similar for either of the above two cases, for convenience we only show the rule for two-qubit gate application:
 
 \begin{lstlisting}[language=QHaskell]
 apply G to M : (g: unitary) ->
@@ -538,7 +536,7 @@ Throughout the type-checking process, we will need to maintain some environment 
 
 \nonterms{Ctx}
 
-These contexts will be especially relevant when calling a quantum function as the function may require binding of the ghost variables in its specification from the environment that it is called in. Similarly, a \textit{merge} of environments may be needed when a function call returns to determine the most precise propositions at the place of return.
+These contexts will be especially relevant when calling a quantum function as the function may require the binding of the ghost variables in its specification from the environment that it is called in. Similarly, a \textit{merge} of environments may be needed when a function call returns to determine the most precise propositions at the place of return.
 
 Finally, we show the computations that represent the monadic unit and three kinds of bind operations:
 
@@ -574,7 +572,7 @@ Our simplest example involves the creation of a Bell (or EPR) state which is one
 
 \lstinputlisting[language=QHaskell,float,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
 
-\cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 10) allocates a new qubit, initializes it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. The strongest postcondition for a unitary application simply involves applying the operator on the subspace specified by the precondition (on lines 9 and 13). Note that we use the $\Leftrightarrow$ symbol in these annotations for a simplification step.
+\cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 10) allocates a new qubit, initializes it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. The strongest postcondition for a unitary application simply involves applying the operator to the subspace specified by the precondition (on lines 9 and 13). Note that we use the $\Leftrightarrow$ symbol in these annotations for a simplification step.
 
 \subsubsection{Quantum teleportation}
 \label{sec:teleport}
@@ -631,9 +629,9 @@ In Bob's case, we start with his qubit $b$ in some arbitrary quantum state and p
 Finally, in the teleport code in \cref{lst:mtelea}, while calling the function \texttt{alice} at line 11, the entangled ghost, $e$, in her type is bound to the corresponding qubit $b$ in the calling environment and we obtain the same propositions as before on return from the function. A similar environment merge is needed at line 15, where function \texttt{bob} is called. We have annotated this merge in more detail in lines 16--22 for clarity. Here relating the existing ghosts $e_x$ and $e_y$ in the return environment with the classical bits $x$ and $y$ in the postcondition for Bob, we obtain the correct propositions. Simplification after the merge operation lets us recover the original message at line 27.
 
 \subsubsection{Deutsch's algorithm}
-Our final example in \cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it---it is parametrized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a black box in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the black box alone.
+Our final example in \cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown but its type specifies everything we know about it---it is parameterized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a black box in the implementation of Deutsch's algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the black box alone.
 
-Note that the second argument to the \texttt{deutsch} function carries its Hoare type (as specified above) along, even though we do not show it in the code at line 9 to avoid extra noise in the presentation. At line 25, the first argument, $f$, is passed to the oracle as a parameter without further calls to $f$. At lines 27--28, we show the standard case analysis for application of the oracle to the given quantum states of $a$ and $b$ depending on the constant or balanced property of $f$. We note that this example requires some manual intervention in interpreting the conclusion of the algorithm as we are not allowed to inspect the behavior of $f$ directly.
+Note that the second argument to the \texttt{deutsch} function carries its Hoare type (as specified above) along, even though we do not show it in the code at line 9 to avoid extra noise in the presentation. At line 25, the first argument, $f$, is passed to the oracle as a parameter without further calls to $f$. At lines 27--28, we show the standard case analysis for the application of the oracle to the given quantum states of $a$ and $b$ depending on the constant or balanced property of $f$. We note that this example requires some manual intervention in interpreting the conclusion of the algorithm as we are not allowed to inspect the behavior of $f$ directly.
 
 \lstinputlisting[language=QHaskell,float,label=lst:deutsch,caption=Deutsch's algorithm]{deutsch.qh}
 
@@ -662,26 +660,9 @@ A limitation of our system is that we currently do not support propositions abou
 
 We would like to mention that the type system presented in this document is not bidirectional~\parencite{dunfield2019bidirectional} as we forego distinguishing between the introduction and elimination forms of terms while defining our syntax for simplicity. The original presentations of HTT~\parencite{nanevski2008,abspr07} (as do many other type theories) keep that distinction to be able to prove the decidability of type checking and provide a syntax-directed type system to aid implementation. We leave this for future work along with an implementation.
 
-Finally, a note about scalability. There are three important aspects to scalability considerations: expressive power of the programming language to support writing large quantum programs; compositionality of both program fragments and reasoning about those fragments for modularity and reuse; and lastly but importantly, the manual and/or computational effort required for verification. We have taken the first and second of these into account by intentionally designing the syntax of our language to be close to Quipper~\parencite{quipper2013} which is a proven scalable quantum programming language. In particular, our Deutsch's algorithm example showed that the language supports higher-order programming. We further benefit from building upon HTT that lets us seamlessly compose Hoare types together, hence permitting modular verification as we showed in our quantum teleportation example. The third aspect of scalability dealing with the proof burden requires some comparison with existing work.
+Finally, a note about scalability. There are three important aspects to scalability considerations: the expressive power of the programming language to support writing large quantum programs; compositional reasoning about programs for modularity and reuse of verified code; and lastly but importantly, the manual and/or computational effort required for verification. We have taken the first and second of these into account by intentionally designing the syntax of our language to be close to Quipper~\parencite{quipper2013} which is a proven scalable quantum programming language. In particular, our Deutsch's algorithm example shows that the language supports higher-order programming. We further benefit from building upon HTT that lets us seamlessly compose Hoare types together, hence permitting modular verification as we show in our quantum teleportation example. The third aspect of scalability dealing with the proof burden requires some comparison with existing work.
 
 The full-fledged \citetitle{floydhoare2012}~\parencite{floydhoare2012} or QHL,that builds upon previous work on modeling quantum programs as superoperators~\parencite{Selinger2004} and quantum predicates as Hermitian operators~\parencite{dhondt2006}, suffers from two problems. First, it requires verbose specifications over the complete quantum state because it does not support Separation logic-style frame rules. We avoid this problem by adopting Unruh's variant of QHL that effectively lets us get away with only specifying properties of the local state. Second, the verification process is manual, non-trivial and does not scale to complicated algorithms such as Shor's, as a recent implementation effort using an interactive theorem prover shows~\parencite{liu2019}. A fundamental reason behind this second problem is the representation of quantum propositions as Hermitian operators. Indeed, because of this scalability limitation, there is a recent trend in research based on QHL to move away from general Hermitian operators and towards a special class of propositions based on projection operators~\parencite{aqhl2019,Li2020}, which are equivalent to our notion of closed subspaces as propositions. This prior research and our intention to use a hybrid system like F* (letting us rely more on automation) for implementing QHTT suggests that we are in the right direction. A full account of scalability considerations of our approach requires further investigation and along with an implementation, we leave it for future work.
-
-% implementation notes using \parencite{dm4free2017}
-
-% We discuss some related work next.
-
-% \subsection{Verification of quantum programs}
-% Previous work, such as Proto-Quipper~\parencite{rios2017,ross2015} and QWire~\parencite{qwire2017,qwirepractice2017,rand2018} utilize a linear type system and dependent types to enforce a small subset of semantic properties, such as the no-cloning restriction and whether a unitary gate is of the right dimension. These advances in quantum type systems, although helpful, still fall short in encoding and enforcing even more useful properties that one would like to be able to express for the purpose of verification.
-
-% TODO: \parencite{amy18,asg2010}
-
-% \subsection{Other quantum Hoare logics}
-
-% TODO:
-
-% quantum logics
-
-% TODO: \parencite{logicqm36,ying2009}
 
 \section{Conclusions and perspectives}
 \label{sec:conclusion}
@@ -689,7 +670,7 @@ In this paper, we described our work on Quantum Hoare Type Theory which is a dep
 
 With future work on code extraction, our approach can become a unified system for programming, specification, and reasoning about quantum computation. There are several other avenues to explore:
 
-\paragraph{Quantum Language} Our programming language currently does not support any iterative or recursive constructs. We would like to add those in the future along with reasoning rules needed for loop invariants. Furthermore, currently, it is not possible to construct pure unitary operators directly in our language apart from those provided as constants. As \textcite{qio} show, unitary operations form an algebraic monoidal structure and it will be nice to be able to construct arbitrary unitaries in the language which will greatly enhance its expressive power from current Clifford circuits to a universal language.
+\paragraph{Quantum Language} Our programming language currently does not support any iterative or recursive constructs. We would like to add those in the future along with the reasoning rules needed for loop invariants. Furthermore, currently, it is not possible to construct pure unitary operators directly in our language apart from those provided as constants. As \textcite{qio} show, unitary operations form an algebraic monoidal structure and it will be nice to be able to construct arbitrary unitaries in the language which will greatly enhance its expressive power from current Clifford circuits to a universal language.
 
 \paragraph{Mechanization} There are multiple implementations of HTT in Coq such as Ynot~\parencite{ynot2008}. We would like to mechanize QHTT in Coq, F*, or some such dependent type theory for higher assurance of the usefulness and soundness of QHTT. This will also enable us to extract verified circuits in a lower level quantum language such as OpenQASM~\parencite{cross2017} for execution on real machines.
 

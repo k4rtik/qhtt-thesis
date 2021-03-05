@@ -197,7 +197,7 @@ What can we from the programming languages community offer that can help the upc
 
 In classical software development, the use of strong static type systems has been proven to be hugely beneficial in avoiding large classes of bugs before running the programs. Recent mainstream languages such as Rust~\parencite{matsakis2014} even manage to statically prevent memory safety bugs~\parencite{xu2021memorysafety,Jung2017,Jung2021} that have been notorious for being the root causes of a large swath of security vulnerabilities found in production software written in unsafe languages such as C. There is a similar need for innovation in type systems for quantum programming languages.
 
-Recent academic languages such as QWire~\parencite{qwire2017,paykin2018} and Silq~\parencite{silq20} that employ a linear type system to statically enforce the no-cloning theorem of quantum mechanics show promise in the approach of statically preventing bugs in the quantum domain. However, semantic properties about the quantum state, such as whether a qubit is in superposition or whether it is entangled with some other qubit, have not been tackled with the help of types. Furthermore, assertions in the form of pre- and postconditions around small pieces of code have shown the most promise in the quantum domain \parencite{huang2019,qdb2018}. This seems fair: we, as humans, can only hold so much information about the quantum state in our brains, it makes sense to reason about pieces of quantum code in a modular manner.
+Recent academic languages, such as QWire~\parencite{qwire2017,paykin2018} and Silq~\parencite{silq20}, that employ a linear type system to statically enforce the no-cloning theorem of quantum mechanics show promise in the approach of statically preventing bugs in the quantum domain. However, semantic properties about the quantum state, such as whether a qubit is in superposition or whether it is entangled with some other qubit, have not been tackled with the help of types. Furthermore, assertions in the form of pre- and postconditions around small pieces of code have shown the most promise in the quantum domain \parencite{huang2019,qdb2018}. This seems fair: we, as humans, can only hold so much information about the quantum state in our brains, it makes sense to reason about pieces of quantum code in a modular manner.
 
 The most common approach to reason with pre- and postconditions in the classical domain is to use variations of Floyd-Hoare logic that utilize specification triples of the form $\HoareT{P}{c}{Q}$, where $c$ is the program to be executed, $P$ a proposition on the initial state associated with the program (precondition), and $Q$ that on the final state (postcondition). The intuitive reading of such a triple is that if the precondition holds on the program state before executing the program, and the program terminates, then the postcondition must also hold. These triples, along with a set of axioms and inference rules for composing them together, have proven to be quite effective in proving the correctness of classical state-manipulating (imperative) programs over the last several decades. It is no surprise that similar logics have appeared in the quantum computing domain as well \parencite{aqhl2019,floydhoare2012,unruh2019,wpe2016}.
 
@@ -205,7 +205,7 @@ Hoare Type Theory (HTT)~\parencite{nanevski2008} incorporates Hoare-style specif
 
 To achieve this, we replace the classical primitive commands from the original HTT with quantum-specific primitive commands and, taking inspiration from a novel approach by \textcite{unruh2019}, employ ghost variables for reasoning locally about the quantum state in our quantum proposition logic. Further, the use of ghost variables opens the door to an expressive language of propositions in which we can specify predicates about the equality, superposition, and entanglement of qubits.
 
-Our approach takes inspiration from previous foundational work in reasoning about quantum programs such as \citetitle{dhondt2006}~\parencite{dhondt2006} and \citetitle{floydhoare2012}~\parencite{floydhoare2012} in the spirit of \textcite{hoare1969}, \textcite{dijkstra1976}, and \textcite{gries1981} but attempts to bring those reasoning techniques into a type system. The hope is that programmers will be able to encode some semantic properties that they expect of their programs as specifications in their code and that type checking will ensure the correctness of their implementation to those specifications. In the classical setting, Hoare Type Theory accomplishes exactly this goal. The work presented here is an attempt to merge these ideas for the emerging landscape of quantum computing.
+Our approach takes inspiration from previous foundational work in reasoning about quantum programs such as \citetitle{dhondt2006}~\parencite{dhondt2006} and \citetitle{floydhoare2012}~\parencite{floydhoare2012} in the spirit of \textcite{hoare1969}, \textcite{dijkstra1976}, and \textcite{gries1981}, but attempts to bring those reasoning techniques into a type system. The hope is that programmers will be able to encode some semantic properties that they expect of their programs as specifications in their code and that type checking will ensure the correctness of their implementation to those specifications. In the classical setting, Hoare Type Theory accomplishes exactly this goal. The work presented here is an attempt to merge these ideas for the emerging landscape of quantum computing.
 
 We limit our presentation to quantum programs that do not involve iteration. This is not to suggest that iteration is not supported in the system, only that we are yet to study it.
 
@@ -229,7 +229,7 @@ In the classical setting, the most important command is an assignment statement.
     {}
     {\HoareT{P[x \rightarrow e]}{x := e}{P}}
 \end{mathpar}
-where $x$ is an assignable (variable) and $e$ is an expression. The meaning of this fact is that the precondition is obtained from the postcondition $P$ by substituting $e$ for all free occurrences of $x$ in $P$.
+where $x$ is an assignable (variable) and $e$ is a pure expression. The meaning of this axiom is that the precondition is obtained from the postcondition $P$ by substituting $e$ for all free occurrences of $x$ in $P$.
 
 Furthermore, there are rules of inference that are required to derive new theorems from one or more axioms or theorems already proved. We first look at the two \textit{rules of consequence}. In the following notation, propositions above the line are called \textit{premises} and the proposition below the line is called \textit{conclusion.}
 \begin{mathpar}
@@ -242,9 +242,7 @@ Furthermore, there are rules of inference that are required to derive new theore
     {\HoareT{P}{c}{R}}
 \end{mathpar}
 
-The first rule says that if the execution of a program $c$ ensures the truth of postcondition $Q$, then it also ensures the truth of any proposition $R$ logically implied by $Q$. This effectively lets us weaken the postcondition.
-
-In the other direction, we can strengthen the precondition using the second rule, which says that if $Q$ is a precondition of program $c$, then so is any other proposition $P$ that logically implies $Q$.
+The first rule says that if the execution of a program $c$ ensures the truth of postcondition $Q$, then it also ensures the truth of any proposition $R$ logically implied by $Q$. This effectively lets us weaken the postcondition. In the other direction, we can strengthen the precondition using the second rule, which says that if $Q$ is a precondition of program $c$, then so is any other proposition $P$ that logically implies $Q$.
 
 Alternatively, we can provide a single rule combining the two above:
 \begin{mathpar}
@@ -261,7 +259,7 @@ The next rule lets us compose sequential programs together:
 \end{mathpar}
 where the semicolon denotes the sequential composition of programs. The rule of composition states that if the postcondition of the first program is identical to the precondition of the second program under which it satisfies its postcondition $R$, then the composition of the programs will satisfy $R$, given that the first program satisfies its precondition $P$.
 
-These are the most important rules that we will need to understand the formal system presented in this work. We do not present other rules such as that for iteration (which we will not need) and others that can be derived. We also note that since we do not have an iteration construct in our system, we do not run into the issue of reasoning about the termination of programs. In other words, all programs presented in our system will be terminating.
+These are the most important rules that we need to understand the formal system presented in this work. We do not present other rules such as that for iteration (which we will not need) and others that can be derived. We also note that since we do not have an iteration construct in our system, we do not run into the issue of reasoning about the termination of programs. In other words, all programs presented in our system will be terminating.
 
 There is one other crucial concept we need to understand before moving to the next section. Let us motivate it with the help of an example that will also serve the purpose of demonstrating how to use Hoare logic. Suppose we are given the following simple triple:
 \begin{mathpar}
@@ -279,7 +277,7 @@ We note that the style of reasoning using the strongest postconditions that we d
 
 A type theory is a formal system of term rewriting in which each term has a type, notated as $t:A$ for a term $t$ and a type $A$. A type theory that admits dependent types can be called a dependent type theory. Dependent type theories can be viewed as logical systems as popularized by the Curry-Howard correspondence (also known as the principle of propositions-as-types or proofs-as-programs). Under this interpretation, logical quantifiers such as $\forall$ (universal) and $\exists$ (existential) correspond respectively to the dependent function ($\Pi$) and pair ($\Sigma$) types in type theory, for example. It turns out that with the expressive power that comes with dependent types, it becomes possible to encode the behavioral specifications of programs as their types which can be viewed as theorems. Proving a theorem then corresponds to writing a program of that type and checking the proof translates to type checking.
 
-Hoare Type Theory or HTT~\parencite{nanevski2008} is a specific dependent type theory that introduces a type constructor called a \textit{Hoare type} which both isolates effectful programs from the remaining functional core language and lets us specify their behavior. In its most basic form, a Hoare type is written as:
+Hoare Type Theory or HTT~\parencite{nanevski2008} is a specific dependent type theory that introduces a type constructor called a \textit{Hoare type} that both isolates effectful programs from the remaining functional core language and lets us specify their behavior. In its most basic form, a Hoare type is written as:
 \begin{mathpar}
     \Delta.\HoareT{P}{x:A}{Q}
 \end{mathpar}
@@ -291,14 +289,14 @@ Let us consider the example we saw in the previous section written in a typical 
 \indent\indent\lstinline[language=QHaskell]!x := 5 : {x = 1} r:unit {x > 0}!
 \medskip\\where $r$ is the variable that holds the result of the assignment statement. Since an assignment returns nothing, we see the type of output is $unit$ and the pre- and postconditions are the same as before.
 
-In an alternative syntax inspired by the F* programming language~\parencite{fstar} (which takes a hybrid approach between automated and interactive theorem proving and is an evolution of HTT), that we will use in our presentation in this work, we can write the above triple as:\medskip\\
+In an alternative syntax inspired by the F* programming language~\parencite{fstar} (which takes a hybrid approach between automated and interactive theorem proving and is an evolution of HTT), that we use in our presentation in this work, we can write the above triple as:\medskip\\
 \indent\indent\lstinline[language=QHaskell]!x := 5 : ST r:unit (requires {x = 1}) (ensures {x > 0})!
-\medskip\\which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify the state (here assignment) and it is indexed by the result of the computation and its two pre- and postconditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we will christen our quantum state monad as $QST$. However, let us first talk about quantum computation.
+\medskip\\which may be clearer to people familiar with Haskell. Here, $ST$ is the state monad that encapsulates computations that modify the state (here assignment) and it is indexed by the result of the computation and its two pre- and postconditions. The keywords $requires$ and $ensures$ provide extra clarity for people unfamiliar with Hoare logic and explicitly naming the computational effect monad, $ST$, helps ensure multiple effects can be supported simultaneously. Inspired by this notation, we christen our quantum state monad as $QST$. However, let us first talk about quantum computation.
 
 \subsection{Quantum computation}
 It is well known that quantum computation can be described in terms of elementary linear algebra. We assume familiarity with basic notions such as vectors, matrices, vector spaces, inner products, bases, linear independence, etc.
 
-Quantum computation is usually described over a specific vector space called the \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space equipped with an inner product ($\mathbb{C}^n$). In this work, we will often use the term ``state space'' to refer to a finite-dimensional Hilbert space.
+Quantum computation is usually described over a specific vector space called the \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space ($\mathbb{C}^n$) equipped with an inner product. In this work, we often use the term ``state space'' to refer to a finite-dimensional Hilbert space.
 
 The basic unit of information in quantum computation is a qubit that can be represented by a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can write an arbitrary qubit, $\psi$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
 \begin{mathpar}
@@ -378,7 +376,7 @@ We refer the reader to the standard textbook by \textcite{nielsen2010} for more 
 
 \subsection{Quantum Hoare logic with ghost variables}
 
-We will need a predicate logic analogous to Separation Logic~\parencite{reynolds2002} for quantum computation to be able to reason about only the interesting portions of the quantum state while still ensuring the correctness of non-local effects such as entanglement. Various quantum Hoare logics that have been proposed~\parencite{aqhl2019,floydhoare2012,wpe2016} do not support frame rules that provide Separation Logic its power. The closest approach is that taken by \textcite{unruh2019} that allows predicates on the quantum state similar to what we would like in our setting, such as whether certain qubits are in a classical state, or uniform superposition, entangled or separable. In this section, we provide an introduction to Unruh's \citetitle{unruh2019} that we will use in our predicate language.
+We will need a predicate logic analogous to Separation Logic~\parencite{reynolds2002} for quantum computation to be able to reason about only the interesting portions of the quantum state while still ensuring the correctness of non-local effects such as entanglement. Various quantum Hoare logics that have been proposed~\parencite{aqhl2019,floydhoare2012,wpe2016} do not support the frame rules that provide Separation Logic its power. The closest approach is that taken by \textcite{unruh2019} that allows predicates on the quantum state similar to what we would like in our setting, such as whether certain qubits are in a classical state, or uniform superposition, entangled or separable. In this section, we provide an introduction to Unruh's \citetitle{unruh2019} that we use in our predicate language.
 
 Let us make precise some mathematical definitions that we will need in this section.
 
@@ -408,7 +406,7 @@ A core idea behind various quantum logics that comes from \textcite{logicqm36} i
 	\item $X =_q \psi$ specifies that variables $X$ are in the specific state $\psi$. This is a sugar for $X \in_q \mathit{span}\{\psi\}$.
 \end{itemize}
 
-The last predicate, for example, lets us write $(a, b) =_q (\ket{00}+\ket{11})/\sqrt{2}$ to specify that quantum variables (or qubits) $a, b$ are in the first Bell state. It is easy to see that the span of the given state vector, $\mathit{span}\{(\ket{00}+\ket{11})/\sqrt{2}\}$, only includes the set of all of its scalar multiples. Since state vectors need to obey the normalization constraint on their amplitudes, the scalar multiple can only be a complex number of the form $e^{i\theta}$ whose absolute value is always 1. This scalar, called the \textit{global phase factor}, can be ignored in most cases as it does not impact the computation. Thus, we are able to express that certain quantum variables correspond to a specific state vector using the notion of subspaces as propositions.
+The last predicate, for example, lets us write $(a, b) =_q (\ket{00}+\ket{11})/\sqrt{2}$ to specify that quantum variables (or qubits) $a, b$ are in the first Bell state. It is easy to see that the span of the given state vector, $\mathit{span}\{(\ket{00}+\ket{11})/\sqrt{2}\}$, only includes the set of all of its scalar multiples. Since state vectors need to obey the normalization constraint on their amplitudes, the scalar multiple can only be a complex number of the form $e^{i\theta}$ whose absolute value is always 1. This scalar, called the \textit{global phase factor}, can be ignored in most cases as it does not affect the computation. Thus, we are able to express that certain quantum variables correspond to a specific state vector using the notion of subspaces as propositions.
 
 Unruh's logic further utilizes ghost variables (also known as logical variables) that can only appear in propositions to make it easy to state properties about the local state when a variable corresponding to that state may not be in scope. For example, it becomes possible to state that a single qubit input to a program is entangled with another qubit, even though we may never see that qubit locally. This is quite useful when proving the quantum teleportation protocol that we will see later.
 
@@ -417,10 +415,10 @@ Ghost variables in Unruh's set-up are identified by their mnemonic names. He use
 Unruh further defines some syntactic sugar for predicates that include ghosts:
 
 \begin{itemize}
-    \item $\mathbf{uniform}(X)$ which states that $X$ is uniformly distributed. It is sugar for $(X, e) =_q \sum_i  \sqrt{\frac{1}{n}} (\ket{i} \otimes \ket{i})$ where $e$ is a fresh entangled ghost.
+    \item $\mathbf{uniform}(X)$, which states that $X$ is uniformly distributed. It is sugar for $(X, e) =_q \sum_i  \sqrt{\frac{1}{n}} (\ket{i} \otimes \ket{i})$ where $e$ is a fresh entangled ghost.
     Note that it is not possible to express this without using ghosts. As a counterexample, consider a single qubit in $\mathbb{C}^2$ in a uniform distribution of its basis states. The only subspace that includes both $\ket{0}$ and $\ket{1}$ is $\top$.
-	\item $\mathbf{separable}(X)$ which states that $X$ is separable, that is, not entangled with any other system. This is sugar for $X \equiv_q u$ where is $u$ is a fresh unentangled ghost.
-	\item $\mathbf{class}(X)$ which states that $X$ holds a classical state. This is sugar for $X \equiv_{cl} u$ where $u$ is a fresh unentangled ghost.
+	\item $\mathbf{separable}(X)$, which states that $X$ is separable, that is, not entangled with any other system. This is sugar for $X \equiv_q u$ where is $u$ is a fresh unentangled ghost.
+	\item $\mathbf{class}(X)$, which states that $X$ holds a classical state. This is sugar for $X \equiv_{cl} u$ where $u$ is a fresh unentangled ghost.
 \end{itemize}
 
 Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language which includes primitives for initialization, unitary application, and measurement. We take inspiration from his logic and inference rules while designing the specification language of QHTT that we will describe in the next section.
@@ -435,16 +433,16 @@ For reference, his rules for the unitary application and initialization commands
     {\HoareT{P}{\textbf{init}\ x}{P[x \rightarrow e],\ x =_q \ket{0}}}
 \end{mathpar}
 
-The unitary application rule simply produces the strongest postcondition from the precondition $P$ by applying the given operator to the chosen qubit(s) in the subspace $P$. The initialization rule substitutes an entangled ghost $e$ for the existing quantum variable $x$ and then initializes $x$ to $\ket{0}$. As we will see, our unitary application rule is quite similar, but our initialization command has different semantics and hence a different rule.
+The unitary application rule simply produces the strongest postcondition from the precondition $P$ by applying the given operator to the chosen qubit(s) in the subspace $P$. The initialization rule substitutes a fresh entangled ghost $e$ for the existing quantum variable $x$ and then initializes $x$ to $\ket{0}$. As we will see, our unitary application rule is quite similar, but our initialization command has different semantics and hence a different rule.
 
 \section{Quantum Hoare Type Theory}
 To design a Hoare Type Theory for quantum computation, we need to consider some assumptions about the quantum state and its programming model.
 
-Each program is assumed to have access to a pool of countably infinite number of logical qubits that can be initialized on demand and are returned to the pool (discarded) on measurement. With ``logical'' we mean a qubit with no errors; this may be realized using quantum error correction techniques. We define primitive quantum commands for qubit initialization, unitary application, and measurement next.
+Each program is assumed to have access to a pool of countably infinite number of logical qubits that can be initialized on demand and are returned to the pool (discarded) on measurement. With ``logical'' we mean qubits with no errors; such qubits may be realized using quantum error correction techniques. We define primitive quantum commands for qubit initialization, unitary application, and measurement next.
 
 \subsection{Primitive quantum commands}
 
-Here we show our primitive quantum commands that are inspired by similar primitives in \citetitle{qio}~\parencite{qio} along with their Hoare types that encode the specifications for these commands. The predicates that we will see are the same as we saw in the previous section. Each predicate implicitly takes the current local state of the program as an argument.
+Here we show our primitive quantum commands that are inspired by similar primitives in \citetitle{qio}~\parencite{qio} along with the Hoare types that encode the specifications for these commands. The predicates that we see are the same as we saw in the previous section. Each predicate implicitly takes the current local state of the program as an argument.
 
 \subsubsection{Initialization}
 \begin{lstlisting}[language=QHaskell]
@@ -552,7 +550,7 @@ In this section, we show some simple examples along with their specifications as
 
 \subsubsection{Bell states}
 
-Our simplest example involves the creation of a Bell (or EPR) state which is one of the four maximally entangled quantum states of two qubits. Specifically, we will create a circuit (\cref{fig:bell00}) to produce the first Bell state which we will write in the mnemonic notation as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$.
+Our simplest example involves the creation of a Bell (or EPR) state which is one of the four maximally entangled quantum states of two qubits. Specifically, we create a circuit (\cref{fig:bell00}) to produce the first Bell state which we write in the mnemonic notation as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$.
 
 \begin{figure}
     \centering
@@ -662,13 +660,13 @@ A limitation of our system is that we currently do not support propositions abou
 
 We would like to mention that the type system presented in this document is not bidirectional~\parencite{dunfield2019bidirectional} as we forego distinguishing between the introduction and elimination forms of terms while defining our syntax for simplicity. The original presentations of HTT~\parencite{nanevski2008,abspr07} (as do many other type theories) keep that distinction to be able to prove the decidability of type checking and provide a syntax-directed type system to aid implementation. We leave this for future work along with an implementation.
 
-Finally, a note about scalability. There are three important aspects to scalability considerations: the expressive power of the programming language to support writing large quantum programs; compositional reasoning about programs for modularity and reuse of verified code; and lastly but importantly, the manual and/or computational effort required for verification. We have taken the first and second of these into account by intentionally designing the syntax of our language to be close to Quipper~\parencite{quipper2013} which is a proven scalable quantum programming language. In particular, our Deutsch's algorithm example shows that the language supports higher-order programming. We further benefit from building upon HTT that lets us seamlessly compose Hoare types together, hence permitting modular verification as we show in our quantum teleportation example. The third aspect of scalability dealing with the proof burden requires some comparison with existing work.
+Finally, a note about scalability. There are three important aspects to scalability considerations: the expressive power of the programming language to support writing large quantum programs; compositional reasoning about programs for modularity and reuse of verified code; and lastly but importantly, the manual and/or computational effort required for verification. We have taken the first and second of these into account by intentionally designing the syntax of our language to be close to Quipper~\parencite{quipper2013}, which is a proven scalable quantum programming language. In particular, our Deutsch's algorithm example shows that the language supports higher-order programming. We further benefit from building upon HTT that lets us seamlessly compose Hoare types together, hence permitting modular verification as we show in our quantum teleportation example. The third aspect of scalability dealing with the proof burden requires some comparison with existing work.
 
 The full-fledged \citetitle{floydhoare2012}~\parencite{floydhoare2012} or QHL, that builds upon previous work on modeling quantum programs as superoperators~\parencite{Selinger2004} and quantum predicates as Hermitian operators~\parencite{dhondt2006}, suffers from two problems. First, it requires verbose specifications over the complete quantum state because it does not support Separation logic-style frame rules. We avoid this problem by adopting Unruh's variant of QHL that effectively lets us get away with only specifying properties of the local state. Second, the verification process is manual, non-trivial and does not scale to complicated algorithms such as Shor's~\parencite*{shor94}, as a recent implementation effort using an interactive theorem prover shows~\parencite{liu2019}. A fundamental reason behind this second problem is the representation of quantum propositions as Hermitian operators. Indeed, because of this scalability limitation, there is a recent trend in research based on QHL to move away from general Hermitian operators and towards a special class of propositions based on projection operators~\parencite{aqhl2019,Li2020}, which are equivalent to our notion of closed subspaces as propositions. This prior research and our intention to use a hybrid system like F* (letting us rely more on automation) for implementing QHTT suggests that we are in the right direction. A full account of scalability considerations of our approach requires further investigation and along with an implementation, we leave it for future work.
 
 \section{Conclusions and perspectives}
 \label{sec:conclusion}
-In this paper, we described our work on Quantum Hoare Type Theory which is a dependently typed functional programming language with support for quantum computation. We used the novel quantum Hoare logic by \textcite{unruh2019} that helped us compactly specify properties about the quantum state. We further demonstrated the usefulness of our approach using basic examples including bell state preparation and quantum teleportation.
+In this paper, we describe our work on Quantum Hoare Type Theory, which is a dependently typed functional programming language with support for quantum computation. We used the novel quantum Hoare logic by \textcite{unruh2019} that helped us compactly specify properties about the quantum state. We further demonstrate the usefulness of our approach using basic examples including bell state preparation and quantum teleportation.
 
 With future work on code extraction, our approach can become a unified system for programming, specification, and reasoning about quantum computation. There are several other avenues to explore:
 

@@ -20,6 +20,7 @@
 \usepackage{amsthm}
 \usepackage{braket}
 \usepackage{xspace}
+\usepackage{microtype}
 \usepackage[capitalize,nameinlink]{cleveref}
 \crefformat{section}{#2\S#1#3}
 \crefformat{lstlisting}{#2Listing~#1#3}
@@ -592,7 +593,7 @@ Our simplest example involves the creation of a Bell (or EPR) state which is one
     \label{fig:teleport}
 \end{figure}
 
-Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum teleportation~\parencite{bennett93} and the corresponding code is shown in \cref{lst:tele}, which uses the Bell pair generation circuit we defined above. This example also demonstrates how we can bind ghost variables in the Hoare type: $\{\psi: \mathit{vector}\}$ at line 2 states that $\psi$ is a ghost variable of \textit{vector} type. Recall that ghost variables can only be used in logical propositions and are not part of the program. We place the context declaring the ghost variables right after the output type to signal that the ghost variables are only bound in the \textit{requires} and \textit{ensures} constructors that follow next in the Hoare type. We see another predicate $\mathbf{class}(q)$ here that states that the given qubit $q$ is in a classical state, which is what we expect during the quantum teleportation protocol. Or there would be no way to tell from the specification whether the implementation just returned the input qubit as the output.
+Our second example shows how we can compose circuits defined in QHTT together and still maintain correctness. \Cref{fig:teleport} shows the circuit for quantum teleportation~\parencite{bennett93} and \cref{lst:tele} shows the corresponding code, which uses the Bell pair generation circuit we defined above. This example also demonstrates how we can bind ghost variables in the Hoare type: $\{\psi: \mathit{vector}\}$ at line 2 states that $\psi$ is a ghost variable of \textit{vector} type. Recall that ghost variables can only be used in logical propositions and are not part of the program. We place the context declaring the ghost variables right after the output type to signal that the ghost variables are only bound in the \textit{requires} and \textit{ensures} constructors that follow next in the Hoare type. We see another predicate $\mathbf{class}(q)$ here that states that the given qubit $q$ is in a classical state, which is what we expect during the quantum teleportation protocol. Or there would be no way to tell from the specification whether the implementation just returned the input qubit as the output.
 
 \lstinputlisting[language=QHaskell,float,label=lst:tele,lastline=13,caption=Quantum teleportation]{teleport.qh}
 

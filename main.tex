@@ -261,7 +261,7 @@ The next rule lets us compose sequential programs together:
 \end{mathpar}
 where the semicolon denotes the sequential composition of programs. The rule of composition states that if the postcondition of the first program is identical to the precondition of the second program under which it satisfies its postcondition $R$, then the composition of the programs will satisfy $R$, given that the first program satisfies its precondition $P$.
 
-These are the most important rules that we need to understand the formal system presented in this work. We do not present other rules such as that for iteration (which we will not need) and others that can be derived. We also note that since we do not have an iteration construct in our system, we do not run into the issue of reasoning about the termination of programs. In other words, all programs presented in our system will be terminating.
+These are the most important rules that we need to understand the formal system presented in this work. We do not present other rules such as that for iteration (which we will not need) and others that can be derived. We also note that since we do not have an iteration construct in our system, we do not run into the issue of reasoning about the termination of programs. In other words, all programs presented in our system are terminating.
 
 There is one other crucial concept we need to understand before moving to the next section. Let us motivate it with the help of an example that will also serve the purpose of demonstrating how to use Hoare logic. Suppose we are given the following simple triple:
 \begin{mathpar}
@@ -269,7 +269,6 @@ There is one other crucial concept we need to understand before moving to the ne
 \end{mathpar}
 
 This obviously seems correct. But how can we mechanically use the formal system just described to show this triple is valid? The missing piece is the idea of the \textit{strongest postcondition}. Given the assignment statement, we can compute the strongest possible postcondition to be $x = 5$, which implies $x > 0$ that is the given postcondition. Now, we can use the first rule of consequence (weakening the postcondition) to derive the given triple.
-% We will use the notation $sp(c, P)$ for the function that computes the strongest postcondition for a given statement $c$ and precondition $P$.
 
 In Hoare Type Theory that we describe next and its quantum variant later, inferring the strongest postcondition for each statement will be the most important step during the process of type checking.
 
@@ -378,9 +377,9 @@ We refer the reader to the standard textbook by \textcite{nielsen2010} for more 
 
 \subsection{Quantum Hoare logic with ghost variables}
 
-We will need a predicate logic analogous to Separation Logic~\parencite{reynolds2002} for quantum computation to be able to reason about only the interesting portions of the quantum state while still ensuring the correctness of non-local effects such as entanglement. Various quantum Hoare logics that have been proposed~\parencite{aqhl2019,floydhoare2012,wpe2016} do not support the frame rules that provide Separation Logic its power. The closest approach is that taken by \textcite{unruh2019} that allows predicates on the quantum state similar to what we would like in our setting, such as whether certain qubits are in a classical state, or uniform superposition, entangled or separable. In this section, we provide an introduction to Unruh's \citetitle{unruh2019} that we use in our predicate language.
+We need a predicate logic analogous to Separation Logic~\parencite{reynolds2002} for quantum computation to be able to reason about only the interesting portions of the quantum state while still ensuring the correctness of non-local effects such as entanglement. Various quantum Hoare logics that have been proposed~\parencite{aqhl2019,floydhoare2012,wpe2016} do not support the frame rules that provide Separation Logic its power. The closest approach is that taken by \textcite{unruh2019} that allows predicates on the quantum state similar to what we would like in our setting, such as whether certain qubits are in a classical state, or uniform superposition, entangled or separable. In this section, we provide an introduction to Unruh's \citetitle{unruh2019} that we use in our predicate language.
 
-Let us make precise some mathematical definitions that we will need in this section.
+Let us make precise some mathematical definitions that we need in this section.
 
 \begin{definition}[Vector Subspace]
 	A subspace of a vector space is a subset of its vectors which is closed under the operations of vector addition and scalar multiplication.
@@ -423,7 +422,7 @@ Unruh further defines some syntactic sugar for predicates that include ghosts:
 	\item $\mathbf{class}(X)$, which states that $X$ holds a classical state. This is sugar for $X \equiv_{cl} u$ where $u$ is a fresh unentangled ghost.
 \end{itemize}
 
-Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language which includes primitives for initialization, unitary application, and measurement. We take inspiration from his logic and inference rules while designing the specification language of QHTT that we will describe in the next section.
+Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language which includes primitives for initialization, unitary application, and measurement. We take inspiration from his logic and inference rules while designing the specification language of QHTT that we describe in the next section.
 
 For reference, his rules for the unitary application and initialization commands are reproduced here:
 \begin{mathpar}
@@ -532,13 +531,13 @@ We next show the predicates of the specification language from \textcite{unruh20
     \label{table:proplogic}
 \end{table}
 
-Apart from the quantum predicates that we see above, we will also have access to the usual connectives from propositional logic, that we summarize in \cref{table:proplogic}. Some of these connectives have the same symbols as the quantum predicates, but their meaning will always be clear from the context. Additionally, we will use $x =_c v$ to denote that a classical bit $x$ is equal to a value $v$.
+Apart from the quantum predicates that we see above, we also have access to the usual connectives from propositional logic, that we summarize in \cref{table:proplogic}. Some of these connectives have the same symbols as the quantum predicates, but their meaning will always be clear from the context. Additionally, we use $x =_c v$ to denote that a classical bit $x$ is equal to a value $v$.
 
-Throughout the type-checking process, we will need to maintain some environment information in the form of contexts that will track variable bindings and propositions available at a point in the program:
+Throughout the type-checking process, we need to maintain some environment information in the form of contexts that track variable bindings and propositions available at a point in the program:
 
 \nonterms{Ctx}
 
-These contexts will be especially relevant when calling a quantum function as the function may require the binding of the ghost variables in its specification from the environment that it is called in. Similarly, a \textit{merge} of environments may be needed when a function call returns to determine the most precise propositions at the place of return.
+These contexts are especially relevant when calling a quantum function as the function may require the binding of the ghost variables in its specification from the environment that it is called in. Similarly, a \textit{merge} of environments may be needed when a function call returns to determine the most precise propositions at the place of return.
 
 Finally, we show the computations that represent the monadic unit and three kinds of bind operations:
 

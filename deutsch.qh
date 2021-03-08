@@ -16,21 +16,21 @@ deutsch = \f.\U_f.do
             a <- init 0
             -- a =q |0⟩
             b <- init 1
-            -- a =q |0⟩, b =q |1⟩
+            -- a =q |0⟩ ∧ b =q |1⟩
             apply H to a
-            -- (H on q) . (a =q |0⟩, b =q |1⟩)
-            -- ⇒ a =q |+⟩, b =q |1⟩
+            -- (H on q) . (a =q |0⟩ ∧ b =q |1⟩)
+            -- ⇒ a =q |+⟩ ∧ b =q |1⟩
             apply H to b
-            -- a =q |+⟩, b =q |-⟩
+            -- a =q |+⟩ ∧ b =q |-⟩
             (a, b) <- U_f f (a, b)
-            -- (U_f on (a, b)) . (a =q |+⟩, b =q |-⟩)
-            -- ⇒ a =q |+⟩, b =q |-⟩ -- f(0) == f(1)
-            --  ∨ a =q |-⟩, b =q |-⟩ -- f(0) != f(1)
+            -- (U_f on (a, b)) . (a =q |+⟩ ∧ b =q |-⟩)
+            -- ⇒ (a =q |+⟩ ∧ b =q |-⟩) -- f(0) == f(1)
+            --  ∨ (a =q |-⟩ ∧ b =q |-⟩) -- f(0) != f(1)
             apply H to a
-            --   a =q |0⟩, b =q |-⟩ -- f(0) == f(1)
-            -- ∨ a =q |1⟩, b =q |-⟩ -- f(0) != f(1)
+            --   (a =q |0⟩ ∧ b =q |-⟩) -- f(0) == f(1)
+            -- ∨ (a =q |1⟩ ∧ b =q |-⟩) -- f(0) != f(1)
             r <- meas a
             -- class(a) ∧
-            --   r =c 0, b =q |-⟩ -- f(0) == f(1)
-            -- ∨ r =c 1, b =q |-⟩ -- f(0) != f(1)
+            --   (r =c 0 ∧ b =q |-⟩) -- f(0) == f(1)
+            -- ∨ (r =c 1 ∧ b =q |-⟩) -- f(0) != f(1)
             return r

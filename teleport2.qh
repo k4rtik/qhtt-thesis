@@ -1,8 +1,8 @@
 alice : (q, a): (qbit⊗qbit) ->
         QST (x, y): (bit⊗bit)
             {e: qbit, e_x: qbit, e_y: qbit, α: complex, β: complex}
-            (requires {q =q α|0⟩+β|1⟩, (a, e) = |β00⟩})
-            (ensures  {class(q), class(a),
+            (requires {q =q α|0⟩+β|1⟩ ∧ (a, e) = |β00⟩})
+            (ensures  {class(q) ∧ class(a) ∧
                        (e_x, e_y, e) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
                                         + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))})
 alice = \qa.do
@@ -16,16 +16,16 @@ alice = \qa.do
 alice : (q, a): (qbit⊗qbit) ->
         QST (x, y): (bit⊗bit)
             {e: qbit, e_x: qbit, e_y: qbit, α: complex, β: complex}
-            (requires {q =q α|0⟩+β|1⟩, (a, e) = |β00⟩})
-            (ensures  {class(q), class(a),
+            (requires {q =q α|0⟩+β|1⟩ ∧ (a, e) = |β00⟩})
+            (ensures  {class(q) ∧ class(a) ∧
                        (e_x, e_y, e) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
                                         + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))})
 alice = \qa.do
             (q, a) = qa
-            -- q =q α|0⟩+β|1⟩, (a, e) = |β00⟩}
+            -- q =q α|0⟩+β|1⟩ ∧ (a, e) =q |β00⟩}
             -- ⇒ (q, a, e) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|00⟩+|11⟩))
             apply CX to (q, a)
-            -- (CX on (q, a)) . (q =q ψ, (a, e) = |β00⟩)
+            -- (CX on (q, a)) . (q =q ψ ∧ (a, e) =q |β00⟩)
             -- ⇒ (q, a, e) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|10⟩+|01⟩))
             apply H to q
             -- (H on q) . ((q, a, e) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|10⟩+|01⟩)))
@@ -74,7 +74,7 @@ bob = \xyb.do
 teleport : q: qbit -> QST b: qbit
                           {ψ: vector}
                           (requires {q =q ψ})
-                          (ensures  {class(q), b =q ψ})
+                          (ensures  {class(q) ∧ b =q ψ})
 teleport = \q.do
               (a, b) <- bell00 ()
               (x, y) <- alice (q, a)
@@ -84,12 +84,12 @@ teleport = \q.do
 teleport : q: qbit -> QST b: qbit
                           {ψ: vector}
                           (requires {q =q ψ})
-                          (ensures  {class(q), b =q ψ})
+                          (ensures  {class(q) ∧ b =q ψ})
 teleport = \q.do
               -- q =q ψ
               -- ⇒ q =q α|0⟩+β|1⟩
               (a, b) <- bell00 ()
-              -- q =q ψ, (a, b) = |β00⟩
+              -- q =q ψ ∧ (a, b) =q |β00⟩
               -- ⇒ (q, a, b) =q 1/√2(α|0⟩(|00⟩+|11⟩)+β|1⟩(|00⟩+|11⟩))
               (x, y) <- alice (q, a)
               -- class(q) ∧ class(a) ∧
@@ -107,6 +107,6 @@ teleport = \q.do
               -- class(q) ∧ class(a) ∧
               -- (e_x, e_y, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|0⟩+β|1⟩)
               --                  + |10⟩(α|0⟩+β|1⟩) + |11⟩(α|0⟩+β|1⟩))
-              -- ⇒ (e_x, e_y) =q 1/2(|00⟩+|01⟩+|10⟩+|11⟩), b =q α|0⟩+β|1⟩
+              -- ⇒ (e_x, e_y) =q 1/2(|00⟩+|01⟩+|10⟩+|11⟩) ∧ b =q α|0⟩+β|1⟩
               return b
               -- b =q α|0⟩+β|1⟩ ⇒ b =q ψ

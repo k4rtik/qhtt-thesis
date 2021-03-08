@@ -299,9 +299,9 @@ It is well known that quantum computation can be described in terms of elementar
 
 Quantum computation is usually described over a specific vector space called the \textit{Hilbert space}, $\mathcal{H}$, which for our purposes can be thought of as an $n$-dimensional complex vector space ($\mathbb{C}^n$) equipped with an inner product. In this work, we often use the term ``state space'' to refer to a finite-dimensional Hilbert space.
 
-The basic unit of information in quantum computation is a qubit that can be represented by a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can write an arbitrary qubit, $\psi$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
+The basic unit of information in quantum computation is a qubit that can be represented by a unit vector in the two-dimensional complex vector space, $\mathbb{C}^2$. Using Dirac's bra-ket notation, we can describe the state of an arbitrary qubit, $\ket{\psi}$, as a linear combination (or \textit{superposition}) of the computational basis vectors:
 \begin{mathpar}
- \psi = \alpha\ket{0} + \beta\ket{1}
+ \ket{\psi} = \alpha\ket{0} + \beta\ket{1}
 \end{mathpar}
 where
 \begin{mathpar}
@@ -417,7 +417,7 @@ Unruh further defines some syntactic sugar for predicates that include ghosts:
 
 \begin{itemize}
     \item $\mathbf{uniform}(X)$, which states that $X$ is uniformly distributed. It is sugar for $(X, e) =_q \sum_i  \sqrt{\frac{1}{n}} (\ket{i} \otimes \ket{i})$ where $e$ is a fresh entangled ghost.
-    Note that it is not possible to express this without using ghosts. As a counterexample, consider a single qubit in $\mathbb{C}^2$ in a uniform distribution of its basis states. The only subspace that includes both $\ket{0}$ and $\ket{1}$ is $\top$.
+    Note that it is not possible to express this without using ghosts. Consider, for example, a single qubit in $\mathbb{C}^2$ in a uniform distribution of its basis states. The only subspace that includes both $\ket{0}$ and $\ket{1}$ is $\top$.
 	\item $\mathbf{separable}(X)$, which states that $X$ is separable, that is, not entangled with any other system. This is sugar for $X \equiv_q u$ where is $u$ is a fresh unentangled ghost.
 	\item $\mathbf{class}(X)$, which states that $X$ holds a classical state. This is sugar for $X \equiv_{cl} u$ where $u$ is a fresh unentangled ghost.
 \end{itemize}
@@ -447,9 +447,9 @@ Here we show our primitive quantum commands that are inspired by similar primiti
 
 \subsubsection{Initialization}
 \begin{lstlisting}[language=QHaskell]
-init M : (b: bit) -> QST (q: qbit)
-                         (requires {⊤})
-                         (ensures  {q =q |b⟩})
+init : (b: bit) -> QST (q: qbit)
+                       (requires {⊤})
+                       (ensures  {q =q |b⟩})
 \end{lstlisting}
 
 We can initialize one qubit at a time in either of the two computational basis states, $\ket{0}$ or $\ket{1}$. For example, the initialization command \lstinline[language=QHaskell]{x <- init 0} allocates a fresh qubit from the global pool, initializes it to $\ket{0}$ and returns a reference to the qubit and binds it to $x$.
@@ -461,31 +461,24 @@ Note that our initialization command is different from Unruh's work discussed in
 \subsubsection{Measurement}
 
 \begin{lstlisting}[language=QHaskell]
-meas M : (q: qbit) -> QST (x: bit)
-                          {ψ: vector, e_x: qbit}
-                          (requires {(q⊗ℋ[V#q]) =q ψ})
-                          (ensures  {class(q) ∧ (e_x⊗ℋ[V#q]) =q ψ})
+meas : (q: qbit) -> QST (x: bit)
+                        {ψ: vector, e_x: qbit}
+                        (requires {(q⊗ℋ[V#q]) =q ψ})
+                        (ensures  {class(q) ∧ (e_x⊗ℋ[V#q]) =q ψ})
 \end{lstlisting}
 
 We assume all measurements to be in the computational basis. The measurement command, in effect, returns the qubit to the pool after returning the result of the measurement as a bit. We maintain the distribution of the outcome by introducing an entangled ghost variable that replaces the measured qubit in the global state. This will become clear when we work through some examples later in this document. We continue to use the state space partition notation ($q\otimes\mathcal{H}[V\backslash q]$) shown in \cref{itm:partnot} to refer to only the local state under consideration. Note that this notation should not be confused to mean that $q$ is separable from the rest of the system (it may or may not be).
 
 \subsubsection{Unitary application}
-It is helpful to think of our unitary application command in terms of two variants: one that takes a single-qubit gate and applies to a single qubit and another that takes a two-qubit gate and applies it to a pair of qubits (we currently only support one- or two-qubit gates).
+It is helpful to think of our unitary application command in terms of two variants: one that takes a single-qubit gate and applies to a single qubit and another that takes a two-qubit gate and applies it to a pair of qubits (we currently only support one- or two-qubit gates). Since it modifies the state in place, the unitary application command returns the trivial unit output. The pre- and postconditions for this command are similar for either of the two cases, for convenience we only show the rule for two-qubit gate application:
 
 \begin{lstlisting}[language=QHaskell]
-apply_1 G_1 to M_1 : unitary -> qbit -> QST unit
-apply_2 G_2 to M_2 : unitary -> (qbit⊗qbit) -> QST unit
-\end{lstlisting}
-
-Since it modifies the state in place, the unitary application command returns the trivial unit output. The pre- and postconditions for this command are similar for either of the above two cases, for convenience we only show the rule for two-qubit gate application:
-
-\begin{lstlisting}[language=QHaskell]
-apply G to M : (g: unitary) ->
-               qs: (qbit⊗qbit) ->
-               QST unit
-                   {P: prop}
-                   (requires {P})
-                   (ensures  {(g on qs) . P})
+apply g to qs : (g: unitary) ->
+                qs: (qbit⊗qbit) ->
+                QST unit
+                    {P: prop}
+                    (requires {P})
+                    (ensures  {(g on qs) . P})
 \end{lstlisting}
 
 This rule is the same as Unruh's rule for unitary application command.

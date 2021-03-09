@@ -257,7 +257,7 @@ defn
     -------------- :: AscriptionE
     G |- M:A : A
 
-    G |- E : {P*top}x:A{P >> Q}
+    G |- E : QST (x:A) (requires {P*top}) (ensures {P >> Q})
     --------------------------------::Do
     G |- do E : QST (x:A) (requires {P}) (ensures {Q})
 
@@ -265,13 +265,13 @@ defn
   G |= P :: :: Prove :: Pr_ {{ com Proof obligation $[[P]]$ }} by
 
 defn
-  G |- E : { P } x : A { Q } :: :: Comp :: comp_ {{ com In context $[[G]] and with precondition [[P]], computation $[[E]]$ returns a value of type $[[A]]$ with postcondition $[[Q]]$ }} by
+  G |- E : QST ( x : A ) ( requires { P } ) ( ensures { Q } ) :: :: Comp :: comp_ by
 
-    G |- E : {P}x:A{Q}
+    G |- E : QST (x:A) (requires {P}) (ensures {Q})
     G, x:A, Q |= R
     --------------------::Conseq
-    G |- E : {P} x:A {R}
+    G |- E : QST (x:A) (requires {P}) (ensures {R})
 
     G |- M : A
     ----------------------------------::Return
-    G |- return M : {P} x:A {P /\ x=M}
+    G |- return M : QST (x:A) (requires {P}) (ensures {P /\ x=M})

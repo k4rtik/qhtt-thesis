@@ -720,11 +720,11 @@ of the author and do not necessarily reflect the views of the National Science F
 
 \subsection{Well-formed propositions}
 
-\drules[prop]{$\Gamma \vdash P : prop$}{valid propositions}{TopI,BotI,ConjI,DisjI,UnI}
+\drules[prop]{$\Gamma \vdash P : \textbf{prop}$}{valid propositions}{TopI,BotI,ConjI,DisjI,UnI}
 
 \subsection{Computation rules}
 
-\drules[comp]{$\Gamma \vdash E : \HoareT{P}{x:A}{Q}$}{valid computations}{Conseq,Return}
+\drules[comp]{$\Gamma \vdash E : \textbf{QST} (x:A) (\textbf{requires} \{P\}) (\textbf{ensures} \{Q\})$}{valid computations}{Conseq,Return}
 
 % TODO:
 

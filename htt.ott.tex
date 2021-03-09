@@ -377,7 +377,7 @@
 
 
 \newcommand{\ottdruletmXXDo}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{*}  \top  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{P}  \ottsym{>>}  \ottnt{Q}  \ottsym{\}}}%
+\ottpremise{\Gamma  \vdash  \ottnt{E}  \ottsym{:} \, \ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{*}  \top  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{P}  \ottsym{>>}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}%
 }{
 \Gamma  \vdash  \ottkw{do} \, \ottnt{E}  \ottsym{:}  \ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{%
 {\ottdrulename{tm\_Do}}{}%
@@ -406,10 +406,10 @@
 
 %% defn Comp
 \newcommand{\ottdrulecompXXConseq}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}%
+\ottpremise{\Gamma  \vdash  \ottnt{E}  \ottsym{:} \, \ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}%
 \ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{,}  \ottnt{Q}  \models  \ottnt{R}}%
 }{
-\Gamma  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{R}  \ottsym{\}}}{%
+\Gamma  \vdash  \ottnt{E}  \ottsym{:} \, \ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{R}  \ottsym{\}}  \ottsym{)}}{%
 {\ottdrulename{comp\_Conseq}}{}%
 }}
 
@@ -417,11 +417,11 @@
 \newcommand{\ottdrulecompXXReturn}[1]{\ottdrule[#1]{%
 \ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
 }{
-\Gamma  \vdash  \ottkw{return} \, \ottnt{M}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{P}  \wedge  \ottmv{x}  \ottsym{=}  \ottnt{M}  \ottsym{\}}}{%
+\Gamma  \vdash  \ottkw{return} \, \ottnt{M}  \ottsym{:} \, \ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{P}  \wedge  \ottmv{x}  \ottsym{=}  \ottnt{M}  \ottsym{\}}  \ottsym{)}}{%
 {\ottdrulename{comp\_Return}}{}%
 }}
 
-\newcommand{\ottdefnComp}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}$}{\ottcom{In context $\Gamma and with precondition \ottnt{P}, computation $\ottnt{E}$ returns a value of type $\ottnt{A}$ with postcondition $\ottnt{Q}$}}
+\newcommand{\ottdefnComp}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{E}  \ottsym{:} \, \ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}$}{}
 \ottusedrule{\ottdrulecompXXConseq{}}
 \ottusedrule{\ottdrulecompXXReturn{}}
 \end{ottdefnblock}}

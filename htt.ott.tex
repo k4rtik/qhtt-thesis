@@ -43,18 +43,15 @@
 \ottprodline{|}{\ottkw{complex}}{}{}{}{\ottcom{Complex scalars}}\ottprodnewline
 \ottprodline{|}{\ottkw{unitary}}{}{}{}{\ottcom{Type of unitaries}}\ottprodnewline
 \ottprodline{|}{\ottkw{prop}}{}{}{}{\ottcom{Type of propositions}}\ottprodnewline
-\ottprodline{|}{\Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{}{}{}{\ottcom{Dependent function}}\ottprodnewline
-\ottprodline{|}{\ottnt{A}  \rightarrow  \ottnt{B}}{}{}{}{\ottcom{Sugar for Pi type}}\ottprodnewline
+\ottprodline{|}{\ottmv{x}  \ottsym{:}  \ottnt{A}  \rightarrow  \ottnt{B}}{}{}{}{\ottcom{Dependent function}}\ottprodnewline
 \ottprodline{|}{\ottnt{A} \, \otimes \, \ottnt{B}}{}{}{}{\ottcom{Pair}}\ottprodnewline
-\ottprodline{|}{\ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{}{}{}{\ottcom{Hoare Type}}\ottprodnewline
-\ottprodline{|}{\ottkw{QST} \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{}{}{}{\ottcom{Sugar for Q. Hoare Type}}}
+\ottprodline{|}{\ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{}{}{}{\ottcom{Quantum Hoare Type}}}
 
 \newcommand{\ottProp}{
 \ottrulehead{\ottnt{Prop}  ,\ \ottnt{P}  ,\ \ottnt{Q}  ,\ \ottnt{R}}{::=}{\ottcom{Propositions (\textbf{prop})}}\ottprodnewline
 \ottfirstprodline{|}{\top}{}{}{}{\ottcom{Complete state space, trivial}}\ottprodnewline
 \ottprodline{|}{\bot}{}{}{}{\ottcom{\{0\}, trivial}}\ottprodnewline
 \ottprodline{|}{\ottnt{P}  \wedge  \ottnt{Q}}{}{}{}{\ottcom{Intersection of subspaces. P, Q}}\ottprodnewline
-\ottprodline{|}{\ottnt{P}  \ottsym{,}  \ottnt{Q}} {\textsf{S}}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottnt{P}  \vee  \ottnt{Q}}{}{}{}{\ottcom{Sum of subspaces}}\ottprodnewline
 \ottprodline{|}{\ottnt{U} \, \cdot \, \ottnt{P}}{}{}{}{\ottcom{Operator}}\ottprodnewline
 \ottprodline{|}{\ottmv{x} \, \in_q \, \ottmv{S}}{}{}{}{\ottcom{x lies in subspace S}}\ottprodnewline
@@ -186,7 +183,7 @@
 \ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
 \ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{B} \, \ottkw{type}}%
 }{
-\Gamma  \vdash  \Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B} \, \ottkw{type}}{%
+\Gamma  \vdash  \ottmv{x}  \ottsym{:}  \ottnt{A}  \rightarrow  \ottnt{B} \, \ottkw{type}}{%
 {\ottdrulename{ty\_Pi}}{}%
 }}
 
@@ -205,7 +202,7 @@
 \ottpremise{\Gamma  \vdash  \ottnt{P}  \ottsym{:} \, \ottkw{prop}}%
 \ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{Q}  \ottsym{:} \, \ottkw{prop}}%
 }{
-\Gamma  \vdash  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}} \, \ottkw{type}}{%
+\Gamma  \vdash  \ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)} \, \ottkw{type}}{%
 {\ottdrulename{ty\_Hoare}}{}%
 }}
 
@@ -322,7 +319,7 @@
 \newcommand{\ottdruletmXXPiI}[1]{\ottdrule[#1]{%
 \ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{B}}%
 }{
-\Gamma  \vdash  \lambda  \ottmv{x}  \ottsym{.}  \ottnt{M}  \ottsym{:}  \Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}{%
+\Gamma  \vdash  \lambda  \ottmv{x}  \ottsym{.}  \ottnt{M}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \rightarrow  \ottnt{B}}{%
 {\ottdrulename{tm\_PiI}}{}%
 }}
 
@@ -346,7 +343,7 @@
 
 
 \newcommand{\ottdruletmXXPiE}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \Pi \, \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottnt{B}}%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \rightarrow  \ottnt{B}}%
 \ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
 }{
 \Gamma  \vdash  \ottnt{K} \, \ottnt{M}  \ottsym{:}  \ottnt{B}  \ottsym{[}  \ottnt{M}  \ottsym{/}  \ottmv{x}  \ottsym{]}}{%
@@ -382,7 +379,7 @@
 \newcommand{\ottdruletmXXDo}[1]{\ottdrule[#1]{%
 \ottpremise{\Gamma  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{*}  \top  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{P}  \ottsym{>>}  \ottnt{Q}  \ottsym{\}}}%
 }{
-\Gamma  \vdash  \ottkw{do} \, \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{%
+\Gamma  \vdash  \ottkw{do} \, \ottnt{E}  \ottsym{:}  \ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{%
 {\ottdrulename{tm\_Do}}{}%
 }}
 

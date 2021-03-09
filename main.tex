@@ -192,7 +192,7 @@
 
 \lstlistoflistings
 
-\setlength{\parskip}{1em}
+\setlength{\parskip}{1em plus 2pt}
 
 \section{Introduction}
 
@@ -477,7 +477,6 @@ meas : (q: qbit) -> QST (x: bit)
 We assume all measurements to be in the computational basis. The measurement command, in effect, returns the qubit to the pool after returning the result of the measurement as a bit. We maintain the distribution of the outcome by introducing an entangled ghost variable that replaces the measured qubit in the global state. This will become clear when we work through some examples later in this document. We continue to use the state space partition notation ($q\otimes\mathcal{H}[V\backslash q]$) shown in \cref{itm:partnot} to refer to only the local state under consideration. Note that this notation should not be confused to mean that $q$ is separable from the rest of the system (it may or may not be).
 
 \subsubsection{Unitary application}
-It is helpful to think of our unitary application command in terms of two variants: one that takes a single-qubit gate and applies to a single qubit and another that takes a two-qubit gate and applies it to a pair of qubits (we currently only support one- or two-qubit gates). Since it modifies the state in place, the unitary application command returns the trivial unit output. The pre- and postconditions for this command are similar for either of the two cases, for convenience we only show the rule for two-qubit gate application:
 
 \begin{lstlisting}[language=QHaskell]
 apply g to qs : (g: unitary) ->
@@ -488,7 +487,7 @@ apply g to qs : (g: unitary) ->
                     (ensures  {(g on qs) . P})
 \end{lstlisting}
 
-This rule is the same as Unruh's rule for unitary application command.
+For convenience, we only show the rule for two-qubit gate application but we support both one- and two-qubit gates. Since it modifies the state in place, the unitary application command returns the trivial unit output. The pre- and postconditions are the same as Unruh's rule for unitary application command.
 
 These primitive quantum commands and a specification language based on the predicates proposed by \textcite{unruh2019} make the core of what is different in our Quantum Hoare Type Theory from the original formulation of HTT.
 

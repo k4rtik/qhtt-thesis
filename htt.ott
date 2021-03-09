@@ -19,19 +19,16 @@ Typ, A, B, C :: Ty ::= {{ com Types }}
   | complex            ::   :: Complex      {{ com Complex scalars }}
   | unitary            ::   :: Unitary      {{ com Type of unitaries }}
   | prop               ::   :: Prop         {{ com Type of propositions }}
-  | Pi x : A . B       ::   :: DepProd      {{ com Dependent function }}
-  | A -> B             ::   :: Arrow        {{ com Sugar for Pi type }}
+  | x : A -> B         ::   :: Arrow        {{ com Dependent function }}
   | A times B          ::   :: Pair         {{ com Pair }}
-  | { P } x : A { Q }  ::   :: Hoare        {{ com Hoare Type }}
-  | QST x : A ( requires { P } )
-    ( ensures { Q } )  ::   :: QHoare        {{ com Sugar for Q. Hoare Type }}
+  | QST ( x : A ) ( requires { P } )
+    ( ensures { Q } )  ::   :: QHoare        {{ com Quantum Hoare Type }}
   | A [ M / x ]        :: M :: Substitution
 
 Prop, P, Q, R :: '' ::= {{ com Propositions (\textbf{prop}) }}
   | top                   ::  :: Top          {{ com Complete state space, trivial }}
   | bot                   ::  :: Bottom       {{ com \{0\}, trivial }}
   | P /\ Q                ::  :: Conjunction  {{ com Intersection of subspaces. P, Q }}
-  | P , Q                 :: S:: ConjSugar
   | P \/ Q                ::  :: Disjunction  {{ com Sum of subspaces }}
   | U o P                 ::  :: Unitary      {{ com Operator }}
   | x inq S               ::  :: InSubspace   {{ com x lies in subspace S }}
@@ -52,8 +49,6 @@ Tm, K, L, M, N :: Tm ::= {{ com Terms }}
   | 0           ::  :: Zero           {{ com 0 value of type bit }}
   | 1           ::  :: One            {{ com 1 value of type bit }}
   | psi         ::  :: Psi            {{ com Metavariable for quantum state vector }}
-  % | alpha       ::  :: Alpha          {{ com Metavariable for complex amplitude }}
-  % | beta        ::  :: Beta           {{ com Metavariable for complex amplitude }}
   | \ x . M     ::  :: Lam            {{ com Abstraction }}
   | K N         ::  :: App            {{ com Application }}
   | ( M , N )   ::  :: Pair           {{ com Pair }}
@@ -162,7 +157,7 @@ defn
     G |- A type
     G, x:A |- B type
     ------------------ :: Pi
-    G |- Pi x:A.B type
+    G |- x:A -> B type
 
     G |- A type
     G |- B type
@@ -173,7 +168,7 @@ defn
     G |- P : prop
     G, x:A |- Q : prop
     ------------------- :: Hoare
-    G |- {P}x:A{Q} type
+    G |- QST (x:A) (requires {P}) (ensures {Q}) type
 
 defn
   A = B :: :: TyEq :: tyeq_ {{ com $[[A]]$ and $[[B]]$ are equal as types }} by
@@ -228,7 +223,7 @@ defn
 
     G, x:A |- M : B
     ---------------------- :: PiI
-    G |- \x.M : Pi x:A.B
+    G |- \x.M : x:A -> B
 
     G |- M : A
     G |- N : B
@@ -240,7 +235,7 @@ defn
     ---------- :: ElimIntro
     G |- K : B
 
-    G |- K : Pi x:A.B
+    G |- K : x:A -> B
     G |- M : A
     ------------------- :: PiE
     G |- K M : B[M/x]
@@ -264,7 +259,7 @@ defn
 
     G |- E : {P*top}x:A{P >> Q}
     --------------------------------::Do
-    G |- do E : {P} x:A {Q}
+    G |- do E : QST (x:A) (requires {P}) (ensures {Q})
 
 defn
   G |= P :: :: Prove :: Pr_ {{ com Proof obligation $[[P]]$ }} by

@@ -320,7 +320,44 @@ where
 1
 \end{bmatrix}
 \end{mathpar}
-and the two constants $\alpha, \beta$ are complex amplitudes that obey the \textit{normalization constraint}, $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured, the probability of the qubit being in state 0 is $|\alpha|^2$ and that for state 1 is $|\beta|^2$. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$. Computation is performed by the application of unitary quantum gates, such as the Hadamard (\textbf{H}) gate or the controlled-NOT (\textbf{CX}) gate, that can be represented as square matrices. Mathematically, a gate application is equivalent to multiplying the matrix representing the gate with the state vector of the qubit(s). \cref{table:gates} shows some commonly used gates along with their circuit notation and matrix representations.
+and the two constants $\alpha, \beta$ are complex amplitudes that obey the \textit{normalization constraint}, $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured in the computational basis, the probability of the qubit being in the classical state 0 is $|\alpha|^2$ and that for state 1 is $|\beta|^2$. Measurement is how we extract information from a quantum system but its side effect is that it collapses the quantum state. For example, if the classical bit obtained was 1, the posterior state becomes $\ket{1}$ and we lose the superposition state. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$.\footnote{More specifically, a Kronecker product which is a special case of the tensor product. The $\otimes$ symbol can often be omitted as shown in the example that follows.} For example, if we take the tensor product of the basis states above, we get:
+\begin{mathpar}
+\ket{0}\otimes\ket{1} = \ket{0}\ket{1} = \ket{01} = \begin{bmatrix}
+    1 \\
+    0
+    \end{bmatrix} \otimes \begin{bmatrix}
+        0 \\
+        1
+        \end{bmatrix} = \begin{bmatrix}
+            1 \begin{bmatrix}
+                0 \\
+                1
+                \end{bmatrix} \\
+            0 \begin{bmatrix}
+                0 \\
+                1
+                \end{bmatrix}
+            \end{bmatrix} = \begin{bmatrix}
+                0 \\
+                1 \\
+                0 \\
+                0
+                \end{bmatrix}
+\end{mathpar}
+
+Computation is performed by the application of unitary quantum gates, such as the NOT gate (\textbf{X}), the Hadamard (\textbf{H}) gate or the controlled-NOT (\textbf{CX}) gate, that can be represented as square matrices. Mathematically, a gate application is equivalent to multiplying the matrix representing the gate with the state vector of the qubit(s). \cref{table:gates} shows some commonly used gates along with their circuit notation and matrix representations. For example:
+\begin{mathpar}
+X\ket{0} = \begin{bmatrix}
+    0 & 1\\
+    1 & 0
+    \end{bmatrix} \begin{bmatrix}
+        1 \\
+        0
+        \end{bmatrix} = \begin{bmatrix}
+            0 \\
+            1
+            \end{bmatrix}
+\end{mathpar}
 
 \begin{table}
 \centering

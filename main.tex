@@ -459,7 +459,7 @@ Ghost variables in Unruh's set-up are identified by their mnemonic names. He use
 Unruh further defines some syntactic sugar for predicates that include ghosts:
 
 \begin{itemize}
-    \item $\mathbf{uniform}(X)$, which states that $X$ is uniformly distributed. It is sugar for $(X, e) =_q \sum_i  \sqrt{\frac{1}{n}} (\ket{i} \otimes \ket{i})$ where $e$ is a fresh entangled ghost.
+    \item $\mathbf{uniform}(X)$, which states that $X$ is uniformly distributed. It is sugar for $(X, e) =_q \sum_{i=0}^{n-1}  \sqrt{\frac{1}{n}} (\ket{i} \otimes \ket{i})$ where $e$ is a fresh entangled ghost.
     Note that it is not possible to express this without using ghosts. Consider, for example, a single qubit in $\mathbb{C}^2$ in a uniform distribution of its basis states. The only subspace that includes both $\ket{0}$ and $\ket{1}$ is $\top$.
 	\item $\mathbf{separable}(X)$, which states that $X$ is separable, that is, not entangled with any other system. This is sugar for $X \equiv_q u$ where is $u$ is a fresh unentangled ghost.
 	\item $\mathbf{class}(X)$, which states that $X$ holds a classical state. This is sugar for $X \equiv_{cl} u$ where $u$ is a fresh unentangled ghost.

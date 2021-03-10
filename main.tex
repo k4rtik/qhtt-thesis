@@ -533,7 +533,7 @@ Now, we are in a good position to talk about the raw syntax of QHTT. The followi
 
 \nonterms{Typ}
 
-The base type $bit$ inhabits the values 0 and 1 but the type $qbit$ is just a reference to a logical qubit. The state is represented using the type $vector$ that may further need the type $complex$ to represent arbitrary quantum states. These last two types are only included for use in the specification language and are not to be used by the programming syntax. The type $unitary$ includes all basic one- and two-qubit gates (such as the Pauli gates and CX) that we include in the language. The propositions formed using the specification language are given the $prop$ type. The $\Pi$ type is the dependent function constructor that is heavily used in the disguise of its sugared form of the arrow type. $\otimes$ is the pair type constructor. Lastly, we see the Hoare type and its sugared variant.
+The base type $bit$ inhabits the values 0 and 1 but the type $qbit$ is just a reference to a logical qubit. The state is represented using the type $vector$ that may further need the type $complex$ to represent arbitrary quantum states. These last two types are only included for use in the specification language and are not to be used by the programming syntax. The type $unitary$ includes all basic one- and two-qubit gates (such as the Pauli gates and CX) that we include in the language. The propositions formed using the specification language are given the $prop$ type. $\otimes$ is the pair type constructor. We use the F*-inspired syntax for both the dependent function and the Quantum Hoare type.
 
 Next, we show the grammar for the terms of the language that include values for the base types and introduction and elimination forms for the type constructors:
 
@@ -608,7 +608,7 @@ Our simplest example involves the creation of a Bell (or EPR) state which is one
 
 \lstinputlisting[language=QHaskell,float,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
 
-\cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 10) allocates a new qubit, initializes it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. The strongest postcondition for a unitary application simply involves applying the operator to the subspace specified by the precondition (on lines 9 and 13). Note that we use the $\Leftrightarrow$ symbol in these annotations for a simplification step.
+\cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 11) allocates a new qubit, initializes it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. Each occurrence of initialization adds its strongest postcondition as shown in the form of comments. At line 8, the Hadamard gate application on $\ket{0}$ results in the equal superposition state, $\ket{+} = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$. The strongest postcondition for a unitary application simply involves applying the operator to the subspace specified by the precondition (on lines 9 and 14). Note that we use the $\Leftrightarrow$ symbol in these annotations for a simplification step. Finally, the return operation lifts the return value to the Quantum Hoare type along with its strongest postcondition (which is trivially the same as the precondition).
 
 \subsubsection{Quantum teleportation}
 \label{sec:teleport}

@@ -16,9 +16,11 @@ bell00 = \x.do
             a <- init 0
             -- a =q |0⟩
             apply H to a
-            -- (H on a) . (a =q |0⟩) ⇒ a =q |+⟩
+            -- (H on a) . (a =q |0⟩)
+            -- ⇒ a =q |+⟩
             b <- init 0
             -- a =q |+⟩ ∧ b =q |0⟩
             apply CX to (a, b)
-            -- (CX on (a, b)).(a =q |+⟩ ∧ b =q |0⟩) ⇒ (a,b) =q |β00⟩
+            -- (CX on (a, b)).(a =q |+⟩ ∧ b =q |0⟩)
+            -- ⇒ (a,b) =q |β00⟩
             return (a, b)

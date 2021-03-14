@@ -79,8 +79,7 @@
       \providecommand{\publicationstatus}{Submitted to:\\
       \event}
     \else\ifpreliminary
-      \providecommand{\publicationstatus}{Preliminary Report. Final version to appear in:\\
-      \event}
+      \providecommand{\publicationstatus}{\event}
     \else
       \providecommand{\publicationstatus}{To appear in EPTCS.}
     \fi\fi\fi

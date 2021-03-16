@@ -14,7 +14,7 @@
 \Keywords{General programming languages\sep Quantum computation\sep Functional languages\sep Program specifications\sep Pre- and post-conditions\sep Type theory\sep Hoare logic}
 \Subject{Computer Science Master's paper}
 \end{filecontents*}
-\documentclass[preliminary,creativecommons]{eptcs}
+\documentclass[adraft,creativecommons]{eptcs}
 \providecommand{\event}{arXiv: \href{https://arxiv.org/abs/2012.02154}{2012.02154}}
 \usepackage[a-1b]{pdfx}
 \usepackage[utf8]{inputenc}
@@ -323,7 +323,7 @@ where
 1
 \end{bmatrix}
 \end{mathpar}
-and the two constants $\alpha, \beta$ are complex amplitudes that obey the \textit{normalization constraint}, $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured in the computational basis, the probability of the qubit being in the classical state 0 is $|\alpha|^2$ and that for state 1 is $|\beta|^2$. Measurement is how we extract information from a quantum system but its side effect is that it collapses the quantum state. For example, if the classical bit obtained was 1, the posterior state becomes $\ket{1}$ and we lose the superposition state. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$.\footnote{More specifically, a Kronecker product which is a special case of the tensor product. The $\otimes$ symbol can often be omitted as shown in the example that follows.} For example, if we take the tensor product of the basis states above, we get:
+and the two constants $\alpha, \beta$ are complex amplitudes that obey the \textit{normalization constraint}, $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured in the computational basis, the probability of the qubit being in the classical state 0 is $|\alpha|^2$ and that for state 1 is $|\beta|^2$. Measurement is how we extract information from a quantum system, but its side effect is that it collapses the quantum state. For example, if the classical bit obtained was 1, the posterior state becomes $\ket{1}$ and we lose the superposition state. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$.\footnote{More specifically, a Kronecker product, which is a special case of the tensor product. The $\otimes$ symbol can often be omitted as shown in the example that follows.} For example, if we take the tensor product of the basis states above, we get:
 \begin{mathpar}
 \ket{0}\otimes\ket{1} = \ket{0}\ket{1} = \ket{01} = \begin{bmatrix}
     1 \\
@@ -348,7 +348,7 @@ and the two constants $\alpha, \beta$ are complex amplitudes that obey the \text
                 \end{bmatrix}
 \end{mathpar}
 
-Computation is performed by the application of unitary quantum gates, such as the NOT gate (\textbf{X}), the Hadamard (\textbf{H}) gate or the controlled-NOT (\textbf{CX}) gate, that can be represented as square matrices. Mathematically, a gate application is equivalent to multiplying the matrix representing the gate with the state vector of the qubit(s). \cref{table:gates} shows some commonly used gates along with their circuit notation and matrix representations. For example:
+Computation is performed by the application of unitary quantum gates, such as the NOT gate (\textbf{X}), the Hadamard (\textbf{H}) gate, or the controlled-NOT (\textbf{CX}) gate, that can be represented as square matrices. Mathematically, a gate application is equivalent to multiplying the matrix representing the gate with the state vector of the qubit(s). \cref{table:gates} shows some commonly used gates along with their circuit notation and matrix representations. For example:
 \begin{mathpar}
 X\ket{0} = \begin{bmatrix}
     0 & 1\\
@@ -428,7 +428,7 @@ We need a predicate logic analogous to Separation Logic~\parencite{reynolds2002}
 Let us make precise some mathematical definitions that we need in this section.
 
 \begin{definition}[Vector Subspace]
-	A subspace of a vector space is a subset of its vectors which is closed under the operations of vector addition and scalar multiplication.
+	A subspace of a vector space is a subset of its vectors that is closed under the operations of vector addition and scalar multiplication.
 \end{definition}
 
 \begin{remark}
@@ -457,7 +457,7 @@ The last predicate, for example, lets us write $(a, b) =_q (\ket{00}+\ket{11})/\
 
 Unruh's logic further utilizes ghost variables (also known as logical variables) that can only appear in propositions to make it easy to state properties about the local state when a variable corresponding to that state may not be in scope. For example, it becomes possible to state that a single qubit input to a program is entangled with another qubit, even though we may never see that qubit locally. This is quite useful when proving the quantum teleportation protocol that we will see later.
 
-Ghost variables in Unruh's set-up are identified by their mnemonic names. He uses $g, G$ for a ghost variable and a list of ghost variables respectively, and similarly $e, E$ for entangled ghosts and $u, U$ for unentangled ghosts. For example, if we would like to use the qubit $b$ from the above qubit pair individually, we can state it is in the first Bell state as $(e, b) =_q (\ket{00}+\ket{11})/\sqrt{2}$, where $e$ is a fresh entangled ghost variable. Intuitively, a ghost variable can assume whatever state is needed to make a given proposition true.
+Ghost variables in Unruh's set-up are identified by their mnemonic names. He uses $g$ \& $G$ for a ghost variable and a list of ghost variables respectively, and similarly $e$ \& $E$ for entangled ghosts and $u$ \& $U$ for unentangled ghosts. For example, if we would like to use the qubit $b$ from the above qubit pair individually, we can state it is in the first Bell state as $(e, b) =_q (\ket{00}+\ket{11})/\sqrt{2}$, where $e$ is a fresh entangled ghost variable. Intuitively, a ghost variable can assume whatever state is needed to make a given proposition true.
 
 Unruh further defines some syntactic sugar for predicates that include ghosts:
 
@@ -468,7 +468,7 @@ Unruh further defines some syntactic sugar for predicates that include ghosts:
 	\item $\mathbf{class}(X)$, which states that $X$ holds a classical state. This is sugar for $X \equiv_{cl} u$ where $u$ is a fresh unentangled ghost.
 \end{itemize}
 
-Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language which includes primitives for initialization, unitary application, and measurement. We take inspiration from his logic and inference rules while designing the specification language of QHTT that we describe in the next section.
+Unruh demonstrates the usefulness of these predicates over a simple imperative quantum language that includes primitives for initialization, unitary application, and measurement. We take inspiration from his logic and inference rules while designing the specification language of QHTT that we describe in the next section.
 
 For reference, his rules for the unitary application and initialization commands are reproduced here:
 \begin{mathpar}
@@ -518,12 +518,12 @@ We assume all measurements to be in the computational basis. The measurement com
 \subsubsection{Unitary application}
 
 \begin{lstlisting}[language=QHaskell]
-apply g to qs : (g: unitary) ->
-                qs: (qbit⊗qbit) ->
-                QST unit
-                    {P: prop}
-                    (requires {P})
-                    (ensures  {(g on qs) . P})
+apply _ to _ : (g: unitary) ->
+               qs: (qbit⊗qbit) ->
+               QST unit
+                   {P: prop}
+                   (requires {P})
+                   (ensures  {(g on qs) . P})
 \end{lstlisting}
 
 For convenience, we only show the rule for two-qubit gate application but we support both one- and two-qubit gates. Since it modifies the state in place, the unitary application command returns the trivial unit output. The pre- and postconditions are the same as Unruh's rule for unitary application command.

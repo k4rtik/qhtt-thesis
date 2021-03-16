@@ -589,7 +589,7 @@ In this section, we show some simple examples along with their specifications as
 
 \subsubsection{Bell states}
 
-Our simplest example involves the creation of a Bell (or EPR) state which is one of the four maximally entangled quantum states of two qubits. Specifically, we create a circuit (\cref{fig:bell00}) to produce the first Bell state which we write in the mnemonic notation as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$.
+Our simplest example involves the creation of a Bell (or EPR) state, which is one of the four maximally entangled quantum states of two qubits. Specifically, we create a circuit (\cref{fig:bell00}) to produce the first Bell state, which we write in the mnemonic notation as $\ket{\beta_{00}} = (\ket{00}+\ket{11})/\sqrt{2}$.
 
 \begin{figure}
     \centering
@@ -691,9 +691,9 @@ Note that the second argument to the \texttt{deutsch} function carries its Hoare
 
 \section{Discussion}
 
-In \cref{sec:teleport}, when we presented the code for quantum teleportation, it was apparent from its type (or specification) that the quantum variables $q$ (input) and $b$ (output) are different because of the proposition $\mathbf{class}(q)$ which suggests that $q$ is discarded in the postcondition. It would be nicer if we could also specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
+In \cref{sec:teleport}, when we presented the code for quantum teleportation, it was apparent from its type (or specification) that the quantum variables $q$ (input) and $b$ (output) are different because of the proposition $\mathbf{class}(q)$, which suggests that $q$ is discarded in the postcondition. It would be nicer if we could also specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
 
-A limitation of our system is that we currently do not support propositions about the distribution of measurement outcomes. For example, \cref{lst:toss} shows a program (along with its verification steps) which produces a uniformly random bit. At line 10, we can infer a weaker proposition on $q$, $\textbf{uniform}(q)$, knowing its exact state. But the proposition $\textbf{uniform}(b)$ in the postcondition of the program would be invalid as it is only defined for quantum variables and not classical bits.
+A limitation of our system is that we currently do not support propositions about the distribution of measurement outcomes. For example, \cref{lst:toss} shows a program (along with its verification steps), which produces a uniformly random bit. At line 10, we can infer a weaker proposition on $q$, $\textbf{uniform}(q)$, knowing its exact state. But the proposition $\textbf{uniform}(b)$ in the postcondition of the program would be invalid as it is only defined for quantum variables and not classical bits.
 
 \lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss with an \textcolor{red}{invalid} postcondition]{cointoss.qh}
 
@@ -709,7 +709,7 @@ In this paper, we describe our work on Quantum Hoare Type Theory, which is a dep
 
 With future work on code extraction, our approach can become a unified system for programming, specification, and reasoning about quantum computation. There are several other avenues to explore:
 
-\paragraph{Quantum Language} Our programming language currently does not support any iterative or recursive constructs. We would like to add those in the future along with the reasoning rules needed for loop invariants. Furthermore, currently, it is not possible to construct pure unitary operators directly in our language apart from those provided as constants. As \textcite{qio} show, unitary operations form an algebraic monoidal structure and it will be nice to be able to construct arbitrary unitaries in the language which will greatly enhance its expressive power from current Clifford circuits to a universal language.
+\paragraph{Quantum Language} Our programming language currently does not support any iterative or recursive constructs. We would like to add those in the future along with the reasoning rules needed for loop invariants. Furthermore, currently, it is not possible to construct pure unitary operators directly in our language apart from those provided as constants. As \textcite{qio} show, unitary operations form an algebraic monoidal structure and it will be nice to be able to construct arbitrary unitaries in the language, which will greatly enhance its expressive power from current Clifford circuits to a universal language.
 
 \paragraph{Mechanization} There are multiple implementations of HTT in Coq such as Ynot~\parencite{ynot2008}. We would like to mechanize QHTT in Coq, F*, or some such dependent type theory for higher assurance of the usefulness and soundness of QHTT. This will also enable us to extract verified circuits in a lower level quantum language such as OpenQASM~\parencite{cross2017} for execution on real machines.
 

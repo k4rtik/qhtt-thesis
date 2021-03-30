@@ -323,7 +323,7 @@ where
 1
 \end{bmatrix}
 \end{mathpar}
-and the two constants $\alpha, \beta$ are complex amplitudes that obey the \textit{normalization constraint}, $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured in the computational basis, the probability of the qubit being in the classical state 0 is $|\alpha|^2$ and that for state 1 is $|\beta|^2$. Measurement is how we extract information from a quantum system, but its side effect is that it collapses the quantum state. For example, if the classical bit obtained was 1, the posterior state becomes $\ket{1}$ and we lose the superposition state. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$.\footnote{More specifically, a Kronecker product, which is a special case of the tensor product. The $\otimes$ symbol can often be omitted as shown in the example that follows.} The dimension, $m$, of the resulting state vector is exponential to the total number of qubits, $n$, ie, $d = 2^m$. For example, if we take the tensor product of the basis states above, we get a four-dimensional state vector:
+and the two constants $\alpha, \beta$ are complex amplitudes that obey the \textit{normalization constraint}, $|\alpha|^2 +|\beta|^2 = 1$. This means that when measured in the computational basis, the probability of the qubit being in the classical state 0 is $|\alpha|^2$ and that for state 1 is $|\beta|^2$. Measurement is how we extract information from a quantum system, but its side effect is that it collapses the quantum state. For example, if the classical bit obtained was 1, the posterior state becomes $\ket{1}$ and we lose the superposition state. To work with multiple qubits, we need to take their tensor product, denoted by $\otimes$.\footnote{More specifically, a Kronecker product, which is a special case of the tensor product. The $\otimes$ symbol can often be omitted as shown in the example that follows.} The dimension, $m$, of the resulting state vector is exponential to the total number of qubits, $n$, ie, $m = 2^n$. For example, if we take the tensor product of the basis states above, we get a four-dimensional state vector:
 \begin{mathpar}
 \ket{0}\otimes\ket{1} = \ket{0}\ket{1} = \ket{01} = \begin{bmatrix}
     1 \\
@@ -462,7 +462,7 @@ Ghost variables in Unruh's set-up are identified by their mnemonic names. He use
 Unruh further defines some syntactic sugar for predicates that include ghosts:
 
 \begin{itemize}
-    \item $\mathbf{uniform}(X)$, which states that $X$ is uniformly distributed. It is sugar for $(X, e) =_q \sum_{i=0}^{n-1}  \sqrt{\frac{1}{n}} (\ket{i} \otimes \ket{i})$ where $e$ is a fresh entangled ghost.
+    \item $\mathbf{uniform}(X)$, which states that $X$ is uniformly distributed. It is sugar for $(X, e) =_q \sum_i \frac{1}{\sqrt{m}} (\ket{i} \otimes \ket{i})$ where $e$ is a fresh entangled ghost and $i$ ranges from bitvectors $0$ to $m-1$.
     Note that it is not possible to express this without using ghosts. Consider, for example, a single qubit in $\mathbb{C}^2$ in a uniform distribution of its basis states. The only subspace that includes both $\ket{0}$ and $\ket{1}$ is $\top$.
 	\item $\mathbf{separable}(X)$, which states that $X$ is separable, that is, not entangled with any other system. This is sugar for $X \equiv_q u$ where is $u$ is a fresh unentangled ghost.
 	\item $\mathbf{class}(X)$, which states that $X$ holds a classical state. This is sugar for $X \equiv_{cl} u$ where $u$ is a fresh unentangled ghost.

@@ -1,0 +1,49 @@
+\documentclass[adraft,creativecommons]{eptcs}
+
+\usepackage{ottalt}
+\inputott{qhtt.ott.tex}
+
+\title{QHTT: Technical Appendix}
+
+\author{
+Kartik Singhal
+\institute{University of Chicago}
+\email{\mailtodomain{ks@cs.uchicago.edu}}
+}
+
+\begin{document}
+
+\section{Grammar}
+
+% \nonterms{Typ}
+% \nonterms{MonoTyp}
+% \nonterms{Prop}
+% \nonterms{Tm}
+% \nonterms{Cmd}
+% \nonterms{Unitary}
+% \nonterms{Comp}
+% \nonterms{Ctx}
+
+\section{Statics}
+
+\subsection{Valid contexts}
+
+% \drules[ctx]{$\vdash \Gamma$ \textbf{ctx}}{context formation}{Empty,Type,Prop}
+
+\subsection{Valid types}
+
+% \drules[ty]{$\Gamma \vdash A$ \textbf{type}}{type formation}{Unit,Bit,Qbit,Prop,Pi,Pair,Hoare}
+
+\subsection{Terms}
+
+% \drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,VectorI,PiI,PiE,PairI,FstE,SndE,ElimIntro,AscriptionE,Do}
+
+% \subsection{Well-formed propositions}
+
+% \drules[prop]{$\Gamma \vdash P : \textbf{prop}$}{valid propositions}{TopI,BotI,ConjI,DisjI,UnI}
+
+\subsection{Computation rules}
+
+% \drules[comp]{$\Gamma \vdash E : \textbf{QST} (x:A) (\textbf{requires} \{P\}) (\textbf{ensures} \{Q\})$}{valid computations}{Conseq,Return}
+
+\end{document}

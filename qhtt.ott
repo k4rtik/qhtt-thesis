@@ -1,0 +1,272 @@
+metavar x ::=        {{ com variables }}
+
+metavar g, e, u ::= {{ com ghost variables }}
+
+metavar S ::=       {{ com subspaces }}
+
+metavar psi {{ tex \psi }} ::=        {{ com states }}
+
+metavar alpha {{ tex \alpha }}, beta {{ tex \beta }} ::= {{ com amplitudes }}
+
+grammar
+
+Typ, A, B, C :: Ty ::= {{ com Types }}
+  | unit               ::   :: Unit
+  | bit                ::   :: Bit
+  | qbit               ::   :: Qubit
+  | prop               ::   :: Prop         {{ com Type of propositions }}
+  | Pi x : A . B       ::   :: DepProd      {{ com Dependent function }}
+  | A times B          ::   :: Pair         {{ com Pair }}
+  | { P } x : A { Q }  ::   :: Hoare        {{ com Hoare Type }}
+  | A [ M / x ]        :: M :: Substitution
+
+Prop, P, Q, R :: '' ::= {{ com Propositions }}
+  | top                   ::  :: Top          {{ com Complete state space, trivial }}
+  | bot                   ::  :: Bottom       {{ com \{0\}, trivial }}
+  | P /\ Q                ::  :: Conjunction  {{ com Intersection of subspaces. P, Q }}
+  | P \/ Q                ::  :: Disjunction  {{ com Sum of subspaces }}
+  | U o P                 ::  :: Unitary      {{ com Operator }}
+  | x inq S               ::  :: InSubspace   {{ com x lies in subspace S }}
+  | x =q psi              ::  :: EqState      {{ com x is equal to state $\psi$ }}
+  | uniform ( x )         ::  :: Uniform      {{ com x is uniformly distributed }}
+  | x1 ==q x2             ::  :: EqQuantum    {{ com quantum equality }}
+  | separable ( x )       ::  :: Separable    {{ com x is separable}}
+  | x1 ==cl x2            ::  :: EqClassical  {{ com classical equality }}
+  | class ( x )           ::  :: Class        {{ com x is classical}}
+  | P [ M / x ]           :: M:: Substitution
+  % | x = M                 :: M:: DecEq
+  % | P * Q                 :: M:: Separation
+  % | P >> Q                :: M:: Frame
+
+Tm, K, L, M, N :: Tm ::= {{ com Terms }}
+  | x           ::  :: Var            {{ com Variable }}
+  | ()          ::  :: Unit           {{ com Unit }}
+  | 0           ::  :: Zero           {{ com 0 value of type bit }}
+  | 1           ::  :: One            {{ com 1 value of type bit }}
+  | psi         ::  :: Psi            {{ com Metavariable for quantum state vector }}
+  | \ x . M     ::  :: Lam            {{ com Abstraction }}
+  | K N         ::  :: App            {{ com Application }}
+  | ( M , N )   ::  :: Pair           {{ com Pair }}
+  | fst K       ::  :: Fst            {{ com First projection from a pair }}
+  | snd K       ::  :: Snd            {{ com Second projection from a pair }}
+  | do E        ::  :: Do             {{ com Suspended computation }}
+  | M : A       ::  :: Ascription     {{ com Type annotation }}
+
+Cmd, c :: '' ::= {{ com Commands }}
+  | init M                :: :: Initialize      {{ com Initialization }}
+  | apply U to M          :: :: ApplyU          {{ com Unitary application }}
+  | meas M                :: :: Measurement     {{ com Measurement }}
+  | if M then E1 else E2  :: :: IfThenElse      {{ com Conditional }}
+
+Unitary, U :: '' ::= {{ com Unitaries }}
+  | I     :: :: Identity      {{ com Identity }}
+  | X     :: :: X             {{ com Pauli X }}
+  | Y     :: :: Y             {{ com Pauli Y }}
+  | Z     :: :: Z             {{ com Pauli Z }}
+  | H     :: :: Hadamard      {{ com Hadamard }}
+  | CX    :: :: ControlledX   {{ com CNOT }}
+  | CZ    :: :: ControlledZ   {{ com Controlled-Z }}
+
+Comp, E, F :: '' ::= {{ com Computations }}
+  | return M        :: :: Return  {{ com return }}
+  | x <- K ; E      :: :: Run     {{ com run computation K }}
+  | x <- c ; E      :: :: Bind    {{ com run command c }}
+  | x = M ; E       :: :: Let     {{ com let binding }}
+
+Ctx, G {{ tex \Gamma }} :: 'Ctx' ::= {{ com Contexts }}
+  | o               :: :: Empty         {{ com empty context }}
+  | G , x : A       :: :: Type          {{ com context extension }}
+  | G , P           :: :: Prop          {{ com context extension with prop }}
+
+
+terminals :: 'terminals_' ::=
+  | \                      ::   :: lambda     {{ tex \lambda }}
+  | ==q                    ::   :: eqQuantum  {{ tex \equiv_q }}
+  | ==cl                   ::   :: eqClass    {{ tex \equiv_{cl} }}
+  | o                      ::   :: operator   {{ tex \cdot }}
+  % | -->                    ::   :: red        {{ tex \longrightarrow }}
+  | |=                     ::   :: seqimp     {{ tex \models }}
+  |  ->                    ::   :: arrow      {{ tex \rightarrow }}
+  | <-                     ::   :: larrow     {{ tex \leftarrow }}
+  |  =>                    ::   :: rbarrow    {{ tex \Rightarrow }}
+  | <                      ::   :: langle     {{ tex \langle }}
+  | >                      ::   :: rangle     {{ tex \rangle }}
+  | |-                     ::   :: turnstile  {{ tex \vdash }}
+  | inc                    ::   :: in         {{ tex \in }}
+  | inq                    ::   :: inq        {{ tex \in_q }}
+  | =q                     ::   :: eqq        {{ tex =_q }}
+  | <-q                    ::   :: initq      {{ tex \stackrel{q}{\leftarrow} }}
+  | Pi                     ::   :: pi         {{ tex \Pi }}
+  | Sig                    ::   :: Sigma      {{ tex \Sigma }}
+  | tau                    ::   :: tau        {{ tex \tau }}
+  | sigma                  ::   :: sigma      {{ tex \sigma }}
+  | psi                    ::   :: psi        {{ tex \psi }}
+  | times                  ::   :: times      {{ tex \otimes }}
+  | top                    ::   :: top        {{ tex \top }}
+  | bot                    ::   :: bot        {{ tex \bot }}
+  | /\                     ::   :: and        {{ tex \wedge }}
+  | \/                     ::   :: or         {{ tex \vee }}
+  | imp                    ::   :: imp        {{ tex \supset }}
+  | not                    ::   :: not        {{ tex \neg }}
+  | exists                 ::   :: exists     {{ tex \exists }}
+  | forall                 ::   :: forall     {{ tex \forall }}
+  | |->                    ::   :: SMapsto    {{ tex \mapsto }}
+  | alpha                  ::   :: Alpha      {{ tex \alpha }}
+  | beta                   ::   :: Beta       {{ tex \beta }}
+
+
+defns
+  Jtype :: '' ::=
+
+defn
+  |- G ctx :: :: ctx :: ctx_ {{ com Checking contexts }} by
+
+    -------- :: Empty
+    |- o ctx
+
+    |- G ctx
+    G |- A type
+    ------------- :: Type
+    |- G, x:A ctx
+
+    |- G ctx
+    G |- P : prop
+    --------------- :: Prop
+    |- G, P ctx
+
+defn
+  G |- A type :: :: Type :: ty_ {{ com $[[A]]$ is a type }} by
+
+    -------------- :: Unit
+    G |- unit type
+
+    ------------- :: Bit
+    G |- bit type
+
+    -------------- :: Qbit
+    G |- qbit type
+
+    -------------- :: Prop
+    G |- prop type
+
+    G |- A type
+    G, x:A |- B type
+    ------------------ :: Pi
+    G |- Pi x:A.B type
+
+    G |- A type
+    G |- B type
+    ------------------- :: Pair
+    G |- A times B type
+
+    G |- A type
+    G |- P : prop
+    G, x:A |- Q : prop
+    ------------------- :: Hoare
+    G |- {P}x:A{Q} type
+
+defn
+  A = B :: :: TyEq :: tyeq_ {{ com $[[A]]$ and $[[B]]$ are equal as types }} by
+
+defn
+  G |- M = N : A :: :: TmEq :: tmeq_ {{ com $[[M]]$ and $[[N]]$ are equal as terms of type $[[A]]$ }} by
+
+defn
+  G |- U : unitary :: :: Un :: un_ by
+
+defn
+  G |- P : prop :: :: Prop :: prop_ {{ com $[[P]]$ is a $[[prop]]$ }} by
+
+    -------------::TopI
+    G |- top:prop
+
+    -------------::BotI
+    G |- bot:prop
+
+    G|-P:prop
+    G|-Q:prop
+    ----------------::ConjI
+    G |- P /\ Q:prop
+
+    G|-P:prop
+    G|-Q:prop
+    ----------------::DisjI
+    G |- P \/ Q:prop
+
+    G |- U : unitary
+    G |- P : prop
+    ----------------::UnI
+    G |- U o P:prop
+
+defn
+  G |- M : A :: :: Term :: tm_ {{ com term $[[M]]$ has type $[[A]]$ }} by
+
+    -------------::VarE
+    G, x:A |- x:A
+
+    ------------::UnitI
+    G |- ():unit
+
+    ----------::ZeroI
+    G |- 0:bit
+
+    ----------::OneI
+    G |- 1:bit
+
+    % ---------------::VectorI
+    % G |- psi:vector
+
+    G, x:A |- M : B
+    -------------------- :: PiI
+    G |- \x.M : Pi x:A.B
+
+    G |- M : A
+    G |- N : B
+    ----------------------- :: PairI
+    G |- (M, N) : A times B
+
+    G |- K : A
+    A = B
+    ---------- :: ElimIntro
+    G |- K : B
+
+    G |- K : Pi x:A.B
+    G |- M : A
+    ------------------- :: PiE
+    G |- K M : B[M/x]
+
+    G |- K : A times B
+    -------------------- :: FstE
+    G |- fst K : A
+
+    G |- K : A times B
+    ------------------ :: SndE
+    G |- snd K : B
+
+    % G |-
+    % --------------------::HoareI
+    % G |- do E: {P}x:A{Q}
+
+    G |- A type
+    G |- M : A
+    -------------- :: AscriptionE
+    G |- M:A : A
+
+    G |- E : {P}x:A{Q}
+    ---------------------------::Do
+    G |- do E : {P} x:A {Q}
+
+defn
+  G |= P :: :: Prove :: Pr_ {{ com Proof obligation $[[P]]$ }} by
+
+defn
+  G |- E : { P } x : A { Q } :: :: Comp :: comp_ by
+
+    G |- E : {P}x:A{Q}
+    G, x:A, Q |= R
+    --------------------::Conseq
+    G |- E : {P}x:A{R}
+
+    G |- M : A
+    ----------------------------------::Return
+    G |- return M : {P} x:A {P}

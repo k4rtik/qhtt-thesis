@@ -277,7 +277,7 @@ There is one other crucial concept we need to understand before moving to the ne
     \HoareT{x = 1}{x := 5}{x > 0}
 \end{mathpar}
 
-This obviously seems correct. But how can we mechanically use the formal system just described to show this triple is valid? The missing piece is the idea of the \textit{strongest postcondition}. Given the assignment statement, we can compute the strongest possible postcondition to be $x = 5$, which implies $x > 0$ that is the given postcondition. Now, we can use the first rule of consequence (weakening the postcondition) to derive the given triple.
+This obviously seems correct. But how can we mechanically use the formal system just described to show this triple is valid? The missing piece is the idea of the \textit{strongest postcondition}. Given the assignment statement, we can compute the strongest possible postcondition to be $x = 5$, which implies $x > 0$, that is, the given postcondition. Now, we can use the first rule of consequence (weakening the postcondition) to derive the given triple.
 
 In Hoare Type Theory that we describe next and its quantum variant later, inferring the strongest postcondition for each statement will be the most important step during the process of type checking.
 

@@ -482,13 +482,13 @@ For reference, his rules for the unitary application and initialization commands
 \begin{mathpar}
     \inferrule[Unitary]
     {}
-    {\HoareT{P}{\textbf{apply}\ U\ \textbf{to}\ x}{(U\ \textbf{on}\ x) \cdot P}} \and
+    {\HoareT{P}{\textbf{apply}\ U\ \textbf{to}\ X}{(U\ \textbf{on}\ X) \cdot P}} \and
     \inferrule[Initialization]
     {}
     {\HoareT{P}{\textbf{init}\ x}{P[x \rightarrow e],\ x =_q \ket{0}}}
 \end{mathpar}
 
-The unitary application rule simply produces the strongest postcondition from the precondition $P$ by applying the given operator to the chosen qubit(s) in the subspace $P$. The initialization rule substitutes a fresh entangled ghost $e$ for the existing quantum variable $x$ and then initializes $x$ to $\ket{0}$. As we will see, our unitary application rule is quite similar, but our initialization command has different semantics and hence a different rule.
+The unitary application rule simply produces the strongest postcondition from the precondition $P$ by applying the given operator to the chosen qubit(s), $X$, in the subspace $P$. In $U\ \textbf{on}\ X$, $U$ is appropriately padded with the identity operation so that the operation $U \otimes I_{[V \backslash X]}$ is applied to the quantum state corresponding to all quantum variables, $V$. The initialization rule substitutes a fresh entangled ghost $e$ for the existing quantum variable $x$ and then initializes $x$ to $\ket{0}$. As we will see, our unitary application rule is quite similar, but our initialization command has different semantics and hence a different rule.
 
 \section{Quantum Hoare Type Theory}
 To design a Hoare Type Theory for quantum computation, we need to consider some assumptions about the quantum state and its programming model.

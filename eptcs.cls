@@ -197,7 +197,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\RequirePackage{hyperref} % add hyperlinks
+\RequirePackage[pdfa]{hyperref} % add hyperlinks
 \RequirePackage{mathptmx} % Pick Times Roman as a base font
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,22 +1,7 @@
 \pdfoutput=1
 
-\RequirePackage{silence}
-\WarningFilter{latex}{File}
-\WarningFilter{hyperref}{Option `pdftex'}
-\WarningFilter{hyperref}{Option `pdfa'}
-
-\def\titlerunning{Quantum Hoare Type Theory}
-\def\authorrunning{Kartik Singhal}
-
-\begin{filecontents*}{\jobname.xmpdata}
-\Title{\titlerunning}
-\Author{\authorrunning}
-\Keywords{General programming languages\sep Quantum computation\sep Functional languages\sep Program specifications\sep Pre- and post-conditions\sep Type theory\sep Hoare logic}
-\Subject{Computer Science Master's paper}
-\end{filecontents*}
 \documentclass[adraft,creativecommons]{eptcs}
 \providecommand{\event}{arXiv: \href{https://arxiv.org/abs/2012.02154}{2012.02154}}
-\usepackage[a-1b]{pdfx}
 \usepackage[utf8]{inputenc}
 
 \usepackage{underscore}
@@ -102,6 +87,9 @@
 \usepackage{ottalt}
 \inputott{htt.ott.tex}
 
+\usepackage{hyperxmp}
+\def\titlerunning{Quantum Hoare Type Theory}
+\def\authorrunning{Kartik Singhal}
 \hypersetup{
     colorlinks,
     linktoc=all,
@@ -109,7 +97,27 @@
     citecolor=ACMPurple,
     urlcolor=ACMDarkBlue,
     filecolor=ACMDarkBlue,
+    pdftitle={\titlerunning},
+    pdfauthor={\authorrunning},
+    pdfkeywords={General programming languages, Quantum computation, Functional languages, Program specifications, Pre- and post-conditions, Type theory, Hoare logic},
+    pdfsubject={Computer Science Master's paper},
+    pdfapart=2,
+    pdfaconformance=B
 }
+% Output intent to conform to PDF/A
+\immediate\pdfobj stream attr{/N 3} file{sRGB.icc}
+\pdfcatalog{%
+  /OutputIntents [
+    <<
+      /Type /OutputIntent
+      /S /GTS_PDFA1
+      /DestOutputProfile \the\pdflastobj\space 0 R
+      /OutputConditionIdentifier (sRGB)
+      /Info (sRGB)
+    >>
+  ]
+}
+
 \usepackage[figure,table]{hypcap}
 
 % ACM CCS 2012 Concepts

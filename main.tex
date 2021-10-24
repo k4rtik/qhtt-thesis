@@ -521,14 +521,14 @@ meas : (q: qbit) -> QST (x: bit)
                         (ensures  {class(q) ∧ (e_x⊗ℋ[V#q]) =q ψ})
 \end{lstlisting}
 
-We assume all measurements to be in the computational basis. The measurement command, in effect, returns the qubit to the pool after returning the result of the measurement as a bit. We maintain the distribution of the outcome by introducing an entangled ghost variable that replaces the measured qubit in the global state. This will become clear when we work through some examples later in this document. We continue to use the state space partition notation ($q\otimes\mathcal{H}[V\backslash q]$) shown in \cref{itm:partnot} to refer to only the local state under consideration. Note that this notation should not be confused to mean that $q$ is separable from the rest of the system (it may or may not be).
+We assume all measurements to be in the computational basis. The measurement command, in effect, returns the qubit to the pool after returning the result of the measurement as a bit. We record the distribution of the outcome by introducing an entangled ghost variable that replaces the measured qubit in the global state. How this helps will be clear when we work through some examples later in the document. We continue to use the state space partition notation ($q\otimes\mathcal{H}[V\backslash q]$) first used in \cref{itm:partnot} to refer to only the local state under consideration. Note that this notation should not be confused to mean that $q$ is separable from the rest of the system (it may or may not be).
 
 \subsubsection{Unitary application}
 
 \begin{lstlisting}[language=QHaskell]
 apply _ to _ : (g: unitary) ->
                qs: (qbit⊗qbit) ->
-               QST unit
+               QST (_: unit)
                    {P: prop}
                    (requires {P})
                    (ensures  {(g on qs) . P})

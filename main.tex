@@ -497,7 +497,7 @@ Each program is assumed to have access to a pool of countably infinite number of
 
 \subsection{Primitive quantum commands}
 
-Here we show our primitive quantum commands that are inspired by similar primitives in \citetitle{qio}~\parencite{qio} along with the Hoare types that encode the specifications for these commands. The predicates that we see are the same as we saw in the previous section. Each predicate implicitly takes the current local state of the program as an argument.
+Here we show our primitive quantum commands that are inspired by similar primitives in \citetitle{qio}~\parencite{qio} along with the Hoare types that encode the specifications for these commands. The predicates that we see are the same as we saw in the previous section. Each predicate implicitly takes the current local state of the program as an argument. These specifications are given in a small footprint style.
 
 \subsubsection{Initialization}
 \begin{lstlisting}[language=QHaskell]
@@ -544,7 +544,7 @@ Now, we are in a good position to talk about the raw syntax of QHTT. The followi
 
 \nonterms{Typ}
 
-The base type $bit$ inhabits the values 0 and 1 but the type $qbit$ is just a reference to a logical qubit. The state is represented using the type $vector$ that may further need the type $complex$ to represent arbitrary quantum states. These last two types are only included for use in the specification language and are not to be used by the programming syntax. The type $unitary$ includes all basic one- and two-qubit gates (such as the Pauli gates and CX) that we include in the language. The propositions formed using the specification language are given the $prop$ type. $\otimes$ is the pair type constructor. We use the F*-inspired syntax for both the dependent function and the Quantum Hoare type.
+The base type $bit$ inhabits the values 0 and 1 but the type $qbit$ is just a reference to a logical qubit. The state is represented using the type $vector$ that may further need the type $complex$ to represent arbitrary quantum states. These last two types are only included for use in the specification language and are not to be used by the programming syntax. The type $unitary$ includes all basic one- and two-qubit gates (such as the Pauli gates and CX) that we include in the language. The propositions formed using the specification language are given the $prop$ type. $\otimes$ is the pair type constructor. We use the F*-inspired syntax for both the dependent function and the Quantum Hoare type. Note that the optional context $\{\Gamma\}$ associated with the Quantum Hoare Type is used to bind ghost variables and propositions that may appear in the pre- and postcondition to relate the beginning and the end state, as we saw in the rules for measurement and unitary application.
 
 Next, we show the grammar for the terms of the language that include values for the base types and introduction and elimination forms for the type constructors:
 
@@ -589,7 +589,7 @@ Finally, we show the computations that represent the monadic unit and three kind
 
 \nonterms{Comp}
 
-The complete grammar and a relatively complete set of typing rules are included in \cref{app:grammar,app:rules} of this document for easy reference. Most of the typing rules are similar to the classical HTT.
+The complete grammar and typing rules are included in \cref{app:grammar,app:rules} of this document for easy reference. Most of the typing rules are similar to the classical HTT.
 
 \subsection{Examples}
 
@@ -617,7 +617,7 @@ Our simplest example involves the creation of a Bell (or EPR) state, which is on
 
 \lstinputlisting[language=QHaskell,float,label=lst:bella,firstline=11,caption=Bell state program annotated with propositions]{bell00.qh}
 
-\cref{lst:bell} shows a circuit that corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: the top predicate, $\top$, that is satisfied by any state space and the $X =_q \psi$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\psi$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
+\cref{lst:bell} shows a circuit that corresponds to a suspended quantum computation that can be composed with other circuits. It takes no input and returns two qubits as output. The specification of the program is in its type (the first three lines). Here we see our first two propositions: top, $\top$, which is satisfied by any state space and the $X =_q \psi$ predicate that is satisfied by quantum variables, $X$, that lie in the span of the given state $\psi$. Intuitively, this circuit does not require any inputs and can work in any given state space and produces two qubits that are maximally entangled in the first Bell state $\ket{\beta_{00}}$.
 
 \cref{lst:bella} shows how we can prove whether this program conforms to the given specification. The initialization command (at lines 6 and 11) allocates a new qubit, initializes it to $\ket{0}$ and binds it to the variable on the left side of $\leftarrow$. Each occurrence of initialization adds its strongest postcondition as shown in the form of comments. At line 8, the Hadamard gate application on $\ket{0}$ results in the equal superposition state, $\ket{+} = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$. The strongest postcondition for a unitary application simply involves applying the operator to the subspace specified by the precondition (on lines 9 and 14). Note that we use the $\Leftrightarrow$ symbol in these annotations for a simplification step. Finally, the return operation lifts the return value to the Quantum Hoare type along with its strongest postcondition (which is trivially the same as the precondition).
 
@@ -645,13 +645,13 @@ Our second example shows how we can compose circuits defined in QHTT together an
 
 \lstinputlisting[language=QHaskell,float,label=lst:telea,firstline=15,caption=Annotated quantum teleportation program]{teleport.qh}
 
-Verification steps for this program are shown in \cref{lst:telea}. At line 8, we see the call to the \texttt{bell00} function. Since the precondition of the function is trivial, there is nothing unusual, but after the function call, the environment is merged with the postcondition of the function, and we see the postcondition on the newly bound qubit pair, $(a, b)$. At line 19, something more interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either the classical bit 0 or 1 based on the distribution of either outcome. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded in the measurement operation) in the state space under consideration with an entangled ghost variable. Furthermore, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So at line 21, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 24--26, $e_y$ is introduced corresponding to $y$. This helps us in the next two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\psi$ at the end. Note that we use the comma symbol interchangeably with the conjunction symbol in the propositions.
+Verification steps for this program are shown in \cref{lst:telea}. At line 8, we see the call to the \texttt{bell00} function. Since the precondition of the function is trivial, there is nothing unusual, but after the function call, the calling environment is merged with the postcondition of the function. We see the expected postcondition on the newly bound qubit pair, $(a, b)$, just before the simplification step. At line 19, something more interesting happens! When we measure a quantum variable (in the default computational basis), its state is collapsed to either the classical bit 0 or 1 based on the distribution of either outcome. In our logic, however, both the outcome and the distribution are still maintained. This is achieved by replacing the measured qubit (which is implicitly discarded in the measurement operation) in the state space under consideration with an entangled ghost variable. Furthermore, we maintain the correspondence between the classical bit that stores the measurement result and the ghost variable that replaced its corresponding qubit. So at line 21, $e_x$ corresponds to the classical bit $x$. Similarly, in lines 24--26, $e_y$ is introduced corresponding to $y$. This helps us in the next two steps of the program where operations controlled on the previous measurement outcomes are applied. We recover the original state $\psi$ at the end. Note that we use the comma symbol interchangeably with the conjunction symbol in the propositions.
 
 This version of teleportation may not seem very interesting because it is essentially equivalent to teleportation performed without measurements (using the principle of deferred measurements). Hence, we turn to a more realistic variant in our next example.
 
 \subsubsection{Modular teleportation with classical control}
 
-As the teleportation protocol is usually stated, we have two agents Alice and Bob, who share an entangled Bell pair at the beginning of the protocol. Alice wants to communicate a message encoded in a qubit to Bob. Alice performs a Bell measurement on her two qubits, the one that encodes the message and the other which is part of the entangled Bell pair. Then she sends the result of this measurement---the two bits---to Bob. Bob receives those bits and performs correction steps on his qubit to obtain the message. We naturally can split the teleportation circuit into three parts: Bell state preparation, Alice's portion of the circuit, and Bob's portion of the circuit.
+As the teleportation protocol is usually stated, we have two agents Alice and Bob, who share an entangled Bell pair at the beginning of the protocol. Alice wants to communicate a message encoded in a qubit to Bob. Alice performs a Bell measurement on her two qubits, the one that encodes the message and the other which is part of the entangled Bell pair. Then she sends the result of this measurement---the two bits---to Bob. Bob receives those bits and performs correction steps on his qubit to obtain the message. We can naturally split the teleportation circuit into three parts: Bell state preparation, Alice's portion of the circuit, and Bob's portion of the circuit.
 
 \lstinputlisting[language=QHaskell,float,label=lst:alice,caption=Alice's portion of teleportation,lastline=14]{teleport2.qh}
 
@@ -659,9 +659,9 @@ As the teleportation protocol is usually stated, we have two agents Alice and Bo
 
 \lstinputlisting[language=QHaskell,float,label=lst:mtele,caption=Modular teleportation,firstline=74,lastline=82]{teleport2.qh}
 
-\cref{lst:alice,lst:bob,lst:mtele} show the implementation of these parts in the form of separate modules (functions) along with their specifications as types. Alice's circuit requires that her second input qubit is entangled in the Bell state. This statement shows our first example of using Unruh's entangled ghost variable, $e$, in our specification, which is declared in the context right before the \textit{requires} construct along with other ghost variables. It further ensures that her two input qubits are both consumed in the process as they are asserted to be classical in the postcondition. Since Alice is dealing with entanglement, it is important to maintain the distribution over all qubits involved, including the ghost qubit $e$ and the newly created ghosts $e_x$ and $e_y$ because of her measurement operations.
+\cref{lst:alice,lst:bob,lst:mtele} show the implementation of the latter two of these parts (we have already seen Bell state preparation) and the final \texttt{teleport} circuit (that composes the three parts together) in the form of separate modules (functions) along with their specifications as types. Alice's circuit requires that her second input qubit be entangled in the Bell state. This precondition shows our first example of using Unruh's entangled ghost variable, $e$, in our specification, which is declared in the context right before the \textit{requires} construct along with other ghost variables. It further ensures that her two input qubits are both consumed in the process as they are asserted to be classical in the postcondition. Since Alice is dealing with entanglement, it is important to maintain the distribution over all qubits involved, including the ghost qubit $e$ and the newly created ghosts $e_x$ and $e_y$ because of her measurement operations.
 
-Bob's specification shows what correction is applied if his qubit is in an arbitrary state. Note that Bob uses the classical control construct if-then-else in this variant of the circuit. Moreover, note that to distinguish between the input and output of the qubit, we are using two different names, but both $b$ and $q$ are referring to the same qubit. The specification for teleport is the same as before, but the implementation is now much shorter.
+Bob's specification shows what correction is applied if his qubit is in an arbitrary state. Note that \texttt{bob} uses the classical control construct if-then-else in this variant of the circuit. Moreover, note that to distinguish between the input and output of the qubit, we are using two different names, but both $b$ and $q$ are referring to the same qubit. The specification for the \texttt{teleport} function is the same as before, but the implementation is now much shorter.
 
 \lstinputlisting[language=QHaskell,float,label=lst:alicea,caption=Annotated code for alice,firstline=16,lastline=43]{teleport2.qh}
 
@@ -669,11 +669,11 @@ Bob's specification shows what correction is applied if his qubit is in an arbit
 
 \lstinputlisting[language=QHaskell,float,label=lst:mtelea,caption=Annotated code for modular teleportation,firstline=84]{teleport2.qh}
 
-We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea}. The verification conditions generated for Alice are almost the same as those generated during the first part of our first teleportation example, except we do not have the qubit $b$ in scope and instead are dealing with its ghost $e$.
+We show the annotated verification steps in \cref{lst:alicea,lst:boba,lst:mtelea}. The verification conditions generated for \texttt{alice} are almost the same as those generated during the first part of our first teleportation example, except we do not have the qubit $b$ in scope and instead are dealing with its ghost $e$.
 
 In Bob's case, we start with his qubit $b$ in some arbitrary quantum state and perform corrections as specified by the classical conditionals. We do not need entangled ghosts here as Bob is only dealing with two classical bits and his own qubit.
 
-Finally, in the teleport code in \cref{lst:mtelea}, while calling the function \texttt{alice} at line 11, the entangled ghost, $e$, in her type is bound to the corresponding qubit $b$ in the calling environment, and we obtain the same propositions as before on return from the function. A similar environment merge is needed at line 15, where function \texttt{bob} is called. We have annotated this merge in more detail in lines 16--22 for clarity. Here relating the existing ghosts $e_x$ and $e_y$ in the return environment with the classical bits $x$ and $y$ in the postcondition for Bob, we obtain the correct propositions. Simplification after the merge operation lets us recover the original message at line 27.
+Finally, in the teleport code in \cref{lst:mtelea}, while calling the function \texttt{alice} at line 11, the entangled ghost, $e$, in her type is bound to the corresponding qubit $b$ in the calling environment as they are both part of the Bell pair along with $a$. After substituting $b$ for $e$, we obtain the same propositions as before on return from the function. A non-trivial environment merge is needed after line 15 on return from the function \texttt{bob}. We have annotated this merge operation in more detail in lines 16--22 for clarity. After relating the existing ghosts $e_x$ and $e_y$ in the return environment with the classical bits $x$ and $y$ in the postcondition for Bob, we obtain the correct propositions. Simplification after the merge operation lets us recover the original message at line 27.
 
 \subsubsection{Deutsch's algorithm}
 Our final example in \cref{lst:deutsch} demonstrates that our system can work in a higher-order setting where we can pass a circuit as input to another circuit and reason about the resulting computation. Here $U_f$ is a quantum oracle whose implementation is unknown, but its type specifies everything we know about it---it is parameterized over a classical function, $f$, that takes a bit and returns a bit; it takes two qubits as input and returns two qubits as output; and finally, if the input qubits store classical bits $x$ and $y$, then the output qubits store $x$ and $y \oplus f(x)$. The circuit $U_f$ is used as a black box in the implementation of \citeauthor{deutsch85}'s~\parencite*{deutsch85} algorithm as shown in \cref{fig:deutsch}. The idea is to be able to reason about the algorithm's correctness using the type of the black box alone.
@@ -699,13 +699,13 @@ Note that the second argument to the \texttt{deutsch} function carries its Hoare
 
 \section{Discussion}
 
-In \cref{sec:teleport}, when we presented the code for quantum teleportation, it was apparent from its type (or specification) that the quantum variables $q$ (input) and $b$ (output) are different because of the proposition $\mathbf{class}(q)$, which suggests that $q$ is discarded in the postcondition. It would be nicer if we could also specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
+In \cref{sec:teleport}, when we presented the code for quantum teleportation, it was apparent from its type (specification) that the quantum variables $q$ (input) and $b$ (output) are different because of the proposition $\mathbf{class}(q)$, which suggests that $q$ is discarded in the postcondition. It would be nicer if we could also specify information about the resource usage of the program; in teleportation, for example, an EPR pair gets consumed along with the input qubit.
 
 A limitation of our system is that we currently do not support propositions about the distribution of measurement outcomes. For example, \cref{lst:toss} shows a program (along with its verification steps), which produces a uniformly random bit. At line 10, we can infer a weaker proposition on $q$, $\textbf{uniform}(q)$, knowing its exact state. But the proposition $\textbf{uniform}(b)$ in the postcondition of the program would be invalid as it is only defined for quantum variables and not classical bits.
 
 \lstinputlisting[language=QHaskell,float,label=lst:toss,firstline=10,caption=Fair coin toss with an \textcolor{red}{invalid} postcondition]{cointoss.qh}
 
-We would like to mention that the type system presented in this document is not bidirectional~\parencite{dunfield2019bidirectional} as we forego distinguishing between the introduction and elimination forms of terms while defining our syntax for simplicity. The original presentations of HTT~\parencite{nanevski2008,abspr07} (as do many other type theories) keep that distinction to be able to prove the decidability of type checking and provide a syntax-directed type system to aid implementation. We leave this for future work along with an implementation.
+We would like to mention that the type system presented in this document is not bidirectional~\parencite{dunfield2019bidirectional} as we forego distinguishing between the introduction and elimination forms of terms while defining our syntax for simplicity. The original presentations of HTT~\parencite{nanevski2008,abspr07} (as do many other type theories) keep that distinction to be able to prove the decidability of type checking and provide a syntax-directed type system to aid implementation. We leave this for future work.
 
 Finally, a note about scalability. There are three important aspects to scalability considerations: the expressive power of the programming language to support writing large quantum programs; compositional reasoning about programs for modularity and reuse of verified code; and lastly but importantly, the manual and/or computational effort required for verification. We have taken the first and second of these into account by intentionally designing the syntax of our language to be close to Quipper~\parencite{quipper2013}, which is a proven scalable quantum programming language. In particular, our Deutsch's algorithm example shows that the language supports higher-order programming. We further benefit from building upon HTT that lets us seamlessly compose Hoare types together, hence permitting modular verification as we show in our quantum teleportation example. The third aspect of scalability dealing with the proof burden requires some comparison with existing work.
 
@@ -756,17 +756,13 @@ of the author and do not necessarily reflect the views of the National Science F
 \section{Statics}
 \label{app:rules}
 
-\subsection{Valid contexts}
-
-\drules[ctx]{$\vdash \Gamma$ \textbf{ctx}}{context formation}{Empty,Type,Prop}
-
 \subsection{Valid types}
 
 \drules[ty]{$\Gamma \vdash A$ \textbf{type}}{type formation}{Unit,Bit,Qbit,Prop,Pi,Pair,Hoare}
 
 \subsection{Terms}
 
-\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,VectorI,PiI,PiE,PairI,FstE,SndE,ElimIntro,AscriptionE,Do}
+\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,VectorI,PiI,PiE,PairI,FstE,SndE,ElimIntro,Do}
 
 % \subsection{Well-formed propositions}
 

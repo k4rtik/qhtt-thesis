@@ -46,8 +46,8 @@ bob : (x, y, b): (bit⊗bit⊗qbit) ->
       QST q: qbit
           {c: complex, d: complex}
           (requires {b =q c|0⟩+d|1⟩})
-          (ensures  {y =c 0 => q =q (c|0⟩+ (-1)^x d|1⟩) ∧
-                     y =c 1 => q =q (c|1⟩+ (-1)^x d|0⟩)})
+          (ensures  {y =c 0 => q =q (c|0⟩ + (-1)^x d|1⟩) ∧
+                     y =c 1 => q =q (c|1⟩ + (-1)^x d|0⟩)})
 bob = \xyb.do
           (x, y, b) = xyb
           if y then apply X to b else ()
@@ -58,17 +58,17 @@ bob : (x, y, b): (bit⊗bit⊗qbit) ->
       QST q: qbit
           {c: complex, d: complex}
           (requires {b =q c|0⟩+d|1⟩})
-          (ensures  {y =c 0 => q =q (c|0⟩+ (-1)^x d|1⟩) ∧
-                     y =c 1 => q =q (d|0⟩+ (-1)^x c|1⟩)})
+          (ensures  {y =c 0 => q =q (c|0⟩ + (-1)^x d|1⟩) ∧
+                     y =c 1 => q =q (d|0⟩ + (-1)^x c|1⟩)})
 bob = \xyb.do
           (x, y, b) = xyb
           -- b =q c|0⟩+d|1⟩
           if y then apply X to b else ()
-          -- y =c 0 => b =q (c|0⟩+ d|1⟩) ∧
-          -- y =c 1 => b =q (c|1⟩+ d|0⟩)
+          -- y =c 0 => b =q (c|0⟩ + d|1⟩) ∧
+          -- y =c 1 => b =q (c|1⟩ + d|0⟩)
           if x then apply Z to b else ()
-          -- y =c 0 => b =q (c|0⟩+ (-1)^x d|1⟩) ∧
-          -- y =c 1 => b =q (c|1⟩+ (-1)^x d|0⟩)
+          -- y =c 0 => b =q (c|0⟩ + (-1)^x d|1⟩) ∧
+          -- y =c 1 => b =q (c|1⟩ + (-1)^x d|0⟩)
           return b
 
 teleport : q: qbit -> QST b: qbit
@@ -101,8 +101,8 @@ teleport = \q.do
               -- (e_x, e_y, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|1⟩+β|0⟩)
               --                  + |10⟩(α|0⟩-β|1⟩) + |11⟩(α|1⟩-β|0⟩))
               -- and
-              -- y =c 0 => b =q (c|0⟩+ (-1)^x d|1⟩) ∧
-              -- y =c 1 => b =q (c|1⟩+ (-1)^x d|0⟩)
+              -- y =c 0 => b =q (c|0⟩ + (-1)^x d|1⟩) ∧
+              -- y =c 1 => b =q (c|1⟩ + (-1)^x d|0⟩)
               -- ⇒
               -- class(q) ∧ class(a) ∧
               -- (e_x, e_y, b) =q 1/2(|00⟩(α|0⟩+β|1⟩) + |01⟩(α|0⟩+β|1⟩)

@@ -38,14 +38,15 @@
 \ottrulehead{\ottnt{Typ}  ,\ \ottnt{A}  ,\ \ottnt{B}  ,\ \ottnt{C}}{::=}{\ottcom{Types}}\ottprodnewline
 \ottfirstprodline{|}{\ottkw{unit}}{}{}{}{}\ottprodnewline
 \ottprodline{|}{\ottkw{bit}}{}{}{}{}\ottprodnewline
-\ottprodline{|}{\ottkw{qbit}}{}{}{}{\ottcom{Index to a logical qubit}}\ottprodnewline
-\ottprodline{|}{\ottkw{vector}}{}{}{}{\ottcom{Quantum state vectors}}\ottprodnewline
+\ottprodline{|}{\ottkw{qbit}}{}{}{}{\ottcom{Logical qubit}}\ottprodnewline
+\ottprodline{|}{\ottkw{vector}}{}{}{}{\ottcom{State vectors}}\ottprodnewline
 \ottprodline{|}{\ottkw{complex}}{}{}{}{\ottcom{Complex scalars}}\ottprodnewline
-\ottprodline{|}{\ottkw{unitary}}{}{}{}{\ottcom{Type of unitaries}}\ottprodnewline
-\ottprodline{|}{\ottkw{prop}}{}{}{}{\ottcom{Type of propositions}}\ottprodnewline
+\ottprodline{|}{\ottkw{unitary}}{}{}{}{\ottcom{Unitaries}}\ottprodnewline
+\ottprodline{|}{\ottkw{prop}}{}{}{}{\ottcom{Propositions}}\ottprodnewline
 \ottprodline{|}{\ottmv{x}  \ottsym{:}  \ottnt{A}  \rightarrow  \ottnt{B}}{}{}{}{\ottcom{Dependent function}}\ottprodnewline
 \ottprodline{|}{\ottnt{A} \, \otimes \, \ottnt{B}}{}{}{}{\ottcom{Pair}}\ottprodnewline
-\ottprodline{|}{\ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{}{}{}{\ottcom{Quantum Hoare Type}}}
+\ottprodline{|}{\ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{\{}  \Gamma  \ottsym{\}}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{}{}{}{\ottcom{Q. Hoare Type}}\ottprodnewline
+\ottprodline{|}{\ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}} {\textsf{S}}{}{}{\ottcom{Quantum Hoare Type  w/o context}}}
 
 \newcommand{\ottProp}{
 \ottrulehead{\ottnt{Prop}  ,\ \ottnt{P}  ,\ \ottnt{Q}  ,\ \ottnt{R}}{::=}{\ottcom{Propositions (\textbf{prop})}}\ottprodnewline
@@ -74,8 +75,7 @@
 \ottprodline{|}{\ottsym{(}  \ottnt{M}  \ottsym{,}  \ottnt{N}  \ottsym{)}}{}{}{}{\ottcom{Pair}}\ottprodnewline
 \ottprodline{|}{\ottkw{fst} \, \ottnt{K}}{}{}{}{\ottcom{First projection from a pair}}\ottprodnewline
 \ottprodline{|}{\ottkw{snd} \, \ottnt{K}}{}{}{}{\ottcom{Second projection from a pair}}\ottprodnewline
-\ottprodline{|}{\ottkw{do} \, \ottnt{E}}{}{}{}{\ottcom{Suspended computation}}\ottprodnewline
-\ottprodline{|}{\ottnt{M}  \ottsym{:}  \ottnt{A}}{}{}{}{\ottcom{Type annotation}}}
+\ottprodline{|}{\ottkw{do} \, \ottnt{E}}{}{}{}{\ottcom{Suspended computation}}}
 
 \newcommand{\ottCmd}{
 \ottrulehead{\ottnt{Cmd}  ,\ \ottnt{c}}{::=}{\ottcom{Commands}}\ottprodnewline
@@ -367,15 +367,6 @@
 }}
 
 
-\newcommand{\ottdruletmXXAscriptionE}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \vdash  \ottnt{A} \, \ottkw{type}}%
-\ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}}%
-}{
-\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}  \ottsym{:}  \ottnt{A}}{%
-{\ottdrulename{tm\_AscriptionE}}{}%
-}}
-
-
 \newcommand{\ottdruletmXXDo}[1]{\ottdrule[#1]{%
 \ottpremise{\Gamma  \vdash  \ottnt{E}  \ottsym{:} \, \ottkw{QST} \, \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{)}  \ottsym{(} \, \ottkw{requires} \, \ottsym{\{}  \ottnt{P}  \ottsym{*}  \top  \ottsym{\}}  \ottsym{)}  \ottsym{(} \, \ottkw{ensures} \, \ottsym{\{}  \ottnt{P}  \ottsym{>>}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}%
 }{
@@ -395,7 +386,6 @@
 \ottusedrule{\ottdruletmXXPiE{}}
 \ottusedrule{\ottdruletmXXFstE{}}
 \ottusedrule{\ottdruletmXXSndE{}}
-\ottusedrule{\ottdruletmXXAscriptionE{}}
 \ottusedrule{\ottdruletmXXDo{}}
 \end{ottdefnblock}}
 

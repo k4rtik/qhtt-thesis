@@ -14,15 +14,17 @@ grammar
 Typ, A, B, C :: Ty ::= {{ com Types }}
   | unit               ::   :: Unit
   | bit                ::   :: Bit
-  | qbit               ::   :: Qubit        {{ com Index to a logical qubit }}
-  | vector             ::   :: Vector       {{ com Quantum state vectors }}
+  | qbit               ::   :: Qubit        {{ com Logical qubit }}
+  | vector             ::   :: Vector       {{ com State vectors }}
   | complex            ::   :: Complex      {{ com Complex scalars }}
-  | unitary            ::   :: Unitary      {{ com Type of unitaries }}
-  | prop               ::   :: Prop         {{ com Type of propositions }}
+  | unitary            ::   :: Unitary      {{ com Unitaries }}
+  | prop               ::   :: Prop         {{ com Propositions }}
   | x : A -> B         ::   :: Arrow        {{ com Dependent function }}
   | A times B          ::   :: Pair         {{ com Pair }}
+  | QST ( x : A ) { G } ( requires { P } )
+    ( ensures { Q } )  ::   :: QHoareC      {{ com Q. Hoare Type }}
   | QST ( x : A ) ( requires { P } )
-    ( ensures { Q } )  ::   :: QHoare        {{ com Quantum Hoare Type }}
+    ( ensures { Q } )  :: S :: QHoare       {{ com Quantum Hoare Type  w/o context }}
   | A [ M / x ]        :: M :: Substitution
 
 Prop, P, Q, R :: '' ::= {{ com Propositions (\textbf{prop}) }}
@@ -55,7 +57,7 @@ Tm, K, L, M, N :: Tm ::= {{ com Terms }}
   | fst K       ::  :: Fst            {{ com First projection from a pair }}
   | snd K       ::  :: Snd            {{ com Second projection from a pair }}
   | do E        ::  :: Do             {{ com Suspended computation }}
-  | M : A       ::  :: Ascription     {{ com Type annotation }}
+  % | M : A       ::  :: Ascription     {{ com Type annotation }}
 
 Cmd, c :: '' ::= {{ com Commands }}
   | init M                :: :: Initialize      {{ com Initialization }}
@@ -252,10 +254,10 @@ defn
     % --------------------::HoareI
     % G |- do E: {P}x:A{Q}
 
-    G |- A type
-    G |- M : A
-    -------------- :: AscriptionE
-    G |- M:A : A
+    % G |- A type
+    % G |- M : A
+    % -------------- :: AscriptionE
+    % G |- M:A : A
 
     G |- E : QST (x:A) (requires {P*top}) (ensures {P >> Q})
     --------------------------------::Do

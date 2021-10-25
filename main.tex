@@ -762,7 +762,14 @@ of the author and do not necessarily reflect the views of the National Science F
 
 \subsection{Terms}
 
-\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,PiI,PiE,PairI,FstE,SndE,Do}
+\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,PiI,PiE,PairI,FstE,SndE}
+
+Most of these rules are standard, but the following rule for suspended computation requires a bit of explanation:
+\begin{mathpar}
+    \drule{tm-HoareI}
+\end{mathpar}
+
+Here, the symbol $*$ is analogous to a similar symbol (\textit{separating conjunction}) in Separation Logic that says that if $R * S$, then $R$ and $S$ hold of disjoint portions of state. So, in the assumption of the premise, $P * \top$ is a large footprint style specification that separates the portion of the state that the computation $E$ requires from the rest of the state using the trivial $\top$ predicate (which signifies that the computation $E$ knows nothing about the rest of the state). Further, the difference operator, $P \multimap Q$, says that the portion of the state satisfied by $P$ is replaced by a portion of the state that satisfies $Q$. In other words, the computation $E$ does not affect the rest of the state. This frame rule is essential to be able to provide small footprint style specifications in HTT, and hence, in our system. We leave a precise definition of the quantum analogues of separating conjunction and difference operator to future work.
 
 % \subsection{Well-formed propositions}
 

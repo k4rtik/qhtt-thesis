@@ -122,6 +122,7 @@ terminals :: 'terminals_' ::=
   | |->                    ::   :: SMapsto    {{ tex \mapsto }}
   | alpha                  ::   :: Alpha      {{ tex \alpha }}
   | beta                   ::   :: Beta       {{ tex \beta }}
+  | >>                     ::   :: diff       {{ tex \multimap }}
 
 
 defns
@@ -262,8 +263,8 @@ defn
     % G |- M:A : A
 
     G, P*top |- E :  (x:A.{P >> Q})
-    --------------------------------::Do
-    G |- do E : {P} x:A {Q}
+    --------------------------------::HoareI
+    G |- do E : G.{P} x:A {Q}
 
 defn
   G |= P :: :: Prove :: Pr_ {{ com Proof obligation $[[P]]$ }} by

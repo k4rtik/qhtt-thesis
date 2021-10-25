@@ -367,11 +367,11 @@
 }}
 
 
-\newcommand{\ottdruletmXXDo}[1]{\ottdrule[#1]{%
-\ottpremise{\Gamma  \ottsym{,}  \ottnt{P}  \ottsym{*}  \top  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottsym{\{}  \ottnt{P}  \ottsym{>>}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}%
+\newcommand{\ottdruletmXXHoareI}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \ottsym{,}  \ottnt{P}  \ottsym{*}  \top  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottsym{\{}  \ottnt{P}  \multimap  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}%
 }{
-\Gamma  \vdash  \ottkw{do} \, \ottnt{E}  \ottsym{:}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{%
-{\ottdrulename{tm\_Do}}{}%
+\Gamma  \vdash  \ottkw{do} \, \ottnt{E}  \ottsym{:}  \Gamma  \ottsym{.}  \ottsym{\{}  \ottnt{P}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}}{%
+{\ottdrulename{tm\_HoareI}}{}%
 }}
 
 \newcommand{\ottdefnTerm}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottnt{A}$}{\ottcom{term $\ottnt{M}$ has type $\ottnt{A}$}}
@@ -386,7 +386,7 @@
 \ottusedrule{\ottdruletmXXPiE{}}
 \ottusedrule{\ottdruletmXXFstE{}}
 \ottusedrule{\ottdruletmXXSndE{}}
-\ottusedrule{\ottdruletmXXDo{}}
+\ottusedrule{\ottdruletmXXHoareI{}}
 \end{ottdefnblock}}
 
 %% defn Prove

@@ -27,7 +27,7 @@
 \newcommand{\ottafterlastrule}{\\}
 \newcommand{\ottmetavars}{
 \ottmetavartabular{
- $ \ottmv{termvar} ,\, \ottmv{x} $ &  \\
+ $ \ottmv{termvar} ,\, \ottmv{x} ,\, \ottmv{y} $ &  \\
  $ \ottmv{ghostvar} ,\, \ottmv{g} ,\, \ottmv{e} ,\, \ottmv{u} $ &  \\
  $ \ottmv{subspace} ,\, \ottmv{S} $ &  \\
  $ \psi ,\, \psi $ &  \\
@@ -395,12 +395,12 @@
 \end{ottdefnblock}}
 
 %% defn Comp
-\newcommand{\ottdrulecompXXConseq}[1]{\ottdrule[#1]{%
+\newcommand{\ottdrulecompXXConsq}[1]{\ottdrule[#1]{%
 \ottpremise{\Gamma  \ottsym{,}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}%
 \ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{,}  \ottnt{Q}  \models  \ottnt{R}}%
 }{
 \Gamma  \ottsym{,}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottsym{\{}  \ottnt{R}  \ottsym{\}}  \ottsym{)}}{%
-{\ottdrulename{comp\_Conseq}}{}%
+{\ottdrulename{comp\_Consq}}{}%
 }}
 
 
@@ -411,9 +411,20 @@
 {\ottdrulename{comp\_Return}}{}%
 }}
 
+
+\newcommand{\ottdrulecompXXHoareE}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{K}  \ottsym{:}  \ottsym{\{}  \ottnt{Q_{{\mathrm{1}}}}  \ottsym{\}}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{\{}  \ottnt{Q_{{\mathrm{2}}}}  \ottsym{\}}}%
+\ottpremise{\Gamma  \ottsym{,}  \ottnt{P}  \models  \ottnt{Q_{{\mathrm{1}}}}  \ottsym{*}  \top}%
+\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{,}  \ottnt{P}  \wedge  \ottsym{(}  \ottnt{Q_{{\mathrm{1}}}}  \multimap  \ottnt{Q_{{\mathrm{2}}}}  \ottsym{)}  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{y}  \ottsym{:}  \ottnt{B}  \ottsym{.}  \ottsym{\{}  \ottnt{R}  \ottsym{\}}  \ottsym{)}}%
+}{
+\Gamma  \ottsym{,}  \ottnt{P}  \vdash  \ottmv{x}  \leftarrow  \ottnt{K}  \ottsym{;}  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{y}  \ottsym{:}  \ottnt{B}  \ottsym{.}  \ottsym{\{}  \ottnt{R}  \ottsym{\}}  \ottsym{)}}{%
+{\ottdrulename{comp\_HoareE}}{}%
+}}
+
 \newcommand{\ottdefnComp}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \ottsym{,}  \ottnt{P}  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{x}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}$}{}
-\ottusedrule{\ottdrulecompXXConseq{}}
+\ottusedrule{\ottdrulecompXXConsq{}}
 \ottusedrule{\ottdrulecompXXReturn{}}
+\ottusedrule{\ottdrulecompXXHoareE{}}
 \end{ottdefnblock}}
 
 

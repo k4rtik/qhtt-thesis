@@ -1,4 +1,4 @@
-metavar termvar, x ::=
+metavar termvar, x, y ::=
 
 metavar ghostvar, g, e, u ::=
 
@@ -42,6 +42,7 @@ Prop, P, Q, R :: '' ::= {{ com Propositions (\textbf{prop}) }}
   | separable ( x )       ::  :: Separable    {{ com x is separable}}
   | x1 ==cl x2            ::  :: EqClassical  {{ com classical equality }}
   | class ( x )           ::  :: Class        {{ com x is classical}}
+  | ( P )                 :: M:: Parens
   | P [ M / x ]           :: M:: Substitution
   | x = M                 :: M:: DecEq
   | P * Q                 :: M:: Separation
@@ -274,9 +275,15 @@ defn
 
     G, P |- E : (x:A.{Q})
     G, x:A, Q |= R
-    --------------------::Conseq
+    --------------------::Consq
     G, P |- E : (x:A.{R})
 
     G |- M : A
     ----------------------------------::Return
     G, P |- return M : (x:A.{P /\ x=M})
+
+    G |- K : {Q1} x:A {Q2}
+    G, P |= Q1*top
+    G, x:A, P /\ (Q1 >> Q2) |- E : (y:B.{R})
+    --------------------------------::HoareE
+    G, P |- x <- K; E : (y:B.{R})

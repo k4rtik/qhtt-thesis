@@ -73,6 +73,7 @@
         {β00}{{$\beta_{00}$}}2
         {==}{{$=$}}1 {!=}{{$\neq$}}1
         {ℋ}{{$\mathcal{H}$}}2
+        {Γ}{{$\Gamma$}}1
 }
 
 \newcommand{\HoareT}[3]{
@@ -544,7 +545,7 @@ Now, we are in a good position to talk about the raw syntax of QHTT. The followi
 
 \nonterms{Typ}
 
-The base type $bit$ inhabits the values 0 and 1 but the type $qbit$ is just a reference to a logical qubit. The state is represented using the type $vector$ that may further need the type $complex$ to represent arbitrary quantum states. These last two types are only included for use in the specification language and are not to be used by the programming syntax. The type $unitary$ includes all basic one- and two-qubit gates (such as the Pauli gates and CX) that we include in the language. The propositions formed using the specification language are given the $prop$ type. $\otimes$ is the pair type constructor. We use the F*-inspired syntax for both the dependent function and the Quantum Hoare type. Note that the optional context $\{\Gamma\}$ associated with the Quantum Hoare Type is used to bind ghost variables and propositions that may appear in the pre- and postcondition to relate the beginning and the end state, as we saw in the rules for measurement and unitary application.
+The base type $bit$ inhabits the values 0 and 1 but the type $qbit$ is just a reference to a logical qubit. The state is represented using the type $vector$ that may further need the type $complex$ to represent arbitrary quantum states. These last two types are only included for use in the specification language and are not to be used by the programming syntax. The type $unitary$ includes all basic one- and two-qubit gates (such as the Pauli gates and CX) that we include in the language. The propositions formed using the specification language are given the $prop$ type. $\otimes$ is the pair type constructor. Note that we use the F*-inspired syntax \lstinline[language=QHaskell]!QST (x:A) {Γ} (requires {P}) (ensures {Q})! in examples, which is just syntactic sugar for the Quantum Hoare Type shown in the formal syntax above. The optional context, $\Gamma$, is used to bind ghost variables and propositions that may appear in the pre- and postcondition to relate the beginning and the end state, as we saw in the rules for measurement and unitary application.
 
 Next, we show the grammar for the terms of the language that include values for the base types and introduction and elimination forms for the type constructors:
 
@@ -745,7 +746,6 @@ of the author and do not necessarily reflect the views of the National Science F
 \label{app:grammar}
 
 \nonterms{Typ}
-\nonterms{MonoTyp}
 \nonterms{Prop}
 \nonterms{Tm}
 \nonterms{Cmd}
@@ -762,7 +762,7 @@ of the author and do not necessarily reflect the views of the National Science F
 
 \subsection{Terms}
 
-\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,VectorI,PiI,PiE,PairI,FstE,SndE,ElimIntro,Do}
+\drules[tm]{$\Gamma \vdash M : A$}{term typing}{VarE,UnitI,ZeroI,OneI,PiI,PiE,PairI,FstE,SndE,Do}
 
 % \subsection{Well-formed propositions}
 
@@ -770,8 +770,6 @@ of the author and do not necessarily reflect the views of the National Science F
 
 \subsection{Computation rules}
 
-\drules[comp]{$\Gamma \vdash E : \textbf{QST} (x:A) (\textbf{requires} \{P\}) (\textbf{ensures} \{Q\})$}{valid computations}{Conseq,Return}
-
-% TODO:
+\drules[comp]{$\Gamma, P \vdash E :  (x:A.\{Q\})$}{valid computations}{Conseq,Return}
 
 \end{document}

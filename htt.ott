@@ -21,10 +21,12 @@ Typ, A, B, C :: Ty ::= {{ com Types }}
   | prop               ::   :: Prop         {{ com Propositions }}
   | x : A -> B         ::   :: Arrow        {{ com Dependent function }}
   | A times B          ::   :: Pair         {{ com Pair }}
-  | QST ( x : A ) { G } ( requires { P } )
-    ( ensures { Q } )  ::   :: QHoareC      {{ com Q. Hoare Type }}
-  | QST ( x : A ) ( requires { P } )
-    ( ensures { Q } )  :: S :: QHoare       {{ com Quantum Hoare Type  w/o context }}
+  | G . { P } x : A { Q } :: :: QHTC        {{ com Quantum Hoare Type }}
+  | { P } x : A { Q }  :: S :: QHT            {{ com Quantum Hoare Type w/o context }}
+  % | QST ( x : A ) { G } ( requires { P } )
+  %   ( ensures { Q } )  :: S :: QHoareC      {{ com Q. Hoare Type }}
+  % | QST ( x : A ) ( requires { P } )
+  %   ( ensures { Q } )  :: S :: QHoare       {{ com Quantum Hoare Type  w/o context }}
   | A [ M / x ]        :: M :: Substitution
 
 Prop, P, Q, R :: '' ::= {{ com Propositions (\textbf{prop}) }}
@@ -170,7 +172,7 @@ defn
     G |- P : prop
     G, x:A |- Q : prop
     ------------------- :: Hoare
-    G |- QST (x:A) (requires {P}) (ensures {Q}) type
+    G |- {P} x:A {Q} type
 
 defn
   A = B :: :: TyEq :: tyeq_ {{ com $[[A]]$ and $[[B]]$ are equal as types }} by
@@ -259,21 +261,21 @@ defn
     % -------------- :: AscriptionE
     % G |- M:A : A
 
-    G |- E : QST (x:A) (requires {P*top}) (ensures {P >> Q})
+    G, P*top |- E :  (x:A.{P >> Q})
     --------------------------------::Do
-    G |- do E : QST (x:A) (requires {P}) (ensures {Q})
+    G |- do E : {P} x:A {Q}
 
 defn
   G |= P :: :: Prove :: Pr_ {{ com Proof obligation $[[P]]$ }} by
 
 defn
-  G |- E : QST ( x : A ) ( requires { P } ) ( ensures { Q } ) :: :: Comp :: comp_ by
+  G , P |- E : ( x : A . { Q } )  :: :: Comp :: comp_ by
 
-    G |- E : QST (x:A) (requires {P}) (ensures {Q})
+    G, P |- E : (x:A.{Q})
     G, x:A, Q |= R
     --------------------::Conseq
-    G |- E : QST (x:A) (requires {P}) (ensures {R})
+    G, P |- E : (x:A.{R})
 
     G |- M : A
     ----------------------------------::Return
-    G |- return M : QST (x:A) (requires {P}) (ensures {P /\ x=M})
+    G, P |- return M : (x:A.{P /\ x=M})

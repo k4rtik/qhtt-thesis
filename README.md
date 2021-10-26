@@ -8,3 +8,4 @@ As quantum computers become real, it is high time we come up with effective tech
 ## Links
 - Homepage: https://ks.cs.uchicago.edu/publication/qhtt-masters/
 - arXiv:[2012.02154](https://arxiv.org/abs/2012.02154)
+- Preliminary version published as a [QPL Extended Abstract](https://doi.org/10.4204/EPTCS.340.15)

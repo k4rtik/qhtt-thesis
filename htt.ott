@@ -1,6 +1,6 @@
 metavar termvar, x, y ::=
 
-metavar ghostvar, g, e, u ::=
+metavar ghostvar, g, ex {{ tex e_x }}, u ::=
 
 metavar subspace, S ::=
 
@@ -36,20 +36,23 @@ Prop, P, Q, R :: '' ::= {{ com Propositions (\textbf{prop}) }}
   | P \/ Q                ::  :: Disjunction  {{ com Sum of subspaces }}
   | U o P                 ::  :: Unitary      {{ com Operator }}
   | x inq S               ::  :: InSubspace   {{ com x lies in subspace S }}
-  | x =q psi              ::  :: EqState      {{ com x is equal to state $\psi$ }}
+  | M =q psi              ::  :: EqState      {{ com M is equal to state $\psi$ }}
   | uniform ( x )         ::  :: Uniform      {{ com x is uniformly distributed }}
   | x1 ==q x2             ::  :: EqQuantum    {{ com quantum equality }}
   | separable ( x )       ::  :: Separable    {{ com x is separable}}
   | x1 ==cl x2            ::  :: EqClassical  {{ com classical equality }}
   | class ( x )           ::  :: Class        {{ com x is classical}}
+  | class ( M )           :: S:: ClassS       {{ com M is classical}}
   | ( P )                 :: M:: Parens
   | P [ M / x ]           :: M:: Substitution
   | x = M                 :: M:: DecEq
   | P * Q                 :: M:: Separation
   | P >> Q                :: M:: Frame
+  | not P                 :: M:: Negation
 
 Tm, K, L, M, N :: Tm ::= {{ com Terms }}
   | x           ::  :: Var            {{ com Variable }}
+  | ex          :: M:: GVar           {{ com ghost Variable }}
   | ()          ::  :: Unit           {{ com Unit }}
   | 0           ::  :: Zero           {{ com 0 value of type bit }}
   | 1           ::  :: One            {{ com 1 value of type bit }}
@@ -84,9 +87,10 @@ Comp, E, F :: '' ::= {{ com Computations }}
   | x = M ; E       :: :: Let     {{ com let binding }}
 
 Ctx, G {{ tex \Gamma }} :: 'Ctx' ::= {{ com Contexts }}
-  | o               :: :: Empty         {{ com empty context }}
-  | G , x : A       :: :: Type          {{ com context extension }}
-  | G , P           :: :: Prop          {{ com context extension with prop }}
+  | o               ::  :: Empty         {{ com empty context }}
+  | G , x : A       ::  :: Type          {{ com context extension }}
+  | G , ex : A      :: M:: GType         {{ com context extension with ghost var }}
+  | G , P           ::  :: Prop          {{ com context extension with prop }}
 
 
 terminals :: 'terminals_' ::=
@@ -94,11 +98,10 @@ terminals :: 'terminals_' ::=
   | ==q                    ::   :: eqQuantum  {{ tex \equiv_q }}
   | ==cl                   ::   :: eqClass    {{ tex \equiv_{cl} }}
   | o                      ::   :: operator   {{ tex \cdot }}
-  % | -->                    ::   :: red        {{ tex \longrightarrow }}
   | |=                     ::   :: seqimp     {{ tex \models }}
-  |  ->                    ::   :: arrow      {{ tex \rightarrow }}
+  | ->                     ::   :: arrow      {{ tex \rightarrow }}
   | <-                     ::   :: larrow     {{ tex \leftarrow }}
-  |  =>                    ::   :: rbarrow    {{ tex \Rightarrow }}
+  | =>                     ::   :: rbarrow    {{ tex \Rightarrow }}
   | <                      ::   :: langle     {{ tex \langle }}
   | >                      ::   :: rangle     {{ tex \rangle }}
   | |-                     ::   :: turnstile  {{ tex \vdash }}
@@ -287,3 +290,23 @@ defn
     G, x:A, P /\ (Q1 >> Q2) |- E : (y:B.{R})
     --------------------------------::HoareE
     G, P |- x <- K; E : (y:B.{R})
+
+defn
+  G , P |- x <- c ; E : ( y : A . { Q } ) :: :: Cmd :: cmd_ by
+
+    G |- M : bit
+    G, x: qbit, P /\ (x =q psi) |- E : (y:B.{Q})
+    --------------------------------------------::Init
+    G, P |- x <- init M; E : (y:B.{Q})
+
+    G |- M : qbit
+    G, P |= M =q psi
+    G, x: bit, ex : qbit, P /\ (M =q psi >> (class(M) /\ ex =q psi)) |- E : (y:B.{Q})
+    -------------------------------------------------------------------::Meas
+    G, P |- x <- meas M; E : (y:B.{Q})
+
+    G |- U : unitary
+    G |- M : qbit
+    G, x: unit, (P >> U o P) |- E : (y:B.{Q})
+    ----------------------------------------::Unitary
+    G, P |- x <- apply U to M; E : (y:B.{Q})

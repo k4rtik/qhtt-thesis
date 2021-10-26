@@ -497,6 +497,7 @@ To design a Hoare Type Theory for quantum computation, we need to consider some 
 Each program is assumed to have access to a pool of countably infinite number of logical qubits that can be initialized on demand and are returned to the pool (discarded) on measurement. With ``logical'' we mean qubits with no errors; such qubits may be realized using quantum error correction techniques. We define primitive quantum commands for qubit initialization, unitary application, and measurement next.
 
 \subsection{Primitive quantum commands}
+\label{sec:primcmds}
 
 Here we show our primitive quantum commands that are inspired by similar primitives in \citetitle{qio}~\parencite{qio} along with the Hoare types that encode the specifications for these commands. The predicates that we see are the same as we saw in the previous section. Each predicate implicitly takes the current local state of the program as an argument. These specifications are given in a small footprint style.
 
@@ -787,5 +788,22 @@ Notice that the \rref{comp-Consq} requires that we show that the postcondition $
 Here, $K$ is a suspended computation (with a Hoare type) sequenced with another computation $E$. We need to show that the overall precondition, $P$, implies the large footprint proposition, $Q_1 * \top$, ie, a portion of state satisfying $Q_1$ exists as required by $K$. The last premise says that in the expanded context after executing $K$, computation $E$ is well-typed.
 
 \subsection{Rules for primitive quantum commands}
+We showed the rules for primitive commands in the form of quantum Hoare types in \cref{sec:primcmds}, here we show them in a natural deduction style for completeness. The main thing to notice about these rules is that they specify the strongest postcondition that captures the most precise relationship between the initial state and modified state after the command's execution.
+
+\begin{mathpar}
+    \drule{cmd-Init}
+\end{mathpar}
+where $x$ is a fresh qubit variable and $\psi$ is either $\ket{0}$ or $\ket{1}$ depending on the input bit.
+
+\begin{mathpar}
+    \drule{cmd-Meas}
+\end{mathpar}
+where $x$ and $e_x$ are fresh variables and the strongest postcondition marks that the measured qubit is now in a classical state and a ghost qubit, $e_x$, now holds the state, $\psi$, previously held by the measured qubit.
+
+Lastly, we show the rule for a single-qubit gate application:
+\begin{mathpar}
+    \drule{cmd-Unitary}
+\end{mathpar}
+where $U \cdot P$ corresponds to the unitary application to the overall state by appropriate padding.
 
 \end{document}

@@ -28,7 +28,7 @@
 \newcommand{\ottmetavars}{
 \ottmetavartabular{
  $ \ottmv{termvar} ,\, \ottmv{x} ,\, \ottmv{y} $ &  \\
- $ \ottmv{ghostvar} ,\, \ottmv{g} ,\, \ottmv{e} ,\, \ottmv{u} $ &  \\
+ $ \ottmv{ghostvar} ,\, \ottmv{g} ,\, e_x ,\, \ottmv{u} $ &  \\
  $ \ottmv{subspace} ,\, \ottmv{S} $ &  \\
  $ \psi ,\, \psi $ &  \\
  $ \ottmv{amplitudes} ,\, \ottmv{alpha} ,\, \ottmv{beta} $ &  \\
@@ -56,12 +56,13 @@
 \ottprodline{|}{\ottnt{P}  \vee  \ottnt{Q}}{}{}{}{\ottcom{Sum of subspaces}}\ottprodnewline
 \ottprodline{|}{\ottnt{U} \, \cdot \, \ottnt{P}}{}{}{}{\ottcom{Operator}}\ottprodnewline
 \ottprodline{|}{\ottmv{x} \, \in_q \, \ottmv{S}}{}{}{}{\ottcom{x lies in subspace S}}\ottprodnewline
-\ottprodline{|}{\ottmv{x}  =_q  \psi}{}{}{}{\ottcom{x is equal to state $\psi$}}\ottprodnewline
+\ottprodline{|}{\ottnt{M}  =_q  \psi}{}{}{}{\ottcom{M is equal to state $\psi$}}\ottprodnewline
 \ottprodline{|}{\ottkw{uniform} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is uniformly distributed}}\ottprodnewline
 \ottprodline{|}{\ottmv{x_{{\mathrm{1}}}}  \equiv_q  \ottmv{x_{{\mathrm{2}}}}}{}{}{}{\ottcom{quantum equality}}\ottprodnewline
 \ottprodline{|}{\ottkw{separable} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is separable}}\ottprodnewline
 \ottprodline{|}{\ottmv{x_{{\mathrm{1}}}}  \equiv_{cl}  \ottmv{x_{{\mathrm{2}}}}}{}{}{}{\ottcom{classical equality}}\ottprodnewline
-\ottprodline{|}{\ottkw{class} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is classical}}}
+\ottprodline{|}{\ottkw{class} \, \ottsym{(}  \ottmv{x}  \ottsym{)}}{}{}{}{\ottcom{x is classical}}\ottprodnewline
+\ottprodline{|}{\ottkw{class} \, \ottsym{(}  \ottnt{M}  \ottsym{)}} {\textsf{S}}{}{}{\ottcom{M is classical}}}
 
 \newcommand{\ottTm}{
 \ottrulehead{\ottnt{Tm}  ,\ \ottnt{K}  ,\ \ottnt{L}  ,\ \ottnt{M}  ,\ \ottnt{N}}{::=}{\ottcom{Terms}}\ottprodnewline
@@ -427,9 +428,44 @@
 \ottusedrule{\ottdrulecompXXHoareE{}}
 \end{ottdefnblock}}
 
+%% defn Cmd
+\newcommand{\ottdrulecmdXXInit}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottkw{bit}}%
+\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottkw{qbit}  \ottsym{,}  \ottnt{P}  \wedge  \ottsym{(}  \ottmv{x}  =_q  \psi  \ottsym{)}  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{y}  \ottsym{:}  \ottnt{B}  \ottsym{.}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}%
+}{
+\Gamma  \ottsym{,}  \ottnt{P}  \vdash  \ottmv{x}  \leftarrow  \ottkw{init} \, \ottnt{M}  \ottsym{;}  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{y}  \ottsym{:}  \ottnt{B}  \ottsym{.}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{%
+{\ottdrulename{cmd\_Init}}{}%
+}}
+
+
+\newcommand{\ottdrulecmdXXMeas}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottkw{qbit}}%
+\ottpremise{\Gamma  \ottsym{,}  \ottnt{P}  \models  \ottnt{M}  =_q  \psi}%
+\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottkw{bit}  \ottsym{,}  e_x  \ottsym{:}  \ottkw{qbit}  \ottsym{,}  \ottnt{P}  \wedge  \ottsym{(}  \ottnt{M}  =_q  \psi  \multimap  \ottsym{(}  \ottkw{class} \, \ottsym{(}  \ottnt{M}  \ottsym{)}  \wedge  e_x  =_q  \psi  \ottsym{)}  \ottsym{)}  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{y}  \ottsym{:}  \ottnt{B}  \ottsym{.}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}%
+}{
+\Gamma  \ottsym{,}  \ottnt{P}  \vdash  \ottmv{x}  \leftarrow  \ottkw{meas} \, \ottnt{M}  \ottsym{;}  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{y}  \ottsym{:}  \ottnt{B}  \ottsym{.}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{%
+{\ottdrulename{cmd\_Meas}}{}%
+}}
+
+
+\newcommand{\ottdrulecmdXXUnitary}[1]{\ottdrule[#1]{%
+\ottpremise{\Gamma  \vdash  \ottnt{U}  \ottsym{:} \, \ottkw{unitary}}%
+\ottpremise{\Gamma  \vdash  \ottnt{M}  \ottsym{:}  \ottkw{qbit}}%
+\ottpremise{\Gamma  \ottsym{,}  \ottmv{x}  \ottsym{:}  \ottkw{unit}  \ottsym{,}  \ottsym{(}  \ottnt{P}  \multimap  \ottnt{U} \, \cdot \, \ottnt{P}  \ottsym{)}  \vdash  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{y}  \ottsym{:}  \ottnt{B}  \ottsym{.}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}%
+}{
+\Gamma  \ottsym{,}  \ottnt{P}  \vdash  \ottmv{x}  \leftarrow  \ottkw{apply} \, \ottnt{U} \, \ottkw{to} \, \ottnt{M}  \ottsym{;}  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{y}  \ottsym{:}  \ottnt{B}  \ottsym{.}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}}{%
+{\ottdrulename{cmd\_Unitary}}{}%
+}}
+
+\newcommand{\ottdefnCmd}[1]{\begin{ottdefnblock}[#1]{$\Gamma  \ottsym{,}  \ottnt{P}  \vdash  \ottmv{x}  \leftarrow  \ottnt{c}  \ottsym{;}  \ottnt{E}  \ottsym{:}  \ottsym{(}  \ottmv{y}  \ottsym{:}  \ottnt{A}  \ottsym{.}  \ottsym{\{}  \ottnt{Q}  \ottsym{\}}  \ottsym{)}$}{}
+\ottusedrule{\ottdrulecmdXXInit{}}
+\ottusedrule{\ottdrulecmdXXMeas{}}
+\ottusedrule{\ottdrulecmdXXUnitary{}}
+\end{ottdefnblock}}
+
 
 \newcommand{\ottdefnsJtype}{
-\ottdefnctx{}\ottdefnType{}\ottdefnTyEq{}\ottdefnTmEq{}\ottdefnUn{}\ottdefnProp{}\ottdefnTerm{}\ottdefnProve{}\ottdefnComp{}}
+\ottdefnctx{}\ottdefnType{}\ottdefnTyEq{}\ottdefnTmEq{}\ottdefnUn{}\ottdefnProp{}\ottdefnTerm{}\ottdefnProve{}\ottdefnComp{}\ottdefnCmd{}}
 
 \newcommand{\ottdefnss}{
 \ottdefnsJtype
